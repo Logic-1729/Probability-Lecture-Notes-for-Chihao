@@ -1,0 +1,506 @@
+\chapter{事件的条件概率}
+
+上节课我们介绍了概率空间 $(\Omega, \mathscr{F}, \mathbb{P})$ 的定义，以及它们需要满足的公理。很多关于概率空间的一些性质和操作，都可以解释成集合上对应的性质和操作。我们今天继续介绍一些性质，它们同样可以看成集合的性质，但本身也有很丰富的概率含义。可以看到，在实际应用中，我们实际思考的对象是这些集合后面的概率。
+
+\section{条件概率及性质}
+
+我们前面介绍过，概率空间，以及相关的记号，都是为了抽象出我们在日常做概率试验的时候的一些直观的事情。对于扔两个骰子的问题，我们可以问，在已知两个骰子的和是偶数的情况下，第一个骰子是 $6$ 的概率。经验告诉我们，这个概率应该是用“第一个是 $6$ 并且和为偶数”的概率，除上“和为偶数的概率”。数学上，我们把这个称之为 \textit{条件概率} ，是定义在两个事件 $A$ 和 $B$ 上，用来表示在已知 $B$ 发生的情况下 $A$ 发生的概率。我们用记号 $\mathbb{P}(A \mid B)$ 来表示，它仅在 $\mathbb{P}(B) > 0$ 的时候有定义。
+
+\begin{definition}[事件的条件期望]
+\[
+\mathbb{P}(A \mid B) = \frac{\mathbb{P}(A \cap B)}{\mathbb{P}(B)}.
+\]
+\end{definition}
+
+注意到这个是条件概率的定义式，我们可以把它写成
+\[
+\mathbb{P}(A \cap B) = \mathbb{P}(B) \cdot \mathbb{P}(A \mid B).
+\]
+
+这个形式可以更方便的把它想象成“事件 $A$ 和 $B$ 同时发生的概率，等于 $B$ 发生的概率，乘上在已知 $B$ 发生的时候 $A$ 发生的概率”。
+
+对于 $n$ 个事件 $A_1, \dots, A_n$，我们不停地使用上式，可以得到
+\[
+\mathbb{P}\left( \bigcap_{i=1}^n A_i \right) = \prod_{k=1}^n \mathbb{P}\left( A_k \,\middle|\, \bigcap_{i=1}^{k-1} A_i \right).
+\]
+
+这个式子被称之为\href{https://en.wikipedia.org/wiki/Chain_rule_(probability)}{\underline{条件概率的链式法则}}。他可以读作：
+
+\begin{leftbarquote}
+
+    \quad \quad 如果我们想计算 $n$ 个事件同时发生的概率，我们先用第一个事件发生的概率，乘上在第一个事件发生的情况下第二个事件发生的概率，再乘上在第一第二个事件都发生的情况下，第三个事件发生的概率，\dots
+
+\end{leftbarquote}
+
+我们可以通过一些简单的例子来验证我们对于这个概念的理解。
+
+\begin{example}
+假设我有正好两个孩子，其中至少一个是女孩，那么两个都是女孩的概率是多大？
+\end{example}
+
+在计算一个概率问题的时候，总是要先对概率空间进行合适的建模。这个问题的概率空间我们可以取样本空间为四元组 $\Omega = \{FF, FM, MF, MM\}$，$\mathscr{F} = 2^\Omega$，$\mathbb{P}$ 为均匀分布。其中事件 $B := \text{“至少一个是女孩”} = \{FF, FM, MF\}$；事件 $A := \text{“两个都是女孩”} = \{FF\}$。
+
+所以
+\[
+\mathbb{P}(A \mid B) = \frac{\mathbb{P}(A \cap B)}{\mathbb{P}(B)} = \frac{\mathbb{P}(\{FF\})}{\mathbb{P}(\{MF, FM, FF\})} = \frac{1/4}{3/4} = \frac{1}{3}.
+\]
+
+
+\begin{example}
+假设面前有三个抽屉，每个抽屉里有两块硬币，分别是“金币+金币”，“金币+银币”，“银币+银币”。现在我随机选一个抽屉，并且随机在这个抽屉里选一个硬币，请问在选出的硬币是金币的情况下，和选出的硬币同一个抽屉的另一个也是金币的概率是多大？
+\end{example}
+
+在这个问题里，我们可以用 $\Omega = \{\text{一,二,三}\} \times\{1,2\}$，$\mathscr{F} = 2^\Omega$，$\mathbb{P}$ 为均匀分布来进行建模。对于样本点 $(i, j)$，我们想表达的意思是选出来的硬币是第 $i$ 个抽屉里的第 $j$ 个硬币（硬币的顺序就按照题干里说的那般）。那么定义事件
+\[
+B = \text{“选出的硬币是金币”} = \{(\text{一},1), (\text{一},2), (\text{二},1)\};
+\]
+\[
+A = \text{“和选出的硬币同一个抽屉的另一个也是金币”} = \{(\text{一},1), (\text{一},2), (\text{二},2)\}.
+\]
+
+因此，我们有
+\[
+\mathbb{P}(A \mid B) = \frac{\mathbb{P}(A \cap B)}{\mathbb{P}(B)} = \frac{1/3}{1/2} = \frac{2}{3}.
+\]
+
+
+\section{独立性}
+
+如果对于事件 $A$ 和 $B$，我们有 $\mathbb{P}(A \cap B) = \mathbb{P}(A) \cdot \mathbb{P}(B)$，或者等价的 $\mathbb{P}(A \mid B) = \mathbb{P}(A)$，我们就称 $A$ 和 $B$ 是独立的，有时候会记作 $A \perp B$。直观上，事件 $A$ 和 $B$ 独立表示 $A$ 或者 $B$ 是否发生，对于对方是否发生没有影响。比如我们扔两次骰子，为事件“第一次扔的是 $3$”，为事件“第二次扔的是 $4$”，则这两件事情是独立的。独立性，我认为，是一个非常具有概率风味的概念。尽管到目前为止，如果 $\Omega$ 是有限集，我们之前说过，所有的这些概率都可以用组合计数来研究，但独立性提供的直观，用计数的语言来说，并不是特别方便。
+
+我们可以把独立的概念推广到更多的事件上去。我们说事件 $A_1, A_2, \dots, A_n$ 是\textbf{相互独立（mutually independent）}的，如果其满足对于任意的 $I \subseteq [n]$，
+
+\[
+\mathbb{P}\left( \bigcap_{i \in I} A_i \right) = \prod_{i \in I} \mathbb{P}(A_i).
+\]
+
+这个定义看起来非常强，因为它要求上述等式对于每一个 $I \subseteq [n]$ 都成立。
+
+\begin{anymark}[注解]
+
+\begin{enumerate}
+    \item 如果只要求 $I = [n]$ 是不够的。假设 $n = 3$，$A_1 = A_2$，$A_3 = \varnothing$，则 $\mathbb{P}(A_1 \cap A_2 \cap A_3) = \mathbb{P}(A_1)\mathbb{P}(A_2)\mathbb{P}(A_3) = 0$。但显然这仨不一定独立。事实上，我们可以把独立的定义写成
+\[
+\mathbb{P}\left( \bigcap_{i=1}^n B_i \right) = \prod_{i=1}^n \mathbb{P}(B_i),
+\]
+
+其中 $B_i = A_i$ 或者 $\Omega$。
+
+    \item 如果只要求等式对于 $I \in \binom{[n]}{2}$ 成立是不够的。一个经典的例子是概率空间为 $\Omega = \{HH, HT, TH, TT\}$ 上的均匀分布，即投两次均匀硬币的结果（H=Head，T=Tail）。我们考虑 $A_1 = \text{“第一次硬币出H”}$，$A_2 = \text{“第二次硬币出H”}$，$A_3 = \text{“两次硬币结果不一样”}$。可以验证，这三个事件对于任何 $I \in \binom{[3]}{2}$，是满足独立性定义的等式的，但对于 $I = [3]$ 并不满足。实际上，如果该等式仅对于 $I \in \binom{[n]}{2}$ 成立，我们称 $A_1, \dots, A_n$ 是\textbf{两两独立（pairwise independent）}的。这是一个在计算机科学里很重要的概念，原因在于，我们在设计算法的时候，独立的随机数本身是一个重要的资源，我们需要代价才能够产生它们。而很多问题里，对于独立的要求并没有像定义那么强，有的时候两两独立就足够满足我们的要求了。而生成两两独立的随机数，代价要小很多。
+\end{enumerate}
+
+
+\end{anymark}
+
+对于无穷多个事件 $\{A_j\}_{j \in J}$，我们说它们相互独立，但且仅当对于 $J$ 的任何一个有限子集 $I$，$\{A_i\}_{i \in I}$ 相互独立。
+
+\section{全概率公式}
+
+假设事件 $B_1, B_2, \dots, B_n, \cdots \in \mathscr{F}$ 构成了样本空间的一个分划，即 $\Omega = \bigcup_{i \geq 1} B_i$ 并且对于 $i \ne j$，$B_i \cap B_j = \varnothing$。根据集合论的知识我们知道，对于任何集合 $A$，$A \cap B_1, A \cap B_2, \dots, A \cap B_n, \dots$ 也构成了 $A$ 的一个分划。如果我们取 $A \in \mathscr{F}$，则根据概率论的公理，我们有
+\[
+\mathbb{P}(A) = \mathbb{P}\left( \bigcup_{n \geq 1} (A \cap B_n) \right) = \sum_{n \geq 1} \mathbb{P}(A \cap B_n).
+\]
+这便是全概率公式（\href{https://en.wikipedia.org/wiki/Law_of_total_probability}{\underline{Law of total probability}}）。我们可以把 $\mathbb{P}(A \cap B_n)$ 用条件概率写出来，即
+\[
+\mathbb{P}(A) = \sum_{n \geq 1} \mathbb{P}(B_n) \cdot \mathbb{P}(A \mid B_n).
+\]
+
+用人话说，就是想算 $A$ 的概率，可以先按照 $B_n$ 的情况进行分类再全部加起来，而每一类的概率是 $B_n$ 发生的概率乘上在 $B_n$ 发生的情况下 $A$ 发生的概率。
+
+\section{一些例子}
+
+我们接下来使用上述工具，来计算一些例子。
+
+\begin{example}[抗原检测]
+假设人群中感染新冠的概率是 $0.2\%$，而抗原检测的准确性是 $99\%$。现在你做了个检测发现阳了，那真的感染新冠的概率是多大？
+
+\end{example}
+
+这个问题的结论有时候会产生一些悖论。因为看起来抗原检测的准确性非常高，因此如果检测阳性，那应该大概率真的被感染了。但通过计算我们会发现不然。
+
+首先我们用概率空间来进行建模。我们假设人群有 $N$ 个人，因此样本空间可以取 $\Omega = [N] \times \{\pm 1\} \times \{\pm 1\}$。这里面的每一个三元组 $(a, i, j)$，其中 $a$ 表示人的 id，$i$ 表示是否被感染，$j$ 表示是否抗原阳性。可以思考一下，我们如何设置 $\mathbb{P}$ 来满足题设的要求，这总是可以做到的。
+
+我们来计算在已知抗原阳性的情况下，没有被感染的概率 $\mathbb{P}(\text{没感染} \mid \text{阳性})$。我们使用条件概率的定义，有
+\[
+\mathbb{P}(\text{没感染} \mid \text{阳性}) = \frac{\mathbb{P}(\text{没感染} \cap \text{阳性})}{\mathbb{P}(\text{阳性})}.
+\]
+
+我们希望把这个分式上下都写成我们题设里告诉能算的东西，因此需要用我们之前介绍的公式来改写一下。对于分子，我们有
+\[
+\mathbb{P}(\text{没感染} \cap \text{阳性}) = \mathbb{P}(\text{阳性} \mid \text{没感染}) \cdot \mathbb{P}(\text{没感染}).
+\]
+
+而对于分母，我们使用全概率公式，有
+\[
+\mathbb{P}(\text{阳性}) = \mathbb{P}(\text{阳性} \cap \text{感染}) + \mathbb{P}(\text{阳性} \cap \text{没感染}) = \mathbb{P}(\text{阳性} \mid \text{感染}) \cdot \mathbb{P}(\text{感染}) + \mathbb{P}(\text{阳性} \mid \text{没感染}) \cdot \mathbb{P}(\text{没感染}).
+\]
+
+这样一番操作之后，我们会发现每一个量我们都会计算了，即
+\[
+\mathbb{P}(\text{阳性} \mid \text{没感染}) = 1\%, \quad \mathbb{P}(\text{没感染}) = 99.8\%, \quad \mathbb{P}(\text{阳性} \mid \text{感染}) = 99\%, \quad \mathbb{P}(\text{感染}) = 0.2\%,
+\]
+
+把这些数字代进去，我们可以得到
+\[
+\mathbb{P}(\text{没感染} \mid \text{阳性}) \approx 83.4\%.
+\]
+
+也就是说，没事去测个抗原，即使阳性了，大概八成概率也没有被感染。
+
+上面这个计算过程有时候也被称为贝叶斯公式（\href{https://en.wikipedia.org/wiki/Bayes%27_theorem}{\underline{Bayes' formula}}）。
+
+\begin{example}[双胞胎]
+双胞胎有两种，同卵双生和异卵双生。一家医院想知道所有双胞胎中同卵双生的比例有多大，但是做这个检测的成本太高了。统计学家说，其实你只要统计一下每一对双胞胎的性别，就能推算出这个比例。我们知道，同卵双生子的性别一定是相同的，而异卵双生子的性别是独立的。因此，使用全概率公式，我们有
+\[
+\mathbb{P}(\text{同性}) = \mathbb{P}(\text{同性} \mid \text{同卵}) \cdot \mathbb{P}(\text{同卵}) + \mathbb{P}(\text{同性} \mid \text{异卵}) \cdot \mathbb{P}(\text{异卵}) = 1 \cdot \mathbb{P}(\text{同卵}) + 0.5 \cdot (1 - \mathbb{P}(\text{同卵})).
+\]
+
+因此，我们只要简单的统计出 $\mathbb{P}(\text{同性})$，即所有双胞胎中同性别的比例，便可以用上面的公式解出双胞胎中同卵双生的比例。
+\end{example}
+
+\begin{example}[生日悖论]
+假设一个班级有 $n$ 位同学（$n \ge 3$），每个人的生日都等可能地出现在一年中的 $m$ 天里，并且每个人的生日是相互独立的。我们定义事件 $A_{i,j}$ 表示第 $i$ 位同学和第 $j$ 位同学的生日在同一天。
+
+这个看似简单的问题，其结论常常令人惊讶。直觉上，如果一年有 $m=365$ 天，那么需要很多人（比如超过100人）才能让“至少有两人同一天生日”的概率变得很大。但计算结果会告诉我们，其实只需要很少的人就能达到很高的概率。
+\end{example}
+
+我们先证明，任意两个不同的事件 $A_{i,j}$ 和 $A_{k,l}$ 是独立的。
+
+对于任意 $i \ne j$，显然有 $\mathbb{P}(A_{i,j}) = \frac{1}{m}$，因为第 $j$ 个人的生日与第 $i$ 个人相同的概率是 $\frac{1}{m}$。
+
+现在考虑两个事件 $A_{i_1,j_1}$ 和 $A_{i_2,j_2}$，其中 $(i_1, j_1) \ne (i_2, j_2)$。我们需要分两种情况讨论：
+
+\textit{情况一：} 四个下标 $i_1, j_1, i_2, j_2$ 互不相同。
+此时，事件 $A_{i_1,j_1}$ 和 $A_{i_2,j_2}$ 涉及的是四组完全独立的人。因此，
+\[
+\mathbb{P}(A_{i_1,j_1} \cap A_{i_2,j_2}) = \frac{m \cdot m \cdot m^{n-4}}{m^n} = \frac{1}{m^2} = \mathbb{P}(A_{i_1,j_1}) \cdot \mathbb{P}(A_{i_2,j_2}).
+\]
+
+\textit{情况二：} 两个事件共享一个下标，例如 $i_1 = i_2$ 且 $j_1 \ne j_2$。
+此时，事件 $A_{i_1,j_1}$ 和 $A_{i_2,j_2}$ 意味着第 $i_1$ 个人的生日同时等于第 $j_1$ 个人和第 $j_2$ 个人的生日，即三个人生日相同。因此，
+\[
+\mathbb{P}(A_{i_1,j_1} \cap A_{i_2,j_2}) = \frac{m \cdot m^{n-3}}{m^n} = \frac{1}{m^2} = \mathbb{P}(A_{i_1,j_1}) \cdot \mathbb{P}(A_{i_2,j_2}).
+\]
+
+综上所述，任意两个不同的事件 $A_{i,j}$ 和 $A_{k,l}$ 都满足独立性的定义，因此事件族 $\{A_{i,j}\}_{i,j \in [n], i<j}$ 是两两独立的。
+
+然而，这组事件并非相互独立。要证明这一点，我们只需找到一个反例。
+
+考虑所有事件的交集 $\bigcap_{i,j \in [n], i<j} A_{i,j}$。这个事件表示“班上所有 $n$ 个人的生日都在同一天”。它的概率为：
+\[
+\mathbb{P}\left(\bigcap_{i,j \in [n], i<j} A_{i,j}\right) = \frac{m}{m^n} = \frac{1}{m^{n-1}}.
+\]
+
+另一方面，如果我们假设所有事件相互独立，那么它们的联合概率应该等于各自概率的乘积：
+\[
+\prod_{i,j \in [n], i<j} \mathbb{P}(A_{i,j}) = \left(\frac{1}{m}\right)^{\binom{n}{2}} = \frac{1}{m^{\binom{n}{2}}}.
+\]
+
+由于当 $n \ge 3$ 时，$\binom{n}{2} = \frac{n(n-1)}{2} > n-1$，所以
+\[
+\frac{1}{m^{\binom{n}{2}}} \ne \frac{1}{m^{n-1}}.
+\]
+
+因此，事件族 $\{A_{i,j}\}_{i,j \in [n], i<j}$ 不是相互独立的。
+
+现在我们来解决最经典的问题：取 $m=30$，请问至少需要多少人 ($n$)，才能使“班上存在两人同生日”的概率大于 $\frac{1}{2}$？
+
+记事件 $B = \bigcup_{i,j \in [n], i<j} A_{i,j}$，即“至少有两人同生日”。我们通常用其补事件“所有人生日都不同”来计算：
+\[
+\mathbb{P}(B) = 1 - \mathbb{P}(B^c) = 1 - \mathbb{P}\left(\bigcap_{i,j \in [n], i<j} A_{i,j}^c\right).
+\]
+
+根据排列组合，所有人生日都不同的概率为：
+\[
+\mathbb{P}(B^c) = \frac{m \cdot (m-1) \cdot (m-2) \cdots (m-n+1)}{m^n} = \frac{m!}{(m-n)! \cdot m^n}.
+\]
+
+因此，
+\[
+\mathbb{P}(B) = 1 - \frac{m!}{(m-n)! \cdot m^n}.
+\]
+
+我们代入 $m=30$ 进行计算：
+- 当 $n=6$ 时，$\mathbb{P}(B) \approx 1 - \frac{30 \cdot 29 \cdot 28 \cdot 27 \cdot 26 \cdot 25}{30^6} \approx 0.4136$。
+- 当 $n=7$ 时，$\mathbb{P}(B) \approx 1 - \frac{30 \cdot 29 \cdot 28 \cdot 27 \cdot 26 \cdot 25 \cdot 24}{30^7} \approx 0.5308$。
+
+因此，当 $n$ 至少为 $7$ 时，班上存在两人同生日的概率才大于 $\frac{1}{2}$。
+
+这个结果再次印证了“生日悖论”的惊人之处：即使在只有30天的“年份”里，也只需要7个人，就有超过一半的概率出现生日重复！
+
+
+\begin{example}[秘书问题]
+某公司需要招聘一名秘书，共有 $n$ 位应聘者。为了节省时间和经济成本，公司决定采用一种“最优停止”策略：首先面试前 $K$ 位应聘者，仅记录他们的表现作为参考标准，但不录用任何人；从第 $K+1$ 位应聘者开始，只要遇到一位比之前所有面试者都优秀的候选人，就立即录用此人，后续的应聘者不再考虑；如果直到最后都没有找到这样的人选，则招聘失败。
+
+这个问题的结论常常令人拍案叫绝。直觉上，我们可能会认为应该在中间某个位置开始选择，或者干脆直接选最后一个。但通过严谨的概率计算，我们会发现存在一个最优的“观察期” $K$，使得成功选到最佳人选的概率最大化。
+
+\end{example}
+
+令事件 $A$ 表示公司最终成功招聘到 $n$ 人中的最佳人选。对于每个 $j \in [n]$，令事件 $B_j$ 表示最佳人选恰好排在第 $j$ 个面试的位置。
+
+我们需要计算条件概率 $\mathbb{P}(A|B_j)$:如果 $j \le K$，即最佳人选出现在前 $K$ 位面试者中，那么根据策略，公司不会录用他/她，因此 $\mathbb{P}(A|B_j) = 0$;如果 $j > K$，即最佳人选出现在第 $K+1$ 位或之后。此时，事件 $A$ 发生当且仅当在前 $j-1$ 位面试者中，实力最强的人恰好出现在前 $K$ 位之中。因为只有这样，第 $j$ 位的最佳人选才会被识别为“比之前所有人都好”。由于前 $j-1$ 位面试者的实力排序是随机的，最强者等可能地出现在这 $j-1$ 个位置中的任何一个，因此其落在前 $K$ 个位置的概率是 $\frac{K}{j-1}$。
+
+综上所述：
+\[
+\mathbb{P}(A|B_j) =
+\begin{cases}
+0, & \text{若 } j \le K, \\
+\frac{K}{j-1}, & \text{若 } j > K.
+\end{cases}
+\]
+
+根据全概率公式，我们可以计算出总体的成功概率 $\mathbb{P}(A)$：
+\[
+\mathbb{P}(A) = \sum_{j=1}^{n} \mathbb{P}(A \cap B_j) = \sum_{j=1}^{n} \mathbb{P}(A|B_j) \cdot \mathbb{P}(B_j).
+\]
+
+由于 $\mathbb{P}(B_j) = \frac{1}{n}$ 对于所有 $j$ 都成立，代入上式得：
+\[
+\mathbb{P}(A) = \sum_{j=K+1}^{n} \frac{K}{j-1} \cdot \frac{1}{n} = \frac{K}{n} \sum_{j=K+1}^{n} \frac{1}{j-1} = \frac{K}{n} \sum_{j=K}^{n-1} \frac{1}{j}.
+\]
+
+当 $n$ 和 $K$ 都足够大时，我们可以用积分来近似求和：
+\[
+\sum_{j=K}^{n-1} \frac{1}{j} \approx \int_{K}^{n} \frac{1}{x} dx = \ln n - \ln K = \ln \frac{n}{K}.
+\]
+
+因此，
+\[
+\mathbb{P}(A) \approx \frac{K}{n} \ln \frac{n}{K} = -\frac{K}{n} \ln \frac{K}{n}.
+\]
+
+令 $x = \frac{K}{n}$，则 $\mathbb{P}(A) \approx -x \ln x$。这是一个经典的优化问题，函数 $f(x) = -x \ln x$ 在区间 $(0,1)$ 上的最大值出现在 $x = \frac{1}{e}$ 处，最大值为 $\frac{1}{e} \approx 0.3679$。
+
+因此，最优的策略是设置 $K \approx \frac{n}{e}$。在实际操作中，我们应取最接近 $\frac{n}{e}$ 的整数，即 $K = \left\lfloor \frac{n}{e} \right\rfloor$ 或 $K = \left\lceil \frac{n}{e} \right\rceil$。
+
+此时，成功选到最佳人选的概率约为 $36.79\%$。这个结果非常惊人——即使有成百上千的候选人，我们只需观察大约前 $37\%$ 的人，然后选择后面第一个比他们都优秀的人，就能以超过三分之一的概率获得最佳人选！
+
+
+\begin{example}[无限悖论]
+假设我们有可数无穷个球，用 $k = 1, 2, \dots$ 来编号，并且有一个无限大的箱子。我们考察一个“放球”与“拿球”的过程。首先是放球：在12点前1分钟，我们把 $1,2,\dots,10$ 号球放进去；在12点前 $\frac{1}{2}$ 分钟，我们把 $11, 12, \dots, 20$ 号球放进去；在12点前 $\frac{1}{4}$ 分钟，我们把 $21, 22, \dots, 30$ 号球放进去，以此类推。对于 $n = 0, 1, 2, \dots$，我们在12点前 $2^{-n}$ 分钟把 $10n+1, 10n+2, \dots, 10(n+1)$ 号球放进去。
+
+然后我们再使用不同的方式把球拿出来。
+
+\begin{leftbarquote}
+    \quad \quad 对于 $n = 0, 1, 2, \dots$，我们在12点前 $2^{-n}$ 分钟放完球后，把第 $10(n+1)$ 号球拿出来。
+\end{leftbarquote}
+
+我们假设放球和拿球都是瞬时完成的，我们来计算一下，在12点的时候，箱子里有多少个球。显然，这种情况箱子里会有无穷多个球，因为所有编号不是10的倍数的球都被放了进去并且没有被拿出来。
+
+我们换另外一种拿球的方式。
+
+\begin{leftbarquote}
+    \quad \quad 对于 $n = 0, 1, 2, \dots$，我们在12点前 $2^{-n}$ 分钟放完球后，把第 $(n+1)$ 号球拿出来。
+\end{leftbarquote}
+
+使用这种拿球的策略，在12点的时候，箱子里有多少个球呢？一番思考之后，不难发现，箱子里一个球都没有！因为对于每一个 $k \in \mathbb{N}$，第 $k$ 号球在 $n = k - 1$ 的时候被拿出来了。
+
+和第一种情况一样，每次都是只拿了一个球出来，居然产生的结果截然不同。我现在想问，如果我随机的选一个球出来，又当如何呢？
+
+\begin{leftbarquote}
+    \quad \quad 对于 $n = 0, 1, 2, \dots$，我们在12点前 $2^{-n}$ 分钟放完球后，我们从箱子里均匀随机的拿一个球出来。
+\end{leftbarquote}
+
+我们来计算每一个球在12点的时候留在箱子里的概率。我们这儿以1号球为例，其它的球的计算方式类似。对于每一个 $n = 0, 1, 2, \dots$，我们用事件 $A_n$ 来表示在第 $n$ 轮操作之后（即12点前 $2^{-n}$ 分钟放球拿球的操作完成之后），1号球还在箱子里这个事件。我们关注的是事件
+\[
+A_\infty := \bigcap_{n \geq 0} A_n = \lim_{n \to \infty} A_n
+\]
+
+发生的概率。根据我们上一节课介绍的概率测度的连续性，我们有 $\mathbb{P}(\lim_{n \to \infty} A_n) = \lim_{n \to \infty} \mathbb{P}(A_n)$。因此，我们只需要计算 $\mathbb{P}(A_n)$，第 $n$ 轮结束后1号球在箱子里的概率。对于 $n = 0, 1, \dots$，我们再定义一个事件 $B_n$，用来表示，在第 $n$ 轮的时候拿出的球不是1号球，则有 $A_n = B_0 \cap B_1 \cap \cdots \cap B_n$。
+
+使用条件概率的链式法则，我们可以得到
+\[
+\mathbb{P}(A_n) = \mathbb{P}\left( \bigcap_{i=1}^n B_i \right) = \prod_{k=0}^n \mathbb{P}\left( B_k \,\middle|\, \bigcap_{i < k} B_i \right).
+\]
+
+我们把 $\mathbb{P}(A_n)$ 写成这样的目的是因为对于每一个 $k = 0, 1, \dots, n$，条件概率 $\mathbb{P}(B_k \mid \bigcap_{i<k} B_i)$ 有着自然的组合意义，并非常好计算：在 $\bigcap_{i<k} B_i$ 的条件下，这对应于箱子里有 $9(k+1) + 1$ 个球，其中一个1号球，我们拿了一个球，但它不是1号球的概率。显然，这个概率是 $1 - \frac{1}{9(k+1)+1}$。所以，我们有
+\[
+\mathbb{P}(A_n) = \prod_{k=0}^n \left( 1 - \frac{1}{9(k+1)+1} \right) \leq e^{-\sum_{k=0}^n \frac{1}{9k+10}}.
+\]
+
+我们知道级数 $\sum_{k=0}^n \frac{1}{9k+10}$ 是发散的，因此， $\lim_{n \to \infty} \mathbb{P}(A_n) = 0$。
+
+所以，我们知道了，在12点的时候，1号球在箱子里的概率是0。我们用 $S_i$ 来表示第 $i$ 号球在12点的时候还在箱子里的概率。我们刚才计算得知 $\mathbb{P}(S_1) = 0$。可以使用类似的方法，我们能够得到对于任意 $n \in \mathbb{N}$，$\mathbb{P}(S_n) = 0$。我们现在关心的是在12点的时候箱子里有球的概率，即 $\mathbb{P}(\exists n \in \mathbb{N}, S_n)$。我们使用上节课讲过的 union-bound，可以得到
+\[
+\mathbb{P}(\exists n \in \mathbb{N}, S_n) \leq \sum_{n \geq 1} \mathbb{P}(S_n) = 0.
+\]
+\end{example}
+
+\section{Example:二分图完美匹配的概率与容斥原理}
+
+在本节中，我们将探讨一个有趣的概率问题：在一个给定的二分图上，随机选取一个映射，它恰好构成一个完美匹配的概率是多少？考虑一个无向且连通的二分图 $G = (V, E)$，其中顶点集被划分为两个大小相等的部分：$V = V_1 \cup V_2$，满足 $|V_1| = |V_2| = n$ 且 $V_1 \cap V_2 = \varnothing$。我们假设 $V_1$ 和 $V_2$ 内部均无边相连。
+
+我们可以用一个 $n \times n$ 的邻接矩阵 $A \in \{0,1\}^{n \times n}$ 来描述这个图。矩阵元素 $A_{i,j}$ 定义如下：
+\[
+A_{i,j} =
+\begin{cases}
+1, & \text{如果 } V_1 \text{ 中的第 } i \text{ 个点与 } V_2 \text{ 中的第 } j \text{ 个点之间有边}, \\
+0, & \text{否则}.
+\end{cases}
+\]
+
+我们的目标是：从所有可能的映射 $f: [n] \to [n]$ 中均匀随机地选取一个，计算它恰好对应图 $G$ 的一个完美匹配的概率。
+
+这里，样本空间 $\Omega$ 是所有映射的集合，记为 $T_n = \{ f: [n] \to [n] \mid \forall i \in [n], A_{i,f(i)} = 1 \}$。注意，这里的映射 $f$ 不一定是置换，它只要求对于每个 $i$，其像 $f(i)$ 在 $V_2$ 中对应的点必须与 $i$ 相连。我们关心的事件 $M$ 是“所选映射 $f$ 正好是一个完美匹配”，即 $f$ 必须是一个置换函数，并且对所有的 $i$ 都有 $A_{i,f(i)} = 1$。
+
+首先，我们直接写出事件 $M$ 的概率。由于概率测度 $\mathbb{P}$ 是均匀分布，事件 $M$ 的概率等于完美匹配的数量除以总的映射数量。令 $S_n$ 表示 $[n]$ 上所有置换函数的集合。一个置换 $\sigma \in S_n$ 构成完美匹配当且仅当 $\prod_{i=1}^{n} A_{i,\sigma(i)} = 1$。因此，完美匹配的总数就是 $\sum_{\sigma \in S_n} \prod_{i=1}^{n} A_{i,\sigma(i)}$。而样本空间 $T_n$ 的大小是 $\prod_{i=1}^{n} \left( \sum_{j \in [n]} A_{i,j} \right)$，因为对于每个 $i \in [n]$，都有 $\sum_{j \in [n]} A_{i,j}$ 种选择 $f(i)$ 的方式。
+
+所以，我们得到第一个直观的概率表达式：
+\[
+\mathbb{P}(M) = \frac{\sum_{\sigma \in S_n} \prod_{i=1}^{n} A_{i,\sigma(i)}}{|T_n|}.
+\]
+
+这个表达式虽然清晰，但计算起来却非常困难，因为它需要枚举所有 $n!$ 个置换。为了找到一个更高效的计算方法，我们引入容斥原理。这是解决“至少有一个”或“恰好没有”这类计数问题的核心工具。我们定义一系列事件来刻画“映射的值域”。对于每个 $i \in [n]$，令事件 $E_i = \{ f \in T_n \mid f^{-1}(i) = \varnothing \}$，表示“$V_2$ 中的第 $i$ 个点没有原像”。
+
+对于任意子集 $J \subseteq [n]$，我们定义：
+\begin{itemize}
+\item 事件 $E_J = \{ f \in T_n \mid \forall j \in J, f \in E_j; \forall j \notin J, f \notin E_j \}$，表示“映射的值域恰好是 $[n] \setminus J$”。
+\item 事件 $E_J^+ = \{ f \in T_n \mid \forall j \in J, f \in E_j \}$，表示“映射的值域是 $[n] \setminus J$ 的子集”。
+\end{itemize}
+
+显然，事件 $E_\varnothing$ 就是我们关心的“映射的值域是整个 $[n]$”，即映射是一个满射。而在我们的问题中，由于 $V_1$ 和 $V_2$ 大小相同，一个满射映射就是一个双射，也就是一个置换。因此，事件 $E_\varnothing$ 等价于事件 $M$。
+
+根据容斥原理，我们有：
+\[
+\mathbb{P}(M) = \mathbb{P}(E_\varnothing) = \sum_{J \subseteq [n]} (-1)^{|J|} \mathbb{P}(E_J^+).
+\]
+
+这个公式的证明可以通过分析每个映射 $f$ 在等式两边被计算的次数来完成。对于一个属于 $E_I$ 的映射 $f$，它在左边只被计算一次；在右边，它会被所有满足 $I \subseteq J$ 的项 $(-1)^{|J|} \mathbb{P}(E_J^+)$ 计算，其总贡献为 $\sum_{J \supseteq I} (-1)^{|J|} = (-1)^{|I|} \sum_{k=0}^{n-|I|} \binom{n-|I|}{k} (-1)^k = 0$（当 $I \neq \varnothing$ 时），只有当 $I = \varnothing$ 时，其贡献为1。这证明了公式的正确性。
+
+现在，我们只需要计算 $\mathbb{P}(E_J^+)$ 即可。事件 $E_J^+$ 表示映射的值域不包含 $J$ 中的任何点，即所有 $f(i)$ 都必须落在 $[n] \setminus J$ 中。这意味着，对于每一个 $i \in [n]$，我们只能从 $V_2$ 中那些与 $i$ 相连且不属于 $J$ 的点中进行选择。因此，对于固定的 $i$，可选的点的数量是 $\sum_{j \in [n] \setminus J} A_{i,j}$。
+
+由于每个 $i$ 的选择是独立的，事件 $E_J^+$ 包含的映射总数为：
+\[
+|E_J^+| = \prod_{i=1}^{n} \left( \sum_{j \in [n] \setminus J} A_{i,j} \right).
+\]
+
+于是，我们有：
+\[
+\mathbb{P}(E_J^+) = \frac{|E_J^+|}{|T_n|} = \frac{\prod_{i=1}^{n} \left( \sum_{j \in [n] \setminus J} A_{i,j} \right)}{|T_n|}.
+\]
+
+将此代入容斥原理的公式，我们得到了著名的 \textbf{Ryser公式}：
+\[
+\mathbb{P}(M) = \frac{\sum_{J \subseteq [n]} (-1)^{|J|} \prod_{i=1}^{n} \left( \sum_{j \in [n] \setminus J} A_{i,j} \right)}{|T_n|}.
+\]
+
+让我们比较一下两种方法的计算效率：
+\begin{itemize}
+\item 直接法需要计算分子 $\sum_{\sigma \in S_n} \prod_{i=1}^{n} A_{i,\sigma(i)}$ 需要遍历所有 $n!$ 个置换，时间复杂度为 $O(n \cdot n!)$；
+\item 而\textbf{Ryser公式}只需要对 $2^n$ 个子集 $J$ 进行求和。对于每个 $J$，计算内层乘积需要 $O(n^2)$ 时间（因为需要对每个 $i$ 计算一个和）。因此，总的时间复杂度为 $O(n^2 \cdot 2^n)$。虽然 $O(n^2 \cdot 2^n)$ 仍然是指数级的，但它比 $O(n!)$ 要好得多。
+\end{itemize}
+
+更重要的是，在计算机科学的理论框架下，如果假设“指数时间假设”（Exponential Time Hypothesis, ETH）成立——即不存在能在 $2^{O(n)}$ 时间内解决 $n$ 个变量布尔公式的算法——那么Ryser公式在渐进意义上就是计算这个概率的最优算法。
+
+\section{Example: Karger的最小割算法}
+我们来看一个经典的算法问题，求图上的最小割。给定一个连通无向图 $G(V, E)$，我们说一个边集 $C \subseteq E$ 是一个割，当且仅当把 $C$ 从图中删掉之后，得到的图 $G(V, E \setminus C)$ 是不连通的。最小割问题即寻找图上最小的一个割。
+
+学过算法的同学都知道，我们可以用最大流的方法来寻找最小割：固定一个源 $s$ 并枚举所有可能的汇 $t$，对每一个源-汇对 $(s, t)$ 求解最大流，其残量网络（residual network）给出了最小割。使用2022年最快的\href{https://en.wikipedia.org/wiki/Maximum_flow_problem}{\underline{最大流算法}}，我们需要 $nm^{1+o(1)}$ 的时间来寻找这个最小割，其中 $n = |V|$, $m = |E|$。我们来介绍一个随机算法，实现非常简单，并且在有效的优化之后比基于最大流的算法要更快。
+
+我们定义图上的所谓\textbf{缩边（contraction）}的操作。给定边 $e = \{u, v\} \in E$，我们缩掉 $e$ 的操作指的是把 $u$ 和 $v$ 合并成一个点，并且删掉之前所有 $u$ 与 $v$ 之间的边（他们俩与别的点相连的边依然保留）。我们把缩完之后的图记作 $G/e$。如下图所示，我们缩掉了边 $\{1, 2\}$。
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.7\textwidth]{figure/002.png}
+\label{fig:karger}
+\end{figure}
+
+Karger算法非常简单，从 $G$ 出发，每一次随机选择一条边，把它缩掉。重复执行 $n - 2$ 次之后，图中只剩两个点了，然后输出所有剩下的边。
+
+\begin{algorithm}
+\While{G contains more than two vertices}{
+    Choose an edge $e$ uniformly at random\;
+    Contract $e$ in $G$\;
+}
+\Return{remaining edges}\;
+\end{algorithm}
+
+这个算法“有可能”成功的原因也很简单，由于我们关心的是“最小的”割，那么算法的每一步，选到割中的边的概率都不会太大。当然了，要谈论这个概率，我们需要有合适的概率空间。一个自然的样本空间可以是算法执行过程中所有（有序的）删除的边的序列。我们可以在上面定义合适的概率测度。
+
+我们设 $C$ 是一个固定的最小割，并且其大小是 $k$。我们来计算算法最终输出 $C$ 的概率。很容易发现，算法最终输出 $C$，当且仅当算法执行 while 的循环中，每一次都没有选到 $C$ 中的边。因此，我们用 $A_k$ 来表示上面代码里面第 $k$ 次执行完 while 循环之后，还没有删过任何一个 $C$ 边的这个事件。为了分析 $\mathbb{P}(A_k)$，我们对于每一个 $k = 1, 2, \dots, n-2$，定义事件 $B_k$ 为“第 $k$ 次 while 循环选择的不是 $C$ 中边”这一事件。那么显然有 $A_k = \bigcap_{i=1}^k B_i$。因此，由条件概率的链式法则，
+\[
+\mathbb{P}(\text{算法输出 } C) = \mathbb{P}(A_{n-2}) = \prod_{i=1}^{n-2} \mathbb{P}\left( B_i \,\middle|\, \bigcap_{j=1}^{i-1} B_j \right).
+\]
+
+我们希望给上述概率一个下界，即每一轮均有比较大的概率不选到 $C$ 中的边。由于我们每一轮是均匀的选，因此我们只需要证明，对于第 $i$ 轮，在已知 $\bigcap_{j=1}^{i-1} B_j$，即前 $i-1$ 轮均没有选到 $C$ 中边的情况下，图中剩余的边足够多即可。一个最重要的观察是 > 此时，图中每一个顶点的度数均不少于 $k$。
+
+这件事情成立的原因是，如果有一个顶点的度数 $< k$，那么在当前的图中，这个顶点与其邻居相连的边，构成了该图中的一个割。同时，也不难发现，这个割也一定是原图 $G$ 中的一个割（因为收缩这种操作不会破坏它是割的性质）。但这就说明，我们找到了一个大小比 $k$ 更小的割，这与我们假设 $C$ 是最小的割矛盾。
+
+有了这个观察，因为我们知道算法在第 $i-1$ 轮后，还剩余 $n - i + 1$ 个顶点。所以第 $i$ 轮开始的时候，图中至少还有 $\frac{k}{2} \cdot (n - i + 1)$ 条边。于是，我们有
+\[
+\mathbb{P}\left( B_i \,\middle|\, \bigcap_{j=1}^{i-1} B_j \right) \geq 1 - \frac{2k}{k(n - i + 1)} = \frac{n - i - 1}{n - i + 1}.
+\]
+
+这说明，
+\[
+\mathbb{P}(A_{n-2}) \geq \prod_{i=1}^{n-2} \frac{n - i - 1}{n - i + 1} = \frac{2}{n(n - 1)}.
+\]
+
+因此，我们的算法有 $\frac{2}{n(n-1)}$ 的概率能够输出最小割 $C$。我们可以重复这个算法 $N = 50n(n - 1)$ 次，并且输出这 $N$ 次中找到最小的那个割。那么，这个割是最小割的概率至少有
+\[
+1 - \left(1 - \frac{2}{n(n - 1)}\right)^N \geq 1 - e^{-100}.
+\]
+
+最后我们来计算一下算法的复杂性。我们要重复算法 $N = O(n^2)$ 次，每一次要进行 $n - 2$ 次收缩操作。如果我们使用\href{https://en.wikipedia.org/wiki/Disjoint-set_data_structure}{\underline{并查集}}来维护的话，大约需要一共需要 $\tilde{O}(n^2 m)$ 的时间。这个时间是比前文提到的使用最大流的算法要慢的（都怪最大流算法发展的太快了，上一次讲的时候最大流还要 $\tilde{O}(nm)$ 呢），但好处在于实现非常简单。事实上，Karger算法可以进一步改进，使得只需要 $\tilde{O}(n^2)$ 的时间即可。下面我们便来简要说明这一点。
+
+Karger算法的一个主要瓶颈在于，它需要将图一直收缩到只剩两个顶点。如果我们能在图规模还比较大的时候就停止收缩，转而用其他方法解决子问题，是否可以更快呢？答案是肯定的。这个改进的算法被称为 Karger-Stein 算法，其核心思想是：当图被收缩到一定规模时，不再继续收缩，而是递归地应用算法本身来解决子问题。
+
+具体来说，我们定义一个函数 $\texttt{KS}(G)$，其工作流程如下：
+
+\begin{algorithm}[H]
+\SetAlgoLined
+\KwIn{一个无向图 $G = (V, E)$}
+\KwOut{图 $G$ 的最小割}
+\eIf{$|V| \le 6$}{
+    使用暴力枚举法直接求出最小割\;
+}{
+    设 $t = \left\lceil 1 + \frac{|V|}{\sqrt{2}} \right\rceil$\;
+    $G_1 \leftarrow \texttt{contract}(G, t)$ \tcp*{将 $G$ 收缩至 $t$ 个顶点}
+    $G_2 \leftarrow \texttt{contract}(G, t)$ \tcp*{独立地再做一次}
+    \Return{ $\min( \texttt{KS}(G_1), \texttt{KS}(G_2) )$ }\;
+}
+\end{algorithm}
+
+这个算法的巧妙之处在于，它通过递归调用自身，将一个大问题分解为两个规模约为原图 $\frac{1}{\sqrt{2}}$ 倍的子问题。我们需要证明，这个递归算法以较高的概率能返回正确的最小割。
+
+首先，我们分析 $\texttt{contract}(G, t)$ 这一步骤的成功概率。令 $p(G, t)$ 表示在将图 $G$ 收缩至 $t$ 个顶点的过程中，从未碰到最小割 $C$ 中任何边的概率。根据我们在课堂上推导的结论，当 $t = \left\lceil 1 + \frac{n}{\sqrt{2}} \right\rceil$ 时，有：
+\[
+p(G, t) = \mathbb{P}(A_{n-t}) \geq \prod_{i=1}^{n-t} \frac{n-i-1}{n-i+1} = \frac{t(t-1)}{n(n-1)} > \frac{1}{2}.
+\]
+
+也就是说，单次收缩操作有超过一半的概率保留了最小割 $C$。
+
+接下来，我们假设存在一个子程序 $\texttt{KS}$，对于规模为 $t$ 的图 $G'$，它能以概率 $p(t) \geq \frac{c}{\log t}$ 输出正确的最小割（其中 $c$ 是一个常数）。现在，我们从原图 $G$ 出发，独立运行两次 $\texttt{contract}$ 得到 $G_1$ 和 $G_2$，然后分别对它们调用 $\texttt{KS}$。我们关心的是，最终输出的两个结果中，较小的那个是原图最小割的概率。
+
+记事件 $B$ 为“$\texttt{KS}(G_1)$ 和 $\texttt{KS}(G_2)$ 中较小的那个是原图 $G$ 的最小割”。记事件 $B_1$ 为“$\texttt{KS}(G_1)$ 是 $G_1$ 的最小割”，事件 $B_2$ 为“$\texttt{KS}(G_2)$ 是 $G_2$ 的最小割”。
+
+根据全概率公式，我们可以计算：
+\[
+\mathbb{P}(B) = 1 - \mathbb{P}(B^c) = 1 - \left[ \mathbb{P}(A_{n-t}^c) + \mathbb{P}(A_{n-t})\mathbb{P}(B_1^c) \right] \cdot \left[ \mathbb{P}(A_{n-t}^c) + \mathbb{P}(A_{n-t})\mathbb{P}(B_2^c) \right].
+\]
+
+代入已知的概率下界：
+\[
+\mathbb{P}(B) > 1 - \left(1 - \frac{1}{2} \cdot \frac{c}{\log t} \right)^2 \geq \frac{c}{\log t} - \frac{c^2}{4 \log^2 t} = \Omega\left(\frac{1}{\log n}\right).
+\]
+
+这表明，即使在递归调用中，算法依然能保持一个与 $\frac{1}{\log n}$ 同阶的成功概率。
+
+最后，我们分析算法的时间复杂度。设 $T(n)$ 为算法在处理 $n$ 个顶点的图时所需的期望时间。
+
+根据算法结构，我们有：
+\[
+T(n) = 2T\left(\left\lceil 1 + \frac{n}{\sqrt{2}} \right\rceil\right) + O(n^2).
+\]
+
+这是一个标准的分治递推式。我们可以使用主定理（Master Theorem）来求解。这里，子问题规模缩小因子为 $a = 2$，规模缩减比例为 $b = \sqrt{2}$，非递归部分为 $f(n) = O(n^2)$。由于 $\log_b a = \log_{\sqrt{2}} 2 = 2$，且 $f(n) = \Theta(n^{\log_b a})$，根据主定理的情况二，我们得到：
+\[
+T(n) = \Theta(n^2 \log n).
+\]
+
+然而，这还不是最终答案。因为我们只需要以常数概率（例如 $\frac{2}{3}$）成功即可，所以我们可以将整个算法独立重复 $O(\log n)$ 次，取其中最好的结果。这样，总的时间复杂度变为：
+\[
+O(\log n) \cdot T(n) = O(n^2 \log^2 n) = \tilde{O}(n^2).
+\]
+
+\newpage

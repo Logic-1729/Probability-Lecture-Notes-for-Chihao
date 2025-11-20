@@ -1,0 +1,134 @@
+\chapter{离散鞅简介}
+
+最后两次课，我们简单介绍一下离散\href{https://en.wikipedia.org/wiki/Martingale_(probability_theory)}{\underline{鞅论（martingale）}}。这是现代概率论的核心工具，有着丰富的内容和非凡的应用。因为课时原因，我们仅仅能够简单一瞥其芳容。
+
+鞅的概念首先来自公平赌博游戏。假设你在玩一个猜大小的游戏。游戏的每一轮开始前，你可以“押大”或者“押小”。你可以押任意多的赌注，但无论如何，在每一轮中期望收益为零。因此，你的总财产的“期望”是保持不变。用数学的语言来描述这个性质，我们用 $X_t$ 表示第 $t$ 轮的收益，用 $Z_t$ 表示第 $t$ 轮结束之后的总财产。那么对于任何 $T>0$，$Z_T = Z_0+\sum_{t=1}^T X_t$。这个游戏是一个公平游戏指的是
+\[
+    \forall t\ge 0,\;\E{X_{t+1}\mid X_1,\dots,X_t} = 0,
+\]
+
+或者等价的
+\[
+     \forall t\ge 0,\;\E{Z_{t+1} \mid X_1,\dots,X_t} = Z_t.
+\]
+
+我们把这样一个性质抽象出来，便是一般的鞅的定义。注意到我们并不要求 $X_{t+1}$ 与 $X_1,\dots,X_t$ 独立，也就是你的赌注可以与之前的胜负有关，as long as 我们玩的是一个公平游戏就行。
+
+\begin{itemize}
+
+\item 设 $\set{X_n}_{n \geq 0}$ 和 $\set{Z_n}_{n \geq 0}$ 是两个随机变量序列。如果每一个 $Z_n$ 都是可积的，并且它们满足
+    \[
+    \forall n\ge 0,\;\E{Z_{n+1} \mid X_0, X_1, \dots, X_n} = Z_n,
+    \]
+    
+    我们则称 $\set{Z_n}_{n \geq 0}$ 是相对于 $\set{X_n}_{n \geq 0}$ 的一个鞅。
+
+    \item 有的时候，我们也会直接称一个序列 $\set{Z_n}_{n\ge 0}$ 是鞅。这个的意思是 $\set{Z_n}$ 相对于自己是鞅，即
+    \[
+    \forall n\ge 0,\;\E{Z_{n+1} \mid Z_0, Z_1, \dots, Z_n} = Z_n.
+    \]
+\end{itemize}
+
+
+为了简化记号，接下来我们用 $\ol{X}_{i,j}$ 来表示随机变量 $(X_i, X_{i+1}, \dots, X_j)$。
+
+我们注意到，条件期望 $\E{Z_{n+1} \mid \ol{X}_{0,n}}$ 实际上的定义是 $\E{Z_{n+1} \mid \sigma(\ol{X}_{0,n})}$。这便让我们可以用 $\sigma$-代数的语言更一般的定义鞅。
+
+为此我们先引入滤链的概念。考虑概率空间 $(\Omega,\@F,\bb P)$。设 $\set{\@F_n}_{n \geq 0}$ 是一列 $\sigma$-代数。如果满足：
+\[
+\@F_0 \subseteq \@F_1 \subseteq \cdots \subseteq \@F_n \subseteq \@F_{n+1} \subseteq \cdots\subseteq \@F,
+\]
+
+则称 $\set{\@F_n}_{n \geq 0}$ 为一个\href{https://en.wikipedia.org/wiki/Filtration_(probability_theory)}{\underline{滤链（filtration）}}。直观上，它编码了逐渐增多的信息。
+
+\begin{definition}[鞅]
+设 $\set{Z_n}_{n \geq 0}$ 是一列可积的随机变量，并且对于每个 $n \geq 0$，$Z_n$ 是 $\@F_n$-可测的。如果
+\[
+\forall n\ge 0,\;\E{Z_{n+1} \mid \@F_n} = Z_n
+\]
+
+成立，则称 $\set{Z_n}_{n \geq 0}$ 是相对于 $\set{\@F_n}_{n \geq 0}$ 的鞅。
+\end{definition}
+
+这个定义直观上就是在说，基于前 $n$ 轮的信息，$Z_{n+1}$ 的平均值是保持不变的（ $=Z_n$ ）。
+
+在上述定义中，如果把要求改为 $\forall n\ge 0,\;\E{Z_{n+1} \mid \@F_n} \leq Z_n$，则称 $\{Z_n\}_{n \geq 0}$ 是一个上鞅 (super-martingale)。类似地，如果 $\forall n\ge 0, \E{Z_{n+1} \mid \@F_n} \geq Z_n$，则称其为下鞅（sub-martingale）。
+
+我们接下来看一些鞅的例子。
+
+\begin{example}[一维随机游走]
+
+考虑一个在整数集合 $\mathbb{Z}$ 上的随机游走，起点为 $0$。在每一步中，向左和向右移动的概率均为 $\frac{1}{2}$。设第 $n$ 步的移动由一个取值为 $\{-1, +1\}$ 的均匀随机变量 $X_n$ 表示。对于任何 $n\ge 1$，我们令
+\[
+S_n = S_{n-1}+X_n.
+\]
+
+容易可以验证 $\{S_n\}_{n \geq 0}$ 是相对于 $\set{X_n}_{n \geq 1}$ （或 $\{S_n\}_{n \geq 0}$ ）的鞅：
+\[
+\forall n\ge 0,\; \E{S_{n+1} \mid \ol{X}_{0,n}} = \E{S_n + X_{n+1} \mid \ol{X}_{0,n}} = S_n + \E{X_{n+1} \mid \ol{X}_{0,n}} = S_n.
+\]
+
+更一般地，如果 $\E{X_{n+1} \mid \ol{X}_{0,n}} = \mu$，我们定义：
+\[
+\forall n\ge 1, Y_n = X_n - \mu, \; S'_n = S'_{n-1}+Y_n = S_n - n\cdot\mu.
+\]
+
+则 $\set{S'_n}_{n \geq 0}$ 是相对于 $\set{Y_n}_{n \geq 1}$ 的鞅。
+\end{example}
+
+\begin{example}[均值为 $1$ 的乘积]
+
+考虑一个随机变量序列 $\{X_n\}_{n \geq 1}$，其中对于所有 $n \geq 1$，有 $\E{X_n \mid \ol{X}_{1,n-1}} = 1$。令：
+\[
+P_n = \prod_{k=1}^n X_k.
+\]
+
+我们可以验证 $\{P_n\}_{n \geq 0}$ 是相对于 $\{X_n\}_{n \geq 1}$ 的鞅：
+\[
+\E{P_{n+1} \mid \ol{X}_{1,n}} = \E{P_n \cdot X_{n+1} \mid \ol{X}_{1,n}} = P_n \cdot \E{X_{n+1} \mid \ol{X}_{1,n}} = P_n.
+\]
+\end{example}
+\begin{example}[Galton-Watson 过程]
+
+\href{https://en.wikipedia.org/wiki/Galton\%E2\%80\%93Watson_process}{\underline{Galton-Watson过程}}是一个用来建模和研究某一个贵族姓氏灭绝概率的模型。在这个模型里，用 $G_t$ 表示第 $t$ 代的个体数量（为了方便，只考虑男性）。假设所有个体彼此独立的繁殖，并且后代数量同分布。我们用 $X_{t,k}$ 表示第 $t$ 代第 $k$ 个个体的（男性）后代个数。设 $\mu = \E{X_{t,k}}$。于是我们有
+\[
+    G_{t+1} = \sum_{k=1}^{G_t} X_{t,k}.
+\]
+
+所以
+\[
+\E{G_{t+1} \mid G_t} = \E{\sum_{k=1}^{G_t} X_{t,k} \mid G_t} = G_t \cdot \E{X_{t,1}} = \mu\cdot G_t.
+\]
+
+定义 $M_t \defeq \mu^{-t} G_t$，则：
+\[
+\E{M_{t+1} \mid G_t} = \mu^{-(t+1)} \E{G_{t+1} \mid G_t} = \mu^{-t} G_t = M_t.
+\]
+
+因此，$\{M_t\}_{t \geq 1}$ 是相对于 $\{G_t\}_{t \geq 1}$ 的鞅。
+\end{example}
+\begin{example}[波利亚的罐子（Pólya’s Urn）]
+
+假设一个罐子中有若干白球和黑球，除了颜色外，所有球完全相同。考虑以下随机过程：每轮随机取一个球，记录其颜色，然后将该球放回，并添加一个相同颜色的球到罐中。假设初始时罐中只有一个白球和一个黑球，为了方便，我们让轮次从 $2$ 开始计数，这样第 $n$ 轮后罐中总共正好有 $n$ 个球。令 $X_n$ 表示第 $n$ 轮后黑球的数量，$Z_n = \frac{X_n}{n}$ 表示第 $n$ 轮后黑球所占的比例。显然有 $Z_2 = \frac{1}{2}$。对于所有 $n\ge 2$，
+\[
+\E{Z_{n+1} \mid \ol{X}_{2,n}} = \frac{1}{n+1} \E{X_{n+1} \mid \ol{X}_{2,n}} = \frac{1}{n+1} \left(Z_n (X_n + 1) + (1 - Z_n) X_n\right) = Z_n.
+\]
+
+因此，$\{Z_n\}_{n \geq 2}$ 是相对于 $\{X_n\}_{n \geq 2}$ 的鞅。
+\end{example}
+\begin{example}[Doob 鞅]
+
+有一类一般的构造鞅的方法叫做 \href{https://en.wikipedia.org/wiki/Doob_martingale}{\underline{Doob 鞅}}。它在随机过程的研究中有非常重要的应用，我们这门课并不会仔细讨论，但我觉得大家在未来的某一天会遇到。
+
+给定一个 Borel 函数 $f\colon \bb R^n\to \bb R$，以及 $n$ 个随机变量 $X_1,\dots,X_n$ （ $n\in \bb N\cup\set{\infty}$，但我们接下来为了方便就假设 $n$ 是自然数）。对于 $k=0,1\dots, n$，定义 $Z_k = \E{f\mid \ol{X}_{1,k}}$。对于 $k>n$，定义 $Z_k = Z_n$。那么 $\set{Z_k}_{k\ge 0}$ 是相对于 $\set{X_k}_{k\ge 1}$ 的鞅，被称为 Doob 鞅。证明很简单，我们只需要对 $k=0,1,2,\dots,n-1$ 验证定义即可。使用条件期望的 Tower Rule：$\forall k=0,1,\dots,n-1$，
+\[
+\begin{aligned}
+\E{Z_{k+1}\mid \ol{X}_{1,k}} 
+&= \E{\E{f(X_1,\dots,X_n)\mid \ol{X}_{1,k+1}}\mid \ol{X}_{1,k}}\\
+&= \E{f(X_1,\dots,X_n)\mid \ol{X}_{1,k}}\\
+&= Z_k.
+\end{aligned}
+\]
+
+这个鞅的定义非常一般且抽象。我们来看一个具体例子。假设 $X_1,\dots,X_n$ 分别对应了一个图片的每一个像素点的颜色。$(X_1,\dots,X_n)\sim\mu$ 是一个随机的图片。而 $f(x_1,\dots,x_n) = \bb I_{[(x_1,\dots,x_n)对应的图片是一只猫]}$。那么 $Z_0 = \E{f} = \Pr{图片是一只猫}$ 指的是我们完全没有看到这张图的时候该图片是一只猫的概率。而对于 $1\le k\le n$，$Z_k = \Pr{图片是一只猫\mid (X_1,\dots,X_k)}$ 指的是我们看到了前 $k$ 个像素之后，我们对于这个图片是不是猫的猜测概率。特别的，当 $k=n$ 的时候，我们已经不需要猜测，因为 $Z_n = f(X_1,\dots,X_n)$ 是 $\sigma(X_1,\dots,X_n)$-可测的，它的值要么是 $1$ 要么是 $0$，取决于给定的 $(X_1,\dots,X_n)$ 是不是一只猫。
+\end{example}

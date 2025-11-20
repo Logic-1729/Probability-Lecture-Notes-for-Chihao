@@ -1,0 +1,182 @@
+\chapter{离散随机变量与期望}
+
+\section{离散概率空间上的随机变量}
+
+在做随机试验的时候，我们经常会关注样本点的某些性质。比如，假设我们在班上随机选一个同学，我们会想知道该同学的身高。或者，我们随机投掷两个骰子，我们想知道两个骰子的点数和。这儿，同学的身高和骰子的点数和均是定义在样本空间 $\Omega$ 上的函数，这也是我们所谓随机变量的定义。
+
+我们固定一个概率空间 $(\Omega, \mathscr{F}, \mathbb{P})$。我们今天所有的讨论均假设 $\Omega$ 是离散的，即它是有限的或者可数的，并且 $\mathscr{F} = 2^\Omega$。这么做的目的是让大家尽快的接触到概率论里面的一些核心概念并建立相应的直观。事实上，本课程的主要目的之一便是在一般的样本空间上定义相关的概念，这也是我们之后会讨论的话题。
+
+一个（实值）随机变量 $X$ 指的是从 $\Omega$ 到 $\mathbb{R}$ 的函数，即
+\[
+X: \omega \in \Omega \mapsto X(\omega) \in \mathbb{R}.
+\]
+
+所以实际上，随机变量它既不随机，也不是变量，它仅仅是一个从样本集到实数集的函数而已。对于一般的样本空间，我们会要求 $X$ 是可测（\href{https://en.wikipedia.org/wiki/Measurable_function}{\underline{measurable}}）的。但我们这儿取的 $\mathscr{F} = 2^\Omega$，因此，任意一个函数均是随机变量。
+
+比如说，在从班上随机选人的例子里，概率空间 $\Omega$ 是班上所有同学的集合，$\mathscr{F} = 2^\Omega$，而 $\mathbb{P}$ 是均匀测度。我们定义 $X: \omega \in \Omega \mapsto \omega\text{的身高},$ 这便是一个随机变量。
+
+我们经常会关心一类特殊的随机变量，即所谓的指示变量。对于事件 $A \in \mathscr{F}$，我们定义
+\[
+\mathbb{I}_A: \omega \in \Omega \mapsto
+\begin{cases}
+1, & \text{if } \omega \in A, \\
+0, & \text{if } \omega \notin A.
+\end{cases}
+\]
+
+换句话说，$\mathbb{I}_A$ 用来指示样本点 $\omega \in \Omega$ 是否在集合 $A$ 中。
+
+\section{一些新的记号}
+
+我们通常会关心关于随机变量的一些问题，比如“随机选一个同学，身高不超过170的概率是多大”。我们因此需要引入一些新的记号，比如对于 $a \in \mathbb{R}$，定义记号形如 $\mathbb{P}[X \leq a]$。事实上，我们有
+\[
+\mathbb{P}[X \leq a] := \mathbb{P}[\{X \leq a\}], \quad \text{其中 } \{X \leq a\} := \{\omega \in \Omega : X(\omega) \leq a\}.
+\]
+
+有了这个定义，我们便可以用 $\mathbb{P}[X \leq 170]$ 来表示随机选一个同学，身高不超过 170 的概率了。注意到，这儿的 $\mathbb{P}$ 就是概率空间里面的 $\mathbb{P}$，它的输入是 $\{X \leq a\}$，这是一个 $\mathscr{F}$ 中的集合。因此，这是良定义的。
+
+类似的，对于任何一个集合 $A \in \mathscr{B}$，我们用 $\{X \in A\}$ 表示 $\{\omega \in \Omega : X(\omega) \in A\}$。因此，可以定义
+\[
+\mathbb{P}[X \in A] := \mathbb{P}[\{X \in A\}].
+\]
+
+我们同样可以类似的定义 $\mathbb{P}[X \geq a]$, $\mathbb{P}[X = a]$ 等直观的记号，这儿就不再赘述了。
+
+此外，我们有时候也用 $X^{-1}(A)$ 来表示 $\{X \in A\}$，即集合 $A$ 在函数 $X$ 下 $\Omega$ 中的原像。
+
+\section{随机变量的分布}
+
+我个人认为，关于随机变量的各种术语以及黑话里面，“分布”这个词经常被误用或者滥用，我们在这儿严格的把它定义清楚。考虑一个定义在离散概率空间 $(\Omega, \mathscr{F} = 2^\Omega, \mathbb{P})$ 上的随机变量 $X: \Omega \to \mathbb{R}$。设 $(\mathbb{R}, \mathscr{B})$ 是实数及其上面的 Borel 集的集合。我们可以定义出一个集合函数 $\mu_X: \mathscr{B} \to \mathbb{R}$，满足
+\[
+\forall A \in \mathscr{B}, \quad \mu_X(A) = \mathbb{P}[X \in A].
+\]
+
+那么，$\mu_X$ 被称为 $X$ 的分布（distribution），或者是 $X$ 的律（law）。我们接着验证，$\mu_X$ 是一个概率测度。
+
+\begin{theorem}
+$(\mathbb{R}, \mathscr{B}, \mu_X)$ 是一个概率空间。
+\end{theorem}
+
+\begin{proof}
+我们只需要使用概率空间的定义进行验证即可。
+\begin{enumerate}
+
+\item 首先 $\mu(\varnothing) = \mathbb{P}[X^{-1}(\varnothing)] = \mathbb{P}[\varnothing] = 0$。
+    \item 其次，对于任何 $A \in \mathscr{B}$，$\mu(A^c) = \mathbb{P}[X^{-1}(A^c)] = \mathbb{P}[\Omega \setminus X^{-1}(A)] = 1 - \mathbb{P}[X^{-1}(A)] = 1 - \mu(A)$。
+    \item 设不相交的集合 $A_1, A_2, \dots, A_n, \cdots \in \mathscr{B}$，它们的原像 $X^{-1}(A_1), X^{-1}(A_2), \dots, X^{-1}(A_n), \dots$ 也是不相交的。因此
+    \[
+    \mu\left( \bigcup_{n \geq 1} A_n \right) = \mathbb{P}\left[ X^{-1}\left( \bigcup_{n \geq 1} A_n \right) \right] = \mathbb{P}\left[ \bigcup_{n \geq 1} X^{-1}(A_n) \right] = \sum_{n \geq 1} \mathbb{P}[X^{-1}(A_n)] = \sum_{n \geq 1} \mu(A_n).
+    \]
+\end{enumerate}
+\end{proof}
+
+在我们讨论的场合里，由于 $X$ 是定义在可数集上的函数，它的值域最多包含可数个点。我们用 $\mathsf{Im}(X) = \{x_1, x_2, \dots\}$ 来表示。我们也因此称 $X$ 为 \textit{离散随机变量} 。显然，$X$ 的分布由 $X$ 取 $\mathsf{Im}(X)$ 中值的概率唯一确定，即
+\[
+\forall A \in \mathscr{B}, \quad \mu(A) = \sum_{a \in \mathsf{Im}(X) \cap A} \mathbb{P}[X = a].
+\]
+
+因此，我们可以定义一个函数 $p_X: \mathbb{R} \to [0, 1]$，满足对于任何 $x \in \mathsf{Im}(X)$，$p_X(x) = \mathbb{P}[X = x]$，且在 $\mathbb{R} \setminus \mathsf{Im}(X)$ 上的定义都是零。这个被称之为概率质量函数（\href{https://en.wikipedia.org/wiki/Probability_mass_function}{\underline{probability mass function}}, pmf）。概率质量函数唯一确定了随机变量的分布 $\mu_X$。
+
+\section{分布的例子}
+
+我们来看几个分布的例子。
+
+我们考察扔一个（不一定均匀）硬币的例子。对于给定的 $p \in [0, 1]$，定义样本空间 $\Omega = \{H, T\}$，$\mathscr{F} = 2^\Omega$，满足 $\mathbb{P}(\{H\}) = p$，$\mathbb{P}(\{T\}) = 1 - p$。我们考虑随机变量 $X: \Omega \to \mathbb{R}$ 满足 $X(H) = 1$，$X(T) = 0$。换句话说，随机变量把 $H$（表示正面）映射到了 $1$，把 $T$（表示反面）映射到了 $0$。
+
+我们来看 $X$ 定义出来的分布 $\mu_X$。它的概率质量函数显然满足 $p_X(1) = p$，$p_X(0) = 1 - p$。我们把这样一个分布称之为参数为 $p$ 的伯努利分布（\href{https://en.wikipedia.org/wiki/Bernoulli_distribution}{\underline{Bernoulli distribution}}），记作 $\mathsf{Ber}(p)$。
+
+我们考虑另外一个随机试验，即扔 $n \geq 1$ 个硬币，每个硬币都是以 $p$ 的概率出现正面。这个随机试验对应的概率空间如下：$\Omega = \{H, T\}^n$ 为所有长度为 $n$ 的 $HT$ 串的集合；$\mathscr{F} = 2^\Omega$ 并且对于每一个 $s \in \Omega$，
+\[
+\mathbb{P}(s) = p^{\text{$s$ 中 $H$ 的个数}} (1 - p)^{\text{$s$ 中 $T$ 的个数}}.
+\]
+
+我们现在定义一个随机变量 $Y$，用来表示做了一次这样的随机试验后，得到了多少个正面朝上的硬币。即
+\[
+Y: s \in \Omega \mapsto \text{$s$ 中 $H$ 的个数}.
+\]
+
+我们来考虑 $Y$ 的分布 $\mu_Y$。显然 $\mathsf{Im}(Y) = \{0, 1, \dots, n\}$。由于 $Y$ 也是离散随机变量，$\mu_Y$ 由 pmf $p_Y$ 决定。容易计算得知
+\[
+\forall k = 0, 1, \dots, n, \quad p_Y(k) = \mathbb{P}[Y = k] = \binom{n}{k} p^k (1 - p)^{n - k}.
+\]
+
+我们把这样一个分布称为参数为 $n$ 和 $p$ 的二项式分布（\href{https://en.wikipedia.org/wiki/Binomial_distribution}{\underline{Binomial distribution}}），记作 $\mathsf{Bin}(n, p)$。
+
+\section{“分布”一词容易混淆的地方}
+
+我们前文出现“分布”这个词的时候，实际上指了两件事：
+
+\begin{itemize}
+\item 给定一个具体的概率空间，一个定义在这个概率空间上的随机变量 $X$，该随机变量诱导出的分布 $\mu_X$；
+    \item 一个具体的概率质量函数定义出来的分布，比如 $\mathsf{Ber}(p)$ 或者 $\mathsf{Bin}(n, p)$。
+\end{itemize}
+
+在教科书或者文献中，我们经常会看到形如“设 $X \sim \mathsf{Ber}(p)$”，或者等价的，“设 $X$ 为满足参数为 $p$ 的伯努利分布的随机变量”。这句话往往让人费解。按照定义 $X$ 应该是一个从概率空间到实数的一个函数，如果轻易的就这么设出来了，那概率空间是啥？
+
+对于这个问题，我是这么理解的。比如说，我们设 $Y \sim \mathsf{Bin}(n, p)$，实际上，我们理解成构造一个随机变量 $Y$，使得其诱导出来的分布 $\mu_Y$ 为 $\mathsf{Bin}(n, p)$。对于定义 $Y$ 的方式，包括函数的形式以及对应的概率空间，它的选择并不是唯一的。比如说，我们可以选择上述引入二项式分布时候介绍的扔 $n$ 个硬币所定义出来的概率空间和 $Y$，也可以选择下面这个看起来有点“平凡”的概率空间：
+\[
+\Omega' = \{0, 1, \dots, n\}, \quad \mathscr{F}' = 2^{\Omega'},
+\]
+
+\[
+\forall k \in \Omega', \quad \mathbb{P}'(\{k\}) = \binom{n}{k} p^k (1 - p)^{n - k}.
+\]
+
+然后，我们定义随机变量
+\[
+\forall k \in \Omega', \quad Y': k \mapsto k.
+\]
+
+显然，$Y'$ 的分布也是 $\mathsf{Bin}(n, p)$。
+
+那么问题来了，我们究竟用哪个？这取决于应用。在很多应用中，我们可能只关心 pmf 的性质，那选择怎样定义的 $Y$ 其实无所谓。并且，容易想到，我们定义 $Y'$ 的方式，可以推广到任何分布上，但这个定义丧失了分布本身的“结构”，或者说“组合含义”。在有一些应用中，比如我们今天最后会讲到的使用期望的线性性来计算二项式分布的期望的时候，选择 $\Omega = \{H, T\}^n$ 这样有着更加丰富组合结构的概率空间，会更加方便。
+
+\section{随机变量的期望}
+
+随机变量的一个重要的“数字特征”，便是它的期望。它可以想象成当我们做随机试验的时候，$X(\omega)$ 的平均值。它的定义，并不是特别平凡的。我们今天先从定义在离散概率空间上的随机变量开始。
+
+假设 $X$ 是定义在离散概率空间 $(\Omega, \mathscr{F}, \mathbb{P})$ 上的一个随机变量，它的值域 $\mathsf{Im}(X) = \{x_1, \dots, x_n, \dots\}$。我们尝试把它的期望定义为 $\sum_{x \in \mathsf{Im}(X)} x \cdot \mathbb{P}[X = x]$。但这个求和可能是个无穷级数，因此，我们要对其行为进行控制。因此，要进行更加细致的讨论。
+
+我们首先设 $\{\Lambda_i\}_{i \geq 1}$ 是对样本空间的一个划分，并且对于任何 $i \geq 1$，在 $\Lambda_i$ 上 $X$ 是常数，即 $\forall \omega,\omega'\in \Lambda_i, X(\omega) = X(\omega')$，$\forall \omega \in \Lambda_i$。这样的一个划分肯定是存在的，比如我们可以设 $\Lambda_i = X^{-1}(x_i)$。但是，我们这儿给出的划分定义更加一般，因为我们允许对于 $i \neq j,\omega\in\Lambda_i,\omega'\in \Lambda_j$，有 $X(\omega)=X(\omega')$。我们设对于 $\omega \in \Lambda_i$，$X(\omega) = z_i$（刚才说了，我们允许 $i \neq j, z_i = z_j$）。
+
+我们称随机变量 $X$ 是可积（integrable）的，当且仅当级数 $\sum_{i=1}^\infty z_i \cdot \mathbb{P}[\Lambda_i]$ 是绝对收敛（\href{https://en.wikipedia.org/wiki/Absolute_convergence}{\underline{converge absolutely}}）的，或者等价地，
+\[
+\sum_{i=1}^\infty |z_i| \cdot \mathbb{P}[\Lambda_i] < \infty.
+\]
+
+如果一个随机变量 $X$ 是可积的，我们就把它的期望 $\mathbb{E}[X]$ 定义为
+\[
+\mathbb{E}[X] = \sum_{i=1}^\infty z_i \cdot \mathbb{P}[\Lambda_i].
+\]
+
+关于这个定义，小朋友一定有很多问号，包括但可能不限于：
+\begin{enumerate}
+\item 这个定义依赖于一个不唯一的分划，它是良定义的吗？
+    \item 为什么要求级数收敛？
+    \item 为什么要求级数绝对收敛？
+\end{enumerate}
+
+我们先回答后两个问题。首先，根据我们的定义，一定有 $\mathbb{E}[X] < \infty$。实际上，这个要求是为了我们目前理论开展的方便。我们在不久的未来就会把期望拓展到无穷的情况。所以，我们暂时只允许期望取有限值。其次，为什么要绝对收敛。原因很简单，如果一个级数只是条件收敛，那么变换求和的顺序就可能得到不同的极限值，我们不希望一个随机变量的“平均值”会随着求和的顺序不同而不一样。
+
+回到第一个问题，这个定义是良定义的吗。事实上，我们可以把所有的 $\{\Lambda_i\}_{i\geq 1}$ 进行分类，如果 $z_i = z_j$，我们就认为其为一类。我们在计算级数 $\sum_{i=1}^\infty z_i \cdot \mathbb{P}[\Lambda_i]$ 的时候，可以先按照 $z_i$ 所有可能的取值进行求和，这对应于对 $x_i$ 进行求和，再对于同一类里面的 $\Lambda_j$ 进行求和，他们一起构成了 $X^{-1}(x_i)$：
+\[
+\sum_{i=1}^\infty z_i \cdot \mathbb{P}[\Lambda_i] = \sum_{i=1}^\infty x_i \sum_{j \geq 1 : z_j = x_i} \mathbb{P}[\Lambda_j] = \sum_{i=1}^\infty x_i \cdot \mathbb{P}[X = x_i].
+\]
+
+这就说明了，这个求和与我们选择的分划无关（只需要满足在每一个 $\Lambda_i$ 内 $X$ 是常数）。注意到，所有这些求和可以随意交换的性质，是该级数绝对收敛所保证的。
+
+我们使用这个分划的语言，而不是直接用 $\sum_{i=1}^\infty x_i \cdot \mathbb{P}[X = x_i]$ 来定义期望，是为了某些证明的方便。
+
+比如说，我们假设 $\Omega = \{\omega_1, \omega_2, \dots, \omega_n, \dots\}$，我们可以令 $\Lambda_i = \{\omega_i\}$，则我们得到期望的另一个表达式
+\[
+\mathbb{E}[X] = \sum_{\omega \in \Omega} X(\omega) \cdot \mathbb{P}[\{\omega\}].
+\]
+
+这个和 $\sum_{i=1}^\infty x_i \cdot \mathbb{P}[X = x_i]$ 相比，我们分别对函数 $X$ 的“左边”和“右边”加权求和，并得到了一样的值。这种 double counting 的技巧，在处理某些问题的时候会非常有用。
+
+我们来计算一下二项式分布 $Y \sim \mathsf{Bin}(n, p)$ 的期望。根据定义，我们有
+\[
+\mathbb{E}[Y] = \sum_{k=0}^n k \cdot \binom{n}{k} p^k (1 - p)^{n - k} = np \sum_{k=0}^{n-1} \binom{n - 1}{k} p^k (1 - p)^{n - 1 - k} = np.
+\]
+
+\newpage

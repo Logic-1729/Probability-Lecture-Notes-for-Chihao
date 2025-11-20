@@ -1,0 +1,114 @@
+\chapter{依分布收敛，Lindeberg 证明}
+
+我们今天给出中心极限定理的的第一个证明。在开始之前，我们先要介绍依分布收敛的一个等价刻画。回忆一下，我们说一族向量 $X_1,X_2,\dots$ 依分布收敛到 $X$，记作 $X_n\overset{D}{\to} X$，当且仅当在 $F(x)$ 连续的那些点 $x$ 上，
+\[
+    \lim_{n\to\infty} F_n(x) = F(x),
+\]
+
+其中 $F(x)$ 是 $X$ 的分布函数，$F_n$ 是 $X_n$ 的分布函数。
+
+\begin{proposition}
+以下二者等价
+\begin{enumerate}
+    \item 对于每一个只在有界闭集上取非零值的连续函数 $h$，有 $\lim_{n\to\infty} \E{h(X_n)} = \E{h(X)}$。
+    \item $X_n\overset{D}{\to} X$。
+\end{enumerate}
+\end{proposition}
+
+(2)$\implies$(1) 是比较显然的。假设 $h$ 的只在 $[a,b]$ 上取非零值。根据定义，我们对 $f$ 的勒贝格积分可以写成黎曼和
+\[
+    \E{h(X_n)} = \int_{\bb R} h(x)\d F_n(x) = \lim_{m\to\infty}\sum_{k=1}^m h(x_{k-1}^{[m]})\cdot \tp{F_n(x_k^{[m]})-F_n(x_{k-1}^{[m]})}.
+\]
+
+这儿对于每一个 $m\in \bb N$，$x_k^{[m]} = a+\tp{b-a}\cdot \frac{k}{m}$ 是对 $[a,b]$ 间距为 $\frac{b-a}{m}$ 的划分点。我们总是可以假设 $x^{[m]}_k$ 是那些 $F(x)$ 的连续点（why？），于是，当 $n\to\infty$ 的时候，每一个 $F_n(x_k^{[m]})$ 均会收敛到 $F(x_k^{[m]})$。
+
+要说明 (1)$\implies$(2)，我们首先构造一族“测试函数” $\set{h_a}_{a\in\bb R}$ 满足如果 $F(x)$ 在 $x=a$ 连续，那么 $\lim_{n\to\infty}\E{h_a(X_n)} = \E{h_a(X)}\implies \lim_{n\to\infty} F_n(a) = F(a)$。我们接着说明可以魔改 $\set{h_a}$ 们得到一族只在有界闭集上取非零值的连续函数作为测试函数们。
+
+显然，我们只需要让 $h_a(x) = \bb I[x\le a]$ 即可。这样的 $h_a(x)$ 明显不连续，但由于 $x=a$ 是 $F(x)$ 的连续点，我们对于每一个足够小的 $\eps>0$，我们可以定义 $h_{a,\eps}(x)$ 为在 $(\infty,a-\eps)$ 上值为 $1$，在 $[a,\infty)$ 上值为 $0$，并在 $[a-\eps,a)$ 上连续的函数即可。当然，这样的 $h_{a,\eps}$ 们的定义域还不是有界闭集，但是对于给定的 $X_n$ 以及任何 $\delta>0$，我们显然可以把它限制到一个有界闭集上得到一个函数 $h'_{a,\eps}$，使得  $\abs{\E{h_{a,\eps}(X_n)} - \E{h'_{a,\eps}(X_n)}}<\delta$ （why？）。
+
+事实上，我们可以把上述命题中 (1) 的“连续函数”加强成“光滑函数”（任意阶导数存在），这只需要在我们刚才的构造中，用“光滑”的方式定义 $h_{a,\eps}$ 在 $[a-\eps,a)$ 上的取值即可。
+
+\section{Lindeberg 对于中心极限定理的证明}
+
+我们现在给出中心极限定理的第一个完整证明。我们把定理复述如下：
+
+\begin{theorem}[中心极限定理]
+如果独立同分布的随机变量 $X_1,X_2,\dots$ 满足 $\E{X_1}=\mu, \Var{X_1}=\sigma^2$ 均为有限的，那么
+\[
+\frac{S_n-n\mu}{\sigma\sqrt{n}}\overset{D}{\to} Y\sim\+N(0,1).
+\]
+
+\end{theorem}
+
+我们不失一般性的假设 $\mu=0$ 并且 $\sigma=1$。根据上一节对于依分布收敛的刻画，我们只需要验证对于任意定义在有界闭集上的光滑函数 $h$ 都有
+\[
+    \E{h\tp{\frac{\sum_{i=1}^n X_i}{\sqrt{n}}}} \overset{n\to\infty}{\to} \E{h(\xi)},\quad \xi\sim\+N(0,1).
+\]
+
+Lindeberg 的方法说的是，假设中心极限定理对一组特殊的随机变量 $Y_1,Y_2,\dots$ 正确，那么我们只需要证明
+\[
+    \E{h\tp{\frac{\sum_{i=1}^n X_i}{\sqrt{n}}}}-\E{h\tp{\frac{\sum_{i=1}^n Y_i}{\sqrt{n}}}} \overset{n\to\infty}{\to} 0
+\]
+
+即可。显然这样的 $Y_i$ 是存在的，比如我们让每一个 $Y_i$ 是独立的 $\+N(0,1)$...
+
+我们首先假设对于每一个 $i$，$\E{\abs{X_i}^3}<\infty$。之后我们会说明如何去掉这个条件。
+
+我们要对每一个 $n\ge 1$，直接比较 $h\tp{\frac{\sum_{i=1}^n X_i}{\sqrt{n}}}$ 和 $h\tp{\frac{\sum_{i=1}^n Y_i}{\sqrt{n}}}$。我们可以把二者之差写成 telescopically 和：
+\[
+\begin{aligned}
+&h\tp{\frac{\sum_{i=1}^n X_i}{\sqrt{n}}}-h\tp{\frac{\sum_{i=1}^n Y_i}{\sqrt{n}}} \\
+&= \sum_{k=1}^nh\tp{\frac{Y_1+\dots+Y_{k-1}+X_k+\cdots+X_n}{\sqrt{n}}}-h\tp{\frac{Y_1+\dots+Y_{k}+X_{k+1}+\cdots+X_n}{\sqrt{n}}}.
+\end{aligned}
+\]
+
+因此，对于每一个 $k\in [n]$，我们只需要计算 $h\tp{\frac{Y_1+\dots+Y_{k-1}+X_k+\cdots+X_n}{\sqrt{n}}}-h\tp{\frac{Y_1+\dots+Y_{k}+X_{k+1}+\cdots+X_n}{\sqrt{n}}}$，这两个函数的输入求和式只在第 $k$ 项不一样。我们可以不失一般性的假设 $k=n$，并把那些相同的求和项记作 $Z$，然后计算
+\[
+    \E{h\tp{Z+\frac{X_n}{\sqrt{n}}}} - \E{h\tp{Z+\frac{Y_n}{\sqrt{n}}}}.
+\]
+
+值得注意的是，由于 telescopic 和有 $n$ 项，我们需要把上式估计得到的误差乘上 $n$ 才是 $\E{h\tp{\frac{\sum_{i=1}^n X_i}{\sqrt{n}}}}-\E{h\tp{\frac{\sum_{i=1}^n Y_i}{\sqrt{n}}}}$ 的误差。 
+
+使用泰勒级数，我们可以得到
+\[
+\E{h\tp{Z+\frac{X_n}{\sqrt{n}}}} = \E{h\tp{Z}} + \frac{1}{\sqrt{n}}\E{h'(Z) X_n} + \frac{1}{2n}\E{h''(Z)X_n^2}+\+O\tp{\frac{1}{n^{3/2}}\E{\abs{X_n}^3}}.
+\]
+
+我们注意到 $\E{\abs{X_n}^3}<\infty$，并且 $\E{h\tp{Z+\frac{Y_n}{\sqrt{n}}}}$ 做同样泰勒展开后前三项是一样的。因此，
+\[
+\E{h\tp{Z+\frac{X_n}{\sqrt{n}}}} - \E{h\tp{Z+\frac{Y_n}{\sqrt{n}}}} = \+O\tp{\frac{1}{n^{3/2}}}.
+\]
+
+这说明
+\[
+\E{h\tp{\frac{\sum_{i=1}^n X_i}{\sqrt{n}}}}-\E{h\tp{\frac{\sum_{i=1}^n Y_i}{\sqrt{n}}}} = \+O\tp{\frac{1}{n^{1/2}}}.
+\]
+
+\subsection{使用截断法去除三阶矩要求}
+
+在上面的分析中，我们看到由于需要把最终的误差控制到 $o(1)$，需要把泰勒级数计算到第三项。而也因此需要 $\E{\abs{X_i}^3}<\infty$ 的条件。如何去掉这个条件呢？我们以前证明大数定律的时候使用过的截断技巧特别擅长处理这种需要随机变量的矩的上界的问题。我们这里再次施展一发。
+
+固定任意 $\eps>0$。对于每一个 $i\ge 1$，我们设 $X_i = X_i^{\le} + X_i^{>}$，其中
+\[
+\begin{aligned}
+    X_{i}^{\le} &\defeq X_i\cdot \bb I[\abs{X_i}\le \eps\sqrt{n}] - \mu_n;\\
+    X_{i}^{>} &\defeq X_i\cdot\bb I[\abs{X_i}>\eps\sqrt{n}]+\mu_n,
+\end{aligned}
+\]
+
+其中 $\mu_n \defeq \E{X_i\cdot \bb I[\abs{X_i}\le \eps\sqrt{n}]}$。换句话说，我们用阈值 $\eps\sqrt{n}$ 截断 $X_i$。但为了让 $X_{i}^{\le}$ 的期望为零（以便无缝使用我们刚证明的三阶矩有上界时候的结论），我们把它平移一个期望 $\mu_n$。使用 DCT，我们可以得到 $\mu_n = \E{X_1\cdot \bb I[\abs{X_1}\le \eps\sqrt{n}]}\overset{n\to\infty}{\to} 0$。和以往使用截断法的原因类似，我们这样操作的目标是保证 $X_n^{\le}$ 的三阶矩是有界的，而 $X_n^{>0}$ 以高概率为零。
+
+我们首先注意到对于任意 $i\ge 1$，$\E{\abs{X_i^{\le}}^3}\le \E{\eps\sqrt{n}\abs{X_i}^2} = \eps\sqrt{n}$。于是我们重复上面的计算，可以得到
+\[
+    \E{h\tp{\frac{\sum_{i=1}^n X_i^{\le }}{\sqrt{n}}}} - \E{h\tp{\frac{\sum_{i=1}^n Y_i}{\sqrt{n}}}} = \+O\tp{\frac{1}{n^{1/2}}\E{\abs{X_1^\le}^3}} = \+O(\eps).
+\]
+
+剩余的项是
+\[
+    \E{\abs{\frac{\sum_{i=1}^n X_i^>}{\sqrt{n}}}}\overset{\mbox{(Cauchy-Schwarz)}}{\le} \sqrt{\E{\tp{\frac{\sum_{i=1}^n X_i^>}{\sqrt{n}}}^2}} \to \sqrt{\Var{X_1^>}}.
+\]
+
+根据 DCT，我们又知道
+\[
+\Var{X_1^>} = \E{X_1^2\bb I[\abs{X_1}>\eps\sqrt{n}]} - \E{X_1^>}^2 \overset{n\to\infty}{\to} 0.
+\]

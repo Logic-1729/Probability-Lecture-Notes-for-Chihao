@@ -1,0 +1,279 @@
+\chapter{一般概率空间上的随机变量}
+
+在有了上节课的基础之后，我们终于可以来定义一般概率空间上的随机变量，以及研究它的一些性质。我们会发现，在一般的概率空间上，许多概念与离散的概率空间会有一些不一样，主要的原因在于一般的概率空间的结构内容更丰富了，以致于不少我们直观上认为会正确的东西不再一定正确。但在看到这些性质的时候，请务必回忆一下在离散场合对应的是什么，如果有所不同，想想为什么。
+
+\section{随机变量与可测函数}
+
+给定一个样本集 $\Omega$ 以及定义在上面的 $\sigma$-代数 $\mathscr{F} \subseteq 2^\Omega$。我们称 $(\Omega, \mathscr{F})$ 为一个可测空间。我们假设上面有一个概率测度 $\mathbb{P}$，因此，$(\Omega, \mathscr{F}, \mathbb{P})$ 是一个概率空间。给定一个（实值）函数 $f: \Omega \to \mathbb{R}$，我们说 $f$ 是一个\textbf{可测函数}，当且仅当对于任何 Borel 集 $A \in \mathscr{B}$，$
+f^{-1}(A) := \{ \omega \in \Omega : f(\omega) \in A \} \in \mathscr{F}.$ 所谓随机变量，实际上就是定义在 $\Omega$ 上的可测函数。不过惯例上，我们会用大写的字母 $X, Y, \dots$ 来表示随机变量。
+
+回忆在离散概率空间的时候，我们把任何 $\Omega \to \mathbb{R}$ 上的函数都称为随机变量，这是因为在那个时候，我们总是把 $\mathscr{F}$ 取成全集 $2^\Omega$，因此任何函数都是可测的。可测的要求是非常自然的。因为我们在研究概率的时候，我们需要对于 Borel 集 $A$，讨论 $\mathbb{P}[X \in A]$ 的概率。由于 $\mathbb{P}$ 是定义在 $\mathscr{F}$ 上的函数，我们必须要要求 $[X \in A] \in \mathscr{F}$（我们有时候用 $X^{-1}(A)$ 来表示 $[X \in A]$）。
+
+\subsection{验证随机变量}
+
+我们对于可测性的要求使得任意给一个函数 $X: \Omega \to \mathbb{R}$，其是否是随机变量是需要验证的。实际上，我们并不需要对于所有的 Borel 集 $A \in \mathscr{B}$，来验证 $[X \in A] \in \mathscr{F}$。我们只需考虑那些形如 $(-\infty, r]$，其中 $r$ 是有理数的集合即可。
+
+\begin{proposition}
+$X$ 是随机变量当且仅当对于每一个有理数 $r \in \mathbb{Q}$，$[X \leq r] \in \mathscr{F}$。
+\end{proposition}
+
+\begin{proof}
+
+“仅当”是显然的。我们来验证“当”，也就是说，如果对于每一个 $r \in \mathbb{Q}$，$[X \leq r] \in \mathscr{F}$，那么对于任何 $A \in \mathscr{B}$，$[X \in A] \in \mathscr{F}$。我们定义 $\mathscr{G} = \{ A \subseteq \mathbb{R} : [X \in A] \in \mathscr{F} \}$
+
+设 $\mathscr{G}_0 = \{ (-\infty, r] : r \in \mathbb{Q} \}$。我们知道 $\mathscr{G}_0 \subseteq \mathscr{G}$。我们先验证 $\mathscr{G}$ 是 $\sigma$-代数，于是就有 $\sigma(\mathscr{G}_0) \subseteq \mathscr{G}$。然后我们验证 $\sigma(\mathscr{G}_0) = \mathscr{B}$ 就可以了。
+
+我们直接根据定义来验证 $\mathscr{G}$ 是 $\sigma$-代数。首先 $\varnothing \in \mathscr{G}$。如果 $A \in \mathscr{G}$，那么意味着 $[X \in A] \in \mathscr{F}$。因此 $[X \in A^c] = [X \in A]^c \in \mathscr{F}$。所以 $A^c \in \mathscr{G}$。类似的，如果 $A_1, A_2, \dots \in \mathscr{G}$，那么 $\bigcup_{n \geq 1} [X \in A_n] = [X \in \bigcup_{n \geq 1} A_n] \in \mathscr{F}$。这说明 $\bigcup_{n \geq 1} A_n \in \mathscr{G}$。因此 $\mathscr{G}$ 是 $\sigma$-代数。
+
+我们要证明 $\sigma(\mathscr{G}_0) = \mathscr{B}$，稍微思索一下即可发现，我们只需要证明使用求补、求可数交的操作，能够从 $\mathscr{G}_0$ 得到 $\mathscr{B}_0$ 即可。那么，现在给定 $(a, b] \in \mathscr{B}_0$，其中 $a \leq b \in \mathbb{R}$，我们显然有
+\[
+(a, b] = (-\infty, b] \setminus (-\infty, a].
+\]
+
+而对于任何一个实数 $a \in \mathbb{R}$，我们总可以找到一列递减的有理数 $r_1, r_2, \dots$，满足 $\lim_{n \to \infty} r_n = a$。于是，
+\[
+(-\infty, a] = \bigcap_{n \geq 1} (-\infty, r_n].
+\]
+\end{proof}
+
+\begin{proposition}
+设 $X, Y: \Omega \to \mathbb{R}$ 是随机变量。
+\begin{enumerate}
+    \item 对于任意实数 $a$，$aX$ 是随机变量；
+    \item $X + Y$ 与 $XY$ 是随机变量；
+    \item 定义 $Z: \omega \in \Omega \mapsto \begin{cases} Y(\omega)/X(\omega) & \text{if } X(\omega) \neq 0, \\ 0 & \text{if } X(\omega) = 0, \end{cases}$ 那么 $Z$ 是随机变量；
+    \item 设 $f: \mathbb{R} \to \mathbb{R}$ 为 $\mathscr{B}$ 上的一个可测函数（又称 Borel 函数），那么 $f(X)$ 是随机变量。
+\end{enumerate}
+\end{proposition}
+
+我们接下来验证一下 $X + Y$ 是随机变量。剩余的一些，我们留成练习。
+
+我们只需要对于任意 $a \in \mathbb{R}$，说明 $[X + Y > a] \in \mathscr{F}$ 即可（why?）。实际上
+\[
+[X + Y > a] = \bigcup_{r \in \mathbb{Q}} ([X > r] \cap [Y > a - r]).
+\]
+
+\subsection{构造概率空间：从有限次试验到无穷次试验}
+
+在概率论中，一个完整的概率空间由三元组 $(\Omega, \mathcal{F}, \mathbb{P})$ 构成，其中 $\Omega$ 是样本空间，$\mathcal{F}$ 是事件域（一个 $\sigma$-代数），而 $\mathbb{P}$ 是定义在 $\mathcal{F}$ 上的概率测度。本小节将通过“独立地扔无穷多个均匀硬币”这一经典模型，系统性地展示如何一步一步地构造出这个三元组，特别是如何引入并定义概率测度 $\mathbb{P}$。
+
+我们考虑一个无限序列的随机试验：独立地抛掷一枚均匀硬币无穷多次。每一次抛掷的结果是正面（记为 $1$）或反面（记为 $0$）。因此，一个完整的试验结果可以表示为一个无穷长的二进制序列：
+\[
+\omega = (\omega_1, \omega_2, \omega_3, \dots), \quad \text{其中 } \omega_i \in \{0, 1\}.
+\]
+
+于是，我们的样本空间 $\Omega$ 定义为所有这样的无穷序列的集合：
+\[
+\Omega = \{0, 1\}^{\mathbb{N}}.
+\]
+
+对于任意一个有限长度的二进制串 $s = (s_1, s_2, \dots, s_n) \in \{0, 1\}^n$，我们定义一个“基本事件” $C_s$，它表示“前 $n$ 次抛掷的结果恰好是 $s$”：
+\[
+C_s := \{ \omega \in \Omega \mid \omega_1 = s_1, \omega_2 = s_2, \dots, \omega_n = s_n \}.
+\]
+
+这些基本事件 $C_s$ 是我们构建整个概率空间的基石。
+
+为了确保我们的构造是良定义的，首先需要证明，对于任意固定的 $n$，所有长度为 $n$ 的基本事件 $\{C_s\}_{s \in \{0,1\}^n}$ 构成了样本空间 $\Omega$ 的一个划分。
+
+\begin{proof}
+对于任意一个无穷序列 $\omega \in \Omega$，其前 $n$ 位 $\omega_{[1:n]} = (\omega_1, \dots, \omega_n)$ 必然属于 $\{0,1\}^n$ 中的某一个元素 $s$。因此，$\omega$ 必然属于 $C_s$。这说明 $\bigcup_{s \in \{0,1\}^n} C_s = \Omega$。
+
+另一方面，如果 $s_1 \ne s_2$，那么 $C_{s_1}$ 和 $C_{s_2}$ 所要求的前 $n$ 位不同，因此它们不可能有共同的元素，即 $C_{s_1} \cap C_{s_2} = \varnothing$。
+
+综上所述，$\{C_s\}_{s \in \{0,1\}^n}$ 是 $\Omega$ 的一个划分。
+\end{proof}
+
+现在，我们考虑只关心前 $n$ 次抛掷结果的所有可能事件。这些事件构成了一个 $\sigma$-代数 $\mathcal{F}_n$，它是包含所有基本事件 $\{C_s\}_{s \in \{0,1\}^n}$ 的最小 $\sigma$-代数。我们可以构造一个映射 $f: \mathcal{F}_n \to 2^{\{0,1\}^n}$，它将每个事件 $A \in \mathcal{F}_n$ 映射为其在 $\{0,1\}^n$ 上的“投影”：
+\[
+f(A) := \bigcup_{\omega \in A} \{(\omega_1, \omega_2, \dots, \omega_n)\}.
+\]
+
+这个映射是一个双射。因为 $\mathcal{F}_n$ 中的任意元素都可以表示为若干个基本事件 $C_s$ 的并集，而 $f(C_s)$ 就是单点集 $\{s\}$。由于 $\{0,1\}^n$ 有 $2^n$ 个元素，所以 $\mathcal{F}_n$ 也有 $2^n$ 个元素，且 $f$ 是一个一一对应。
+
+基于此，我们可以在 $(\{0,1\}^n, \mathcal{F}_n)$ 上定义一个概率测度 $\mathbb{P}_n$，使得每个基本事件 $C_s$ 的概率为 $\frac{1}{2^n}$。由于 $\mathcal{F}_n$ 中的任意事件都是若干个互斥的基本事件的并，其概率自然就是这些基本事件概率之和。这就是独立地抛 $n$ 次均匀硬币所对应的概率空间。
+
+接下来，我们考虑随着试验次数增加，事件域是如何变化的。令 $\mathcal{F}_i$ 表示只关心前 $i$ 次试验结果的事件域。显然，如果我们知道了前 $i+1$ 次的结果，我们当然也知道了前 $i$ 次的结果。因此，$\mathcal{F}_i$ 中的任何一个事件都可以用 $\mathcal{F}_{i+1}$ 中的事件来描述，即 $\mathcal{F}_i \subseteq \mathcal{F}_{i+1}$。这样的一列嵌套的 $\sigma$-代数 $\{\mathcal{F}_n\}_{n=1}^{\infty}$ 被称为一个滤链（filtration）。
+
+我们定义 $\mathcal{F}_{\infty} := \bigcup_{n \ge 1} \mathcal{F}_n$。这是一个代数（algebra），但还不是 $\sigma$-代数，因为它对可数并运算不封闭。
+
+\begin{proof}
+验证 $\mathcal{F}_{\infty}$ 是一个代数：
+\begin{enumerate}
+\item 空集 $\varnothing$ 属于 $\mathcal{F}_1$，因此 $\varnothing \in \mathcal{F}_{\infty}$。
+    \item 对于任意 $A \in \mathcal{F}_{\infty}$，存在某个 $n$ 使得 $A \in \mathcal{F}_n$，则其补集 $A^c$ 也属于 $\mathcal{F}_n$，故 $A^c \in \mathcal{F}_{\infty}$。
+    \item 对于任意 $A, B \in \mathcal{F}_{\infty}$，存在 $n, m$ 使得 $A \in \mathcal{F}_n$, $B \in \mathcal{F}_m$。不妨设 $n \le m$，则 $A, B \in \mathcal{F}_m$，所以它们的并集 $A \cup B \in \mathcal{F}_m \subseteq \mathcal{F}_{\infty}$。
+综上，$\mathcal{F}_{\infty}$ 是一个代数。
+\end{enumerate}
+\end{proof}
+
+为了得到一个真正的 $\sigma$-代数，我们需要取 $\mathcal{F}_{\infty}$ 的闭包。令 $\mathscr{B}(\Omega) = \sigma(\mathcal{F}_{\infty})$ 为包含 $\mathcal{F}_{\infty}$ 的最小 $\sigma$-代数。这是我们在无穷样本空间上所能定义的“最大”的事件域。
+
+值得注意的是，对于任意一个单点集 $\{\omega\}$，它不属于 $\mathcal{F}_{\infty}$，因为没有任何有限次试验能唯一确定一个无穷序列。但它属于 $\mathscr{B}(\Omega)$，因为我们可以将其表示为一列递减的基本事件的交：
+\[
+\{\omega\} = \bigcap_{n=1}^{\infty} C_{(\omega_1, \dots, \omega_n)}.
+\]
+
+由于每个 $C_{(\omega_1, \dots, \omega_n)} \in \mathcal{F}_n \subseteq \mathcal{F}_{\infty} \subseteq \mathscr{B}(\Omega)$，并且 $\mathscr{B}(\Omega)$ 对可数交运算封闭，所以 $\{\omega\} \in \mathscr{B}(\Omega)$。
+
+现在，我们定义一个函数 $\mu: \mathcal{F}_{\infty} \to [0,1]$，对于任意 $A \in \mathcal{F}_n$，令 $\mu(A) = \frac{k}{2^n}$，其中 $k$ 是 $A$ 可以分解成的互斥基本事件 $C_s$ 的个数。
+
+关键问题是：这个定义是否良好？也就是说，同一个事件 $A$ 如果可以用不同的 $n$ 和 $k$ 来表示，其比值 $\frac{k}{2^n}$ 是否恒定？
+
+\begin{proof}
+假设 $A \in \mathcal{F}_n$，且 $A = \bigcup_{j=1}^{k} C_{s_j}$，其中 $s_j \in \{0,1\}^n$。令 $n_0$ 为满足 $A \in \mathcal{F}_{n_0}$ 的最小整数，$k_{n_0} = |f_{n_0}(A)|$。
+
+我们构造一个新的集合 $S' = \{ (s_1, \dots, s_{n_0}, 0), (s_1, \dots, s_{n_0}, 1) \mid s = (s_1, \dots, s_{n_0}) \in f_{n_0}(A) \}$。显然，$S'$ 中的元素都属于 $\{0,1\}^{n_0+1}$，且 $A = \bigcup_{s' \in S'} C_{s'}$。此时，$|S'| = 2k_{n_0}$。
+
+因此，如果我们将 $A$ 视为 $\mathcal{F}_{n_0+1}$ 中的事件，其对应的 $k$ 值为 $2k_{n_0}$，分母为 $2^{n_0+1}$，比值仍为 $\frac{2k_{n_0}}{2^{n_0+1}} = \frac{k_{n_0}}{2^{n_0}}$。
+
+通过归纳法，我们可以证明，对于任意 $n > n_0$，如果 $A = \bigcup_{j=1}^{k_n} C_{s_j}$，其中 $s_j \in \{0,1\}^n$，则总有 $\frac{k_n}{2^n} = \frac{k_{n_0}}{2^{n_0}}$。这意味着比值 $\frac{k}{2^n}$ 只依赖于事件 $A$ 本身，而与我们选择的 $n$ 和 $k$ 无关。因此，$\mu$ 在 $\mathcal{F}_{\infty}$ 上是良定义的。
+\end{proof}
+
+最后一步，也是最关键的一步，是将 $\mu$ 从代数 $\mathcal{F}_{\infty}$ 扩张到 $\sigma$-代数 $\mathscr{B}(\Omega)$ 上。这需要用到著名的 Carathéodory扩张定理。
+
+该定理指出，如果一个函数 $\mu$ 在一个代数 $\mathcal{A}$ 上是 $\sigma$-可加的（即对于任意一列互不相交的集合 $A_1, A_2, \dots \in \mathcal{A}$，若它们的并集也在 $\mathcal{A}$ 中，则 $\mu(\bigcup_{i=1}^{\infty} A_i) = \sum_{i=1}^{\infty} \mu(A_i)$），那么 $\mu$ 可以唯一地扩张为定义在 $\sigma(\mathcal{A})$ 上的概率测度 $\mathbb{P}$。
+
+因此，我们只需验证 $\mu$ 在 $\mathcal{F}_{\infty}$ 上的 $\sigma$-可加性。
+
+\begin{proof}
+考虑一列互不相交的集合 $A_1, A_2, \dots \in \mathcal{F}_{\infty}$，且它们的并集 $A = \bigcup_{i=1}^{\infty} A_i$ 也属于 $\mathcal{F}_{\infty}$。
+
+根据第6问的结论，存在某个 $n_0$ 和 $k_0$，以及一些基本事件 $C_{s_j^{(0)}}$，使得 $A = \bigcup_{j=1}^{k_0} C_{s_j^{(0)}}$，且 $\mu(A) = \sum_{j=1}^{k_0} \mu(C_{s_j^{(0)}})$。
+
+同时，对于每个 $A_i$，它也可以被分解为若干个基本事件 $C_{s_j^{(i)}}$ 的并。由于 $A_i$ 之间互不相交，这些基本事件 $C_{s_j^{(i)}}$ 之间也必然互不相交。
+
+因此，$\mu(A) = \sum_{i=1}^{\infty} \mu(A_i)$ 成立。这证明了 $\mu$ 的 $\sigma$-可加性。
+\end{proof}
+
+至此，我们成功地应用 Carathéodory 扩张定理，将 $\mu$ 扩张为定义在 $(\Omega, \mathscr{B}(\Omega))$ 上的概率测度 $\mathbb{P}$。我们最终构造出了独立地抛无穷多个均匀硬币所对应的完备概率空间 $(\Omega, \mathscr{B}(\Omega), \mathbb{P})$。
+
+同时说明一个有趣的事实：在上文中，我们使用了记号 $\mathscr{B}$ 来表示 $[0,1]$ 上所有的 Borel 集。这是因为，在构造过程中，我们实际上建立了一个从样本空间 $\Omega$ 到区间 $[0,1]$ 的映射 $f: \Omega \setminus S \to (0,1]$，其中 $S$ 是所有尾部为无穷多个 $0$ 的序列的集合。
+
+这个映射 $f$ 将每一个无穷二进制序列 $\omega$ 映射为其对应的二进制小数的值，即 $f(\omega) = \sum_{j=1}^{\infty} \omega_j \cdot 2^{-j}$。这个映射几乎是双射的（除了那些尾部为无穷多个 $0$ 或无穷多个 $1$ 的序列，它们会映射到同一个实数）。
+
+通过这个映射，我们将概率空间 $(\Omega, \mathscr{B}(\Omega), \mathbb{P})$ 与区间 $[0,1]$ 上的 Borel 测度空间建立了联系。由于 $S$ 是一个零测集（其测度为0），忽略它不会影响任何概率计算。因此，我们可以说，独立抛无穷硬币的过程等价于在 $[0,1]$ 上均匀采样一个实数。
+
+\section{随机变量的分布函数（\href{https://en.wikipedia.org/wiki/Cumulative_distribution_function}{\underline{Distribution Function}}）}
+
+一个随机变量 $X$ 唯一决定了一个 $\mathbb{R} \to [0, 1]$ 的函数 $F_X$:
+\[
+F_X(a) := \mathbb{P}[X \leq a].
+\]
+
+我们把 $F_X$ 称为 $X$ 的分布函数（Distribution Function），或者累积分布函数（Cumulative Distribution Function, CDF）。
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.5\textwidth]{figure/Figure8.1.png}
+\caption{Figure 1}
+\end{figure}
+
+设 $X$ 是投掷一个六面骰子得到的的点数，那么它对应的分布函数的图像如 Figure~1 所示。
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.5\textwidth]{figure/Figure8.2.png}
+\caption{Figure 2}
+\end{figure}
+
+设 $X$ 是从 $[0, 1]$ 上均匀取的一个数，那么它对应的分布函数的图像如 Figure~2 所示。
+
+\subsection{分布函数的基本性质}
+
+分布函数有一些基本性质，我们罗列一些。
+
+\begin{proposition}[分布函数的基本性质]
+设 $X$ 是一个随机变量并且 $F$ 是它的分布函数，那么对于任何的 $x, y \in \mathbb{R}$，以下结论成立。
+\begin{enumerate}
+    \item $0 \leq F(x) \leq 1$；
+    \item $x \leq y \implies F(x) \leq F(y)$；
+    \item $\lim_{x \to -\infty} F(x) = 0$ 并且 $\lim_{x \to \infty} F(x) = 1$；
+    \item $\lim_{y \downarrow x} F(y) = F(x)$；
+    \item $F(x-) := \lim_{y \uparrow x} F(y)$ 存在；
+    \item $F$ 具有至多可数个间断点。
+\end{enumerate}
+\end{proposition}
+
+这些性质大部分使用定义可以直接验证。其中 6 是我们数学分析课中证明过的单调函数的间断点至多可数个的性质。而 5 成立的原因是有上界的单调非降序列极限一定存在。我们来验证一下 4，它告诉我们每一个分布函数都是右连续的。同时满足 4 和 5 的函数被称作 \href{https://en.wikipedia.org/wiki/C%C3%A0dl%C3%A0g}{\underline{càdlàg}} 的。
+
+\begin{anymark}[Remark]
+
+càdlàg 是个法文词，大概意思是 数学中定义在实数集或其子集上的函数，具有处处右连续且左极限存在的特性‌；
+
+\end{anymark}
+
+我们定义一列递减的数 $\{x + \frac{1}{n}\}_{n \geq 1}$。那么
+\[
+\lim_{y \downarrow x} F(y) = \lim_{n \to \infty} F\left(x + \frac{1}{n}\right) = \lim_{n \to \infty} \mathbb{P}\left[X \leq x + \frac{1}{n}\right] = \mathbb{P}[X \leq x] = F(x).
+\]
+
+接下来这些随机变量和分布函数的关系也是比较容易验证的，我列出来，证明留作练习。
+
+\begin{proposition}
+设 $X$ 是一个随机变量并且 $F$ 是它的分布函数。那么如下结论成立。
+\begin{enumerate}
+    \item $\mathbb{P}[X < x] = F(x-)$；
+    \item $\mathbb{P}[X = x] = F(x) - F(x-)$；
+    \item 如果 $a < b$，则 $\mathbb{P}[a < X \leq b] = F(b) - F(a)$；
+    \item $\mathbb{P}[X > x] = 1 - F(x)$。
+\end{enumerate}
+\end{proposition}
+
+我们之前定义过随机变量 $X$ 的分布 $\mu_X$。它是 $(\mathbb{R}, \mathscr{B})$ 上的一个概率测度，满足对于任何 $A \in \mathscr{B}$，$\mu_X(A) = \mathbb{P}[X = A]$。可以看到，它可以由分布函数 $F_X$ 直接给出：对于任何 $(a, b] \in \mathscr{B}_0$，我们有 $\mu_X((a, b]) = F(b) - F(a)$。然后使用扩张定理把这个测度唯一的扩张到 $\mathscr{B}$ 上即可。
+
+\subsection{分布函数和随机变量的等价性}
+
+我们上面说了每一个随机变量都可以定义出一个分布函数，并且这个分布函数满足若干性质。我们现在想说，如果有一个 $\mathbb{R} \to \mathbb{R}$ 的函数 $F$，它满足我们上一节第一个命题中前四条性质，那么也能够构造出一个随机变量，使得它的分布函数正好是 $F$。我们现在给出这个构造。
+
+基本的想法是先找到函数 $F$ 的逆 $F^{-1}$。但由于 $F$ 可能有间断点，我们没有办法找到完美的逆，因此定义函数 $G: (0, 1) \to \mathbb{R}$ 满足
+\[
+G(u) := \inf \{ x \in \mathbb{R} : F(x) \geq u \}.
+\]
+
+注意到，在 $F$ 是连续函数的情况下，$G = F^{-1}$。对于我们这儿的 càdlàg 的 $F$，容易验证，如下命题依然成立。
+
+\begin{proposition}
+对于任意 $u \in (0, 1)$ 和 $x \in \mathbb{R}$，$G(u) \leq x \iff u \leq F(x)$。
+\end{proposition}
+
+我们现在构造一个以 $F$ 为分布的随机变量。设概率空间为 $((0, 1), \mathscr{B}((0, 1)), \mathbb{P})$，其中 $\mathbb{P}$ 为 $(0, 1)$ 上的均匀分布。设 $U: x \in (0, 1) \mapsto x$ 为恒等函数，我们构造的随机变量为
+\[
+G(U): x \in (0, 1) \mapsto G(U(x)).
+\]
+
+根据我们说明的 $G$ 的性质，
+\[
+\mathbb{P}[G(U) \leq x] = \mathbb{P}[U \leq F(x)].
+\]
+
+但由于 $U$ 是 $(0, 1)$ 上的均匀分布，所以 $\mathbb{P}[U \leq F(x)] = F(x)$。
+
+这个构造还告诉我们一件事情。假设在知道分布函数 $F$ 的情况下，如果从 $F$ 定义的分布中进行采样呢？我们可以先均匀的从 $(0, 1)$ 中选一个 $u$，再输出 $G(u)$。
+
+\section{随机变量的独立性}
+
+我们之前对于离散的随机变量定义了独立的概念，即 $X, Y$ 独立，当且仅当对于任何 $x, y$，$\mathbb{P}[X = x \wedge Y = y] = \mathbb{P}[X = x] \cdot \mathbb{P}[Y = y]$。这个定义对于一般的随机变量是不正确的。我们修正如下。
+
+\begin{definition}
+对于定义在概率空间 $(\Omega, \mathscr{F}, \mathbb{P})$ 上的两个随机变量 $X, Y$，我们说它们是独立的，记作 $X \perp Y$，当且仅当对于任何 $A, B \in \mathscr{B}$，
+\[
+\mathbb{P}[X \in A \wedge Y \in B] = \mathbb{P}[X \in A] \cdot \mathbb{P}[Y \in B].
+\]
+\end{definition}
+
+同样，我们接下来说明，如果要验证两个随机变量是不是独立，我们只需要取 $A, B$ 是形如 $(-\infty, r], r \in \mathbb{Q}$ 这样的集合就够了。我们固定一个 $r \in \mathbb{Q}$，然后设 $\mathscr{G} = \{ A \subseteq \mathbb{R} : \mathbb{P}[X \leq r \wedge Y \in A] = \mathbb{P}[X \leq r] \cdot \mathbb{P}[Y \in A] \}$。我们现在来证明 $\mathscr{G}$ 包含 $\mathscr{B}$。设 $\mathscr{B}'$ 为所有可以写成形如 $(a, b], a \leq b \in \mathbb{Q}$ 的区间的有限并的集合的集合。显然 $\mathscr{B}'$ 是一个代数（和 $\mathscr{B}_0$ 的区别是这儿我们要求区间的端点是有理数）。我们前面也验证过 $\sigma(\mathscr{B}') = \mathscr{B}$。
+
+我们使用定义，可以比较容易的验证 $\mathscr{B}' \subseteq \mathscr{G}$，这儿不再细说。为了使用单调类定理，我们只需要验证 $\mathscr{G}$ 是单调类即可。考虑 $A_1 \subseteq A_2 \subseteq \cdots \in \mathscr{G}$，那么
+
+\begin{align*}
+\mathbb{P}\left[ X \le r \land Y \in \bigcup_{n \ge 1} A_n \right] 
+&= \mathbb{P}\left[ \lim_{n \to \infty} \left( X \le r \land Y \in \bigcup_{i=1}^{n} A_i \right) \right] \\
+&= \lim_{n \to \infty} \mathbb{P}\left[ X \le r \land Y \in \bigcup_{i=1}^{n} A_i \right] \\
+&= \lim_{n \to \infty} \mathbb{P}\left[ X \le r \right] \cdot \mathbb{P}\left[ Y \in \bigcup_{i=1}^{n} A_i \right] \\
+&= \mathbb{P}\left[ X \le r \right] \cdot \mathbb{P}\left[ Y \in \bigcup_{n \ge 1} A_n \right].
+\end{align*}
+
+我们再使用类似的方法，对每一个 $B \in \mathscr{B}$，证明集合 $\mathscr{G}' = \{ A \subseteq \Omega : \mathbb{P}[X \in A \wedge Y \in B] = \mathbb{P}[X \in A] \cdot \mathbb{P}[Y \in B] \}$ 是个 $\sigma$-代数，便完成了整个证明。
+
+\newpage

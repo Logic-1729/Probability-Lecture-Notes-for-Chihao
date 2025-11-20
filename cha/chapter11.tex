@@ -1,0 +1,200 @@
+\chapter{积分的换元，期望与分布，概率密度函数}
+
+如果概率空间 $(\Omega, \mathscr{F}, \mathbb{P})$ 是离散的，我们知道，在上面定义的随机变量 $X$ 之期望可以写成下面两种形式，分别对应了对于 $X$ 的不同分划方式：
+\begin{enumerate}
+\item $\mathbf{E}[X] = \sum_{\omega \in \Omega} X(\omega) \cdot \mathbb{P}[\{\omega\}]$
+
+\item $\mathbf{E}[X] = \sum_{x \in \mathsf{Im}(X)} x \cdot \mathbb{P}[X = x]$
+\end{enumerate}
+
+直观上，这两种期望的表示方法可以分别看成对 $X$ 的定义域和值域进行加权求和。其中第二种方式通过枚举随机变量取值的方法在有些问题中会特别方便我们计算。我们今天想说明，对于一般的随机变量，我们也能这么做，唯一需要做的是把求和换成合适测度的（勒贝格）积分。
+
+\section{积分的换元，期望与分布}
+
+我们首先引入一个记号。对于测度空间 $(\Omega, \mathscr{F}, \mathbb{P})$，随机变量 $X$，以及 $A \in \mathscr{F}$，我们定义在 $A$ 上的 $X$ 积分
+\[
+\int_A X  d\mathbb{P} := \int_\Omega X \cdot \mathbb{I}_{X \in A}  d\mathbb{P}.
+\]
+
+我们假设 $X$ 是 $(\Omega, \mathscr{F}, \mathbb{P})$ 上定义的一个一般的随机变量。根据我们对于期望的定义，我们可以记作
+\[
+\mathbf{E}[X] = \int_\Omega X(\omega) \mathbb{P}(d\omega).
+\]
+
+这便是离散空间上随机变量上面第一种写法的推广。我们将要证明，这个期望等于
+\[
+\int_{\mathbb{R}} x  \mu(\text{dx}),
+\]
+
+其中 $\mu$ 是我们介绍过的 $X$ 诱导出来的分布，满足对于任何 $A \in \mathscr{B}(\mathbb{R})$，$\mu(A) = \mathbb{P}[X \in A]$。注意到这是一个在测度空间 $(\mathbb{R}, \mathscr{B}, \mu)$ 上定义的勒贝格积分。因此，如果我们直观的把 $\text{dx}$ 想象成 $\mathbb{R}$ 中的一小段区间的话，$\mu(\text{dx}) = \mathbb{P}[X \in \text{dx}]$，这在形式上便是离散随机变量的期望第二种写法的推广。
+
+事实上，我们将证明一个更强的定理。我们称定义在 $(\mathbb{R}, \mathscr{B})$ 上的可测函数 $f: \mathbb{R} \to \mathbb{R}$ 为 $\textsf{\textsf{Borel}}$ 函数。那么，对于一个 $\textsf{\textsf{Borel}}$ 函数 $f$ 和随机变量 $X$，容易验证复合函数 $f(X): \omega \in \Omega \mapsto f(X(\omega)) \in \mathbb{R}$ 是可测的，因此也是一个随机变量。我们有下面这个一般版本的 $\textsf{LOTUS(Law of the unconscious statistician)}$：
+
+\begin{theorem}
+设 $X$ 是 $(\Omega, \mathscr{F}, \mathbb{P})$ 上的随机变量，$g$ 是一个非负 \textsf{Borel} 函数。那么
+\[
+\mathbf{E}[g(X)] = \int_{\mathbb{R}} g(x)  \mu(\text{dx}).
+\]
+\end{theorem}
+
+注意到，因为按照我们上一节课提及之处理无穷随机变量期望的方法，我们只需要考虑非负的 $g$ 就够了。
+
+\begin{proof}
+对于每一个 $n \geq 0$，我们考虑 $g$ 的上近似 $\overline{g}_n(x)$。对于每一个 $k \in \mathbb{N}$，定义 $\Lambda_k = \{x \in \mathbb{R} : \overline{g}_n(x) = k \cdot 2^{-n} \}$。设 $A_k = [X \in \Lambda_k]$。那么，根据 $\mu$ 的定义，我们有 $\mathbb{P}(A_k) = \mu(\Lambda_k)$。
+于是，
+\[
+\mathbf{E}[\overline{g}_n(X)] = \sum_{k=0}^\infty k \cdot 2^{-n} \mathbb{P}[A_k] = \sum_{k=0}^\infty k \cdot 2^{-n} \mu(\Lambda_k) = \mathbf{E}_\mu[\overline{g}_n].
+\]
+令 $n \to \infty$ 即得证。
+\end{proof}
+
+\section{随机变量的分类}
+
+我们知道每一个随机变量 $X$ 均有一个分布函数 $F_X: \mathbb{R} \to [0, 1]$，满足
+\[
+\forall t, F(t) = \mathbb{P}[X \leq t].
+\]
+
+我们前面说过，如果一个随机变量的所有可能取值是一个可数集，则它被称为$\textbf{离散随机变量}$。我们将称一个随机变量为$\textbf{连续随机变量}$，如果其分布函数是一个连续函数。当然了，一个随机变量可以既不连续也不离散。
+
+我们说一个随机变量的分布函数 $F$ 是绝对连续（\href{https://en.wikipedia.org/wiki/Absolute_continuity}{\underline{absolutely continuous}}）的，如果存在一个定义在 $\mathbb{R}$ 上的函数 $f$，满足
+\[
+\forall t, \quad F(t) = \int_{(-\infty, t]} f(x)  \text{dx}.
+\]
+
+这里的积分是勒贝格积分，$\text{dx}$ 是勒贝格测度。我们称 $f$ 为 $X$ 的概率密度函数（\href{https://en.wikipedia.org/wiki/Probability_density_function}{\underline{probability density function}}, pdf），有时候又简称为密度函数。显然，我们要求 $f$ 非负并且 $\int_{\mathbb{R}} f(x)  \text{dx} = 1$。比如说，$X$ 在 $(0, 1]$ 上的均匀分布，它的密度函数为
+\[
+f(x) = \begin{cases} 0, & x < 0; \\ 1, & 0 \leq x \leq 1; \\ 0, & x > 1. \end{cases}
+\]
+
+一个绝对连续的 $F$ 一定是连续的，但不一定是可导的（比如说 $(0, 1]$ 上的均匀分布，它有 $0$ 和 $1$ 两个不可导的点）。可以证明，它一定是几乎处处可导的。这个\href{https://math.stackexchange.com/questions/610709/example-of-continuous-but-not-absolutely-continuous-strictly-increasing-function}{\underline{帖子}}里给出了一些单调的，连续的，但是不绝对连续的例子。如果 $F$ 在 $x = t$ 可导，那么 $f(t) = F'(t)$。
+
+绝对连续的概念在概率论里面很重要的一个原因是，我们关心的很多连续分布，是直接通过其概率密度函数定义的。比如说，我们未来会仔细研究的标准正态分布，正是满足 $f(x) = \frac{1}{\sqrt{2\pi}} e^{-\frac{x^2}{2}}$ 的分布。我们也可以通过概率密度函数计算随机变量的很多数字特征，如期望、方差等。
+
+当然，别忘了，并不是每一个连续分布均有概率密度函数的。
+
+\section{概率密度的积分}
+
+我们接下来要介绍一个对于计算期望非常重要的结论。再次回忆对于离散随机变量我们有
+\[
+\mathbf{E}[X] = \sum_{x \in \mathsf{Im}(X)} x \cdot \mathbb{P}[X = x].
+\]
+
+我们之前讲离散随机变量的时候定义过所谓概率质量函数 pmf，即 $p_X(x) = \mathbb{P}[X = x]$。所以上式也可以写成
+\[
+\mathbf{E}[X] = \sum_{x \in \mathsf{Im}(X)} x \cdot p_X(x).
+\]
+
+这个式子的 LOTUS 版本是对于任何 \textsf{Borel} 函数 $g$：
+\[
+\mathbf{E}[g(X)] = \sum_{x \in \mathsf{Im}(X)} g(x) \cdot p_X(x).
+\]
+
+这个式子是我们计算离散随机变量以及关于其函数的期望最常用的公式。根据我们上面的定义可以看出，概率密度函数其实就是“连续版本”的概率质量函数，因此，我们也期望有类似的式子来进行计算。我们现在就给出这个公式。
+
+\begin{theorem}
+对于有概率密度 $f(x)$ 的随机变量 $X$ 以及$\textbf{非负}$ \textsf{Borel} 函数 $g$，我们有
+\[
+\mathbf{E}[g(X)] = \int_{\mathbb{R}} g(x) f(x)  \text{dx}.
+\]
+\end{theorem}
+
+同样，这里的积分是勒贝格积分，$\text{dx}$ 是勒贝格测度。
+
+\begin{proof}
+
+由于我们知道 $\mathbf{E}[g(X)] = \int_{\mathbb{R}} g(x)  \mu(\text{dx})$，我们只需要证明
+\[
+\int_{\mathbb{R}} g(x)  \mu(\text{dx}) = \int_{\mathbb{R}} g(x) f(x)  \text{dx}
+\]
+
+即可。
+
+我们分两步来证明上述使用概率密度函数的积分公式。
+
+\begin{enumerate}
+
+\item $\textbf{第一步}$ 我们首先定义一个 $\mathbb{R}$ 上的集合函数 $\nu$：
+\[
+\forall A \in \mathscr{B}, \quad \nu(A) := \int_A f(x)  \text{dx}.
+\]
+
+我们来验证，对于每一个 $A \in \mathscr{B}$，$\mu(A) = \nu(A)$。To this end，定义
+\[
+\mathscr{G} := \{ A \subseteq \Omega : \nu(A) = \mu(A) \}.
+\]
+
+我们将用单调类定理证明 $\mathscr{G}$ 包含了 $\mathscr{B}$。首先容易验证 $\mathscr{G}$ 包含了所有的形如 $(a, b]$ 的区间。这是由于
+\[
+\nu((a, b]) = \int_{(a, b]} f(x)  \text{dx} = F(b) - F(a) = \mu((a, b]).
+\]
+
+根据勒贝格积分的定义，容易验证，所有有限个左开右闭的区间的并也是属于 $\mathscr{G}$。因此，代数 $\mathscr{B}_0 \subseteq \mathscr{G}$。
+
+我们现在验证对于单调上升的 $A_1 \subseteq A_2 \subseteq \cdots \in \mathscr{G}$，$\bigcup_{n \geq 1} A_n \in \mathscr{G}$。由于 $\mu$ 是一个测度，所以我们有
+\[
+\mu\left(\bigcup_{i \geq 1} A_i\right) = \mu\left( \lim_{n \to \infty} \bigcup_{i=1}^n A_i \right) = \lim_{n \to \infty} \mu\left( \bigcup_{i=1}^n A_i \right).
+\]
+
+由于对于每一个 $n$，$\bigcup_{i=1}^n A_i = A_n \in \mathscr{G}$，我们有
+\[
+\mu\left(\bigcup_{i \geq 1} A_n\right) = \lim_{n \to \infty} \nu\left( \bigcup_{i=1}^n A_i \right) \overset{(\clubsuit)}{=} \nu\left(\bigcup_{i \geq 1} A_i\right).
+\]
+
+其中 $(\clubsuit)$ 是使用了 MCT（$\nu\left(\bigcup_{i=1}^n A_i\right) = \int_{\mathbb{R}} \mathbb{I}_{\bigcup_{i=1}^n A_i} f(x)  \text{dx}$，而 $\mathbb{I}_{\bigcup_{i=1}^n A_i} f(X)$ 是单调递增的随机变量）。
+
+对于单调递减的事件列，其封闭性亦可类似证明。于是，由单调类定理，$\mathscr{B} \subseteq \mathscr{G}$。
+
+\item $\textbf{第二步}$ 接着，我们使用上一步的结论证明对于任何 $A \in \mathscr{B}$，有
+\[
+\int_A g(x)  \mu(\text{dx}) = \int_A g(x) f(x)  \text{dx}.
+\]
+
+对于每一个 $n$，我们来考察 $g$ 的下近似 $\underline{g}_n$ 的期望。对于每一个 $k \in \mathbb{N}$，我们定义 $A_k := \{ x \in \mathbb{R} : \underline{g}_n(x) = k \cdot 2^{-n} \}$。于是，$\underline{g}_n$ 可以写成 $\underline{g}_n(x) = \sum_{k \in \mathbb{N}} k \cdot 2^{-n} \mathbb{I}_{x \in A_k}$。那么
+\[
+\int_A \underline{g}_n(x)  \mu(\text{dx}) = \int_A \sum_{k \in \mathbb{N}} k \cdot 2^{-n} \mathbb{I}_{x \in A_k}  \mu(\text{dx}) \overset{(\diamondsuit)}{=} \sum_{k \in \mathbb{N}} k \cdot 2^{-n} \int_{\mathbb{R}} \mathbb{I}_{x \in A \cap A_k}  \mu(\text{dx}).
+\]
+
+这里 $(\diamondsuit)$ 这一步积分和求和可以交换的原因是每一项都是非负的，因此可以应用 MCT。于是，上式可以继续写成
+\[
+\sum_{k \in \mathbb{N}} k \cdot 2^{-n} \mu(A \cap A_k) = \sum_{k \in \mathbb{N}} k \cdot 2^{-n} \nu(A \cap A_k) = \sum_{k \in \mathbb{N}} k \cdot 2^{-n} \int_{A \cap A_k} f(x)  \text{dx} = \int_A \underline{g}_n(x) f(x)  \text{dx}.
+\]
+
+所以我们就证明了
+\[
+\int_A \underline{g}_n(x)  \mu(\text{dx}) = \int_A \underline{g}_n(x) f(x)  \text{dx}.
+\]
+
+对两边取极限，并使用 MCT 把极限和积分进行交换，我们便证明了
+\[
+\int_A g(x)  \mu(\text{dx}) = \int_A g(x) f(x)  \text{dx}.
+\]
+
+最后再提一句，设 $F$ 是 $X$ 的分布函数。我们有的时候会使用记号
+\[
+\int_A g(x)  dF(x) := \int_A g(x)  \mu(\text{dx}).
+\]
+因此，我们有在勒贝格积分的意义下，如果 $F(x)$ 绝对连续，那么
+\[
+\int_A g(x)  dF(x) = \int_A g(x) f(x)  \text{dx}.
+\]
+\end{enumerate}
+\end{proof}
+
+\subsection{勒贝格积分与黎曼积分}
+
+在一个区间 $[a, b]$ 上的一个 \textsf{Borel} 函数 $f$，如果他是有界的，那么它是勒贝格可积的函数。如果它正好也是黎曼可积的，那么两个积分一定相等。在这儿，我简述一下证明。由于 $f$ 是黎曼可积，设其积分是 $S$，那么对于任何 $\varepsilon > 0$，都存在一个 $\delta > 0$，满足对于 $[a, b]$ 的一个分划 $\{I_i\}_{i \in [n]}$，如果 $\lambda(I_i) \leq \delta$，则用它定义的函数的黎曼和满足
+\[
+\left| S - \sum_{i=1}^n f(x_i) \lambda(I_i) \right| \leq \varepsilon,
+\]
+
+其中 $x_i \in I_i$ 并且 $\lambda$ 是勒贝格测度（即区间的长度）。我们定义一个函数 $g$，满足 $g(x) = \sum_{i=1}^n \sup_{x \in I_i} f(x) \cdot \mathbb{I}_{x \in I_i}$。那么显然 $f \leq g$，并且由我们关于黎曼和的假设
+\[
+\left| S - \sum_{i=1}^n \sup_{x_i \in I_i} f(x_i) \lambda(I_i) \right| \leq \varepsilon.
+\]
+
+而 $\sum_{i=1}^n \sup_{x_i \in I_i} f(x_i) \cdot \lambda(I_i)$ 正好是 $g$ 的勒贝格积分 $\int_{[a,b]} g  \text{dx}$。因此，我们由勒贝格积分的单调性，$\int_{[a,b]} f  \text{dx} \leq \int_{[a,b]} g  \text{dx} \leq S + \varepsilon$。我们同样可以类似证明 $\int_{[a,b]} f  \text{dx} \geq S - \varepsilon$。由于这个不等式对于任何 $\varepsilon$ 都成立，所以勒贝格积分 $\int_{[a,b]} f  \text{dx} = S$。
+
+因此，我们在概率密度存在的情况下，可以通过数学分析课熟悉的对于黎曼积分的计算技巧，来处理随机变量的期望问题。我们将在未来看到更多实际计算的例子。
+
+\newpage

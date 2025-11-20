@@ -1,0 +1,160 @@
+\chapter{作为信息的 $\sigma$-代数，Kolmogorov 0-1 律}
+
+\section{$\sigma$-代数与信息}
+
+我们今天从另外一视角来看 $\sigma$-代数，即看成信息的集合。为了说明这一点，我们回顾一下随机变量的定义。给定一个概率空间 $(\Omega,\@F,\bb P)$，我们说函数 $X\colon \Omega\to\bb R$ 是一个随机变量，当且仅当 $X$ 是一个可测函数，也就是说对于任何 $B\in\@B(\bb R)$，我们有 $X^{-1}(B)\in \@F$。这个时候，我们也称 $X$ 是 $\@F$-可测的。同理，对于定义在 $\Omega$ 上的任意一个 $\sigma$-代数 $\@G$ 和一个函数 $Y\colon\Omega\to\bb R$，我们说 $Y$ 是 $\@G$-可测的，当且仅当对于任何 $B\in\@B(\bb R)$，$Y^{-1}(B)\in \@G$。
+
+反过来，给定一个函数 $X\colon \Omega\to\bb R$，我们用 $\sigma(X)$ 表示使得 $X$ 可测的最小的 $\sigma$-代数，容易验证，$\sigma(X)$ 总是存在的。直观上，对于\textbf{离散}的 $X$ 我们可以把 $\sigma(X)$ 理解成 $\set{X^{-1}(x)\cmid x\in \!{Im}(X)}$ 所构成的 $\Omega$ 的分划所生成的 $\sigma$-代数。这个直观帮助我们理解这个概念很重要。实际上，对于一般的 $X$ 我们有下面命题。
+
+\begin{proposition}
+$\sigma(X) = \set{X^{-1}(B)\cmid B\in \@B(\bb R)}$.
+\end{proposition}
+
+命题的验证很简单，首先根据定义 $\sigma(X)$ 必须包含 $\set{X^{-1}(B)\cmid B\in \@B(\bb R)}$。其次，我们已经验证过，$\set{X^{-1}(B)\cmid B\in \@B(\bb R)}$ 本身是一个 $\sigma$-代数。
+
+我们可以自然的把定义推广到多个随机变量 $X_1,\dots,X_n$ 上。我们用 $\sigma(X_1,\dots,X_n)$ 表示使得 $(X_1,\dots,X_n)$ 的联合分布可测的最小的 $\sigma$-代数。容易验证
+\[
+    \sigma(X_1,\dots,X_n) = \sigma\tp{\bigcup_{i\in [n]} \sigma(X_i)}.
+\]
+
+同样，如果是无穷多个随机变量 $\set{X_\alpha\cmid \alpha\in I}$，那么 $\sigma(\set{X_\alpha\cmid \alpha\in I})\defeq \sigma\tp{\bigcup_{\alpha\in I}\sigma(X_i)}$。
+
+我们今天会有很多比较抽象的概念，因此，脑子里一直有下面这个 running example 是比较重要的。我们考虑投掷一个公平的六面骰子的概率空间 $(\Omega,\@F,\bb P)$，其中 $\Omega = [6]$，$\@F = 2^\Omega$, $\forall i\in \Omega, \Pr{\set{i}}=\frac{1}{6}$。我们定义四个随机变量
+\begin{enumerate}
+\item $X_1\colon i\in \Omega\mapsto i$，即 $X_1$ 表示掷出来的点数；
+    \item $X_2\colon i\in \Omega\mapsto \bb I_{[i\ge 4]}$，即 $X_2$ 表示掷出来的点数是“大”还是“小”；
+    \item $X_3\colon i\in \Omega\mapsto i \mod 2$，即 $X_3$ 表示掷出来的点数除 $2$ 之后的余数；
+    \item $X_4\colon i\in \Omega\mapsto i \mod 4$，即 $X_4$ 表示掷出来的点数除 $4$ 之后的余数。
+\end{enumerate}
+
+我们可以分别计算 $\sigma(X_i)$。由于 $X_i$ 是离散的随机变量，我们只需要给出分划 $\set{X^{-1}(x)\cmid x\in \!{Im}(X)}$ 就可以了。回忆到我们之前介绍过，对于一个集族 $\@A\subseteq 2^{\Omega}$，$\sigma(\@A)$ 为包含 $\@A$ 的最小 $\sigma$-代数。于是，稍作思索可以得到
+
+\begin{enumerate}
+\item $\@F_1 = \sigma(X_1) = \sigma\tp{\set{\set{1},\set{2},\set{3},\set{4},\set{5},\set{6}}}$；
+    \item $\@F_2 = \sigma(X_2) = \sigma\tp{\set{\set{1,2,3},\set{4,5,6}}}$；
+    \item $\@F_3 = \sigma(X_3) = \sigma\tp{\set{\set{1,3,5},\set{2,4,6}}}$；
+    \item $\@F_4 = \sigma(X_4) = \sigma\tp{\set{\set{4},\set{1,5},\set{2,6},\set{3}}}$。
+\end{enumerate}
+
+回忆我们说一个函数 $f\colon\bb R\to\bb R$ 是 Borel 的，当且仅当 $f$ 是 $(\bb R,\@B(\bb R))$ 可测的。下面命题可以说明，为什么我们把 $\sigma$-代数称为信息的集合。
+
+\begin{proposition}
+随机变量 $Y$ 是 $\sigma(X)$-可测的当且仅当存在一个 Borel $f$ 使得 $Y=f(X)$。
+\end{proposition}
+
+这个命题想说明这样一件事情：一个随机变量 $Y$ 是另一个随机变量 $X$ 生成的 $\sigma$-代数可测，意味着如果知道了 $X$ 的取值，那么 $Y$ 的取值也就知道。换句话说，$X$ 包含了 $Y$ 的所有信息，这等价于 $\sigma(Y)\subseteq \sigma(X)$。也就是说，如果我想知道随机变量 $Y$ 的取值，我并不需要知道随机试验得到了哪个样本点 $\omega\in\Omega$，而只需知道随机试验得到的样本点在 $X$ 上的取值即可。
+
+我们用前面的例子来检查一下这个结论，希望大家能够仔细弄清楚。
+\begin{enumerate}
+\item 首先，由于 $\@F_1=\@F$，因此 $X_1,X_2,X_3,X_4$ 均是 $\@F_1$-可测的。这是很显然的，因为 $X_1(i)=i$ 就返回随机实验得到的样本点本身，$\@F_1$ 包含了“投一个公平六面骰子”的全部信息。
+    \item $X_3$ 是 $\@F_4$ 可测的。这个从 $\@F_3$ 和 $\@F_4$ 的定义上可以看出来，但直观上它想说的事情是，“如果我们知道一个数除 $4$ 的余数，那自然也就知道其除 $2$ 的余数”。因此，$X_3$ 可以写成 $X_4$ 的函数（ $X_3 = X_4 \mod 2$ ）。但是反过来就不对，因为我们知道一个数除 $2$ 的余数，并不能够得到其除 $4$ 的余数，$\sigma(X_3)$ 包含的信息严格少于 $\sigma(X_4)$。
+    \item $\@F_2$ 和 $\@F_3$ 是不能够比较的，因此，$X_2$ 和 $X_3$ 互相不能写成对方的函数。因为，知道一个数是否大于等于 $4$ 不能确定其除 $2$ 的余数，反之亦然。
+\end{enumerate}
+
+我们接着来证明这个命题。
+
+“当”是比较容易的。如果对于某个 Borel $f$，$Y=f(X)$，那么，对于任何 $B\in\@B(\bb R)$，
+\[
+    [Y\in B] = [f(X)\in B] = [X\in f^{-1}(B)]\in \sigma(X).
+\]
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.5\textwidth]{figure/Figure21.1.png}
+\end{figure}
+
+我们接着来说明“仅当”。也就是说，当 $Y$ 是 $\sigma(X)$-可测的时候，我们要构造一个 Borel $f$ 使得 $Y=f(X)$。我们先把 $Y$ 进行离散化，对于任意 $n\in \bb N$，我们考虑 $\underline{Y}_n$。回忆其定义为
+\[
+    \forall\omega\in\Omega,\;\underline{Y}_n(\omega) = 2^{-n}\cdot k\;\mbox{ if }\; Y(\omega)\in (2^{-n}\cdot k,2^{-n}\cdot (k+1)].
+\]
+
+显然 $\underline{Y}_n$ 也是 $\sigma(X)$-可测的。因此，对于任何的 $k\in \bb Z$，我们考虑集合 $A_{n,k}\defeq \underline{Y}_n^{-1}(2^{-n}\cdot k)\in \sigma(X)$。根据我们前面对于 $\sigma(X)$ 的命题，一定存在一个 $B_{n,k}\in \@B(\bb R)$ 使得 $A_{n,k} = X^{-1}(B_{n,k})$。显然，对于固定的 $n$，所有的 $B_{n,k}$ 是互相不相交的，并且构成了 $\bb R$ 的一个分划。对于每一个 $x\in B_{n,k}$，我们定义 $f_n(x) = 2^{-n}\cdot k$，或者等价的 $f_n(x) = \sum_{k} 2^{-n}\cdot k\cdot \bb I_{x\in B_{n,k}}$。那么显然 $f_n(X(\omega)) = \underline{Y}_n(\omega)$。我们让左右两边的 $n$ 趋于无穷，即 $f(x) = \lim_{n\to\infty} f_n(x)$，即可得到 $f(X(\omega)) = Y(\omega)$, as desired.
+
+\section{$\sigma$-代数的独立}
+
+我们之前定义过随机变量的独立。我们现在从更一般的角度来重新定义这个概念。给定同一个概率空间的样本集上的两个 $\sigma$-代数 $\@F$ 和 $\@G$，我们说 $\@F$ 和 $\@G$ 独立，记作 $\@F\perp \@G$，如果
+\[
+    \forall A\in \@F, B\in\@G,\; \Pr{A\cap B} = \Pr{A}\cdot \Pr{B}.
+\]
+
+类似的，对于有限个 $\sigma$-代数 $\@F_1,\@F_2,\dots,\@F_n$，我们说它们是独立的当且仅当
+\[
+    \forall A_1\in\@F_1,\dots,A_n\in\@F_n,\; \Pr{\bigcap_{i\in [n]} A_i} = \prod_{i\in[n]} \Pr{A_i}.
+\]
+
+对于任意一族 $\sigma$-代数 $\set{\@F_\alpha\cmid \alpha\in I}$，我们说它们是独立的当且仅当它的任何一个有限子集是独立的。
+
+我们现在说明，我们之前的定义的随机变量的独立性是一种特殊情况。
+
+\begin{proposition}
+随机变量 $X$ 和 $Y$ 独立当且仅当 $\sigma(X)$ 和 $\sigma(Y)$ 独立。
+\end{proposition}
+
+我们可以把上述命题自然的推广到一族随机变量 $\set{X_\alpha\cmid \alpha\in I}$ 独立。
+
+我们先证明“当”。对于任何 $A,B\in\@B(\bb R)$，我们知道 $[X\in A]\in \sigma(X)$, $[Y\in B]\in \sigma(Y)$，因此
+$\Pr{X\in A\land Y\in B} = \Pr{X\in A}\cdot \Pr{Y\in B}$。
+
+然后来说明“仅当”。对于任何 $A\in \sigma(X)$ 和 $B\in\sigma(Y)$，我们知道一定存在 $A',B'\in \@B(\bb R)$，使得 $A = X^{-1}(A')$，$B=Y^{-1}(B')$。于是
+\[
+    \Pr{A\cap B} = \Pr{X\in A'\cap Y\in B'} = \Pr{X\in A'}\cdot \Pr{Y\in B'} = \Pr{A}\cdot \Pr{B}.
+\]
+
+这个命题有一个很有用的推论：如果 $X_1,\dots,X_n,Y$ 独立，并且 $f\colon \bb R^n\to\bb R$ 是一个 Borel 函数，那么 $f(X_1,\dots,X_n)$ 和 $Y$ 也独立。
+
+证明是显然的，因为我们前面已经说明了 $\sigma(f(X_1,\dots,X_n))\subseteq \sigma(X_1,\dots,X_n)$。
+
+\section{\href{https://en.wikipedia.org/wiki/Kolmogorov\%27s_zero\%E2\%80\%93one_law}{\underline{Kolmogorov 0-1 律}}}
+
+我们之前学过几个结论：
+\begin{enumerate}
+\item （Kolmogorov 强大数定律）设 $X_1,\dots,X_n,\dots$ 是独立同分布的随机变量，满足 $\E{X_1}=\mu<\infty$。那么 
+    \[
+     \Pr{\lim_{n\to\infty}\frac{\sum_{i=1}^n X_i}{n}=\mu}=1.
+    \]
+    
+    \item （Second Borell-Cantelli） 设 $A_1,\dots,A_n,\dots$ 是独立的事件，那么
+    \[
+        \Pr{A_n\mbox{ i.o.}}=
+        \begin{cases}
+            1, & \mbox{ if }\sum_{i=1}^\infty \Pr{A_i}=\infty\\
+            0, & \mbox{ if }\sum_{i=1}^\infty \Pr{A_i}<\infty.
+        \end{cases}
+    \]
+\end{enumerate}
+
+这俩结论都有几个共同点：都涉及独立的随机变量或者事件；都是讨论某一个极限事件发生的概率；这个事件发生的概率要么是 $0$ 要么是 $1$ 而不是其它的数。事实上，这个并不是巧合。Kolmogorov 0-1 律说明，对于一大类事件，它发生的概率非零即一。
+
+为了说明这个定律，我们考虑在同一个概率空间 $(\Omega,\@F,\bb P)$ 下的一列随机变量 $X_1,X_2,\dots,X_n,\dots$。对于每一个 $n\ge 1$，我们定义 $\@F_n = \sigma(X_1,X_2,\dots,X_n)$。于是，$\@F_1\subseteq \@F_2 \subseteq \dots$。我们通常把这样一个递增的 $\sigma$-代数链称为滤链（\href{https://en.wikipedia.org/wiki/Filtration_(probability_theory)}{\underline{filtration}}），用来表示逐渐增多的信息。我们定义 $\@F_\infty = \sigma\tp{\bigcup_{i=1}^\infty \@F_i}$。
+
+比如说，我们考虑一个不停投掷均匀硬币的随机试验（比如我们在作业里定义过的几何分布随机变量的概率空间）。我们用 $X_n$ 表示第 $n$ 枚硬币的结果。直观上，$\@F_n$ 包含了前 $n$ 次硬币投掷结果的所有信息。
+
+于是，一个随机变量 $X$ 是 $\@F_n$-可测的，当且仅当它的值可以被前 $n$ 枚硬币投掷的结果所决定。比如 $X=\mbox{“是否从一开始连续投出了 5 个正面”}$ 这个随机变量便是 当 $k\ge 5$ 时，$\@F_k$-可测的，但不是 $\@F_1,\@F_2,\@F_3,\@F_4$-可测的。
+
+我们接着定义一系列记号。对于每一个 $n\ge 0$，定义 $\@F^*_n \defeq \sigma(X_{n+1},X_{n+2},\dots)$。我们定义 $\@F^*_\infty \defeq \bigcap_{n\ge 0} \@F^*_n$。 它被形象的称为\emph{尾代数}，而 $\@F^*_\infty$ 中的事件被称为\emph{尾事件}。
+
+尾代数的定义看起来有一些抽象，根据定义，它里面的事件满足“发生与否与任意前面有限个 $X_n$ 无关”。实际上，几乎所有关于 $X_n$ 序列极限的事件都是尾事件，正如我们在大数定律以及 Borel-Cantelli 里面遇到的那样（why？）。
+
+Kolmogorov 0-1 律是下面这个有些惊人的结论。
+
+\begin{theorem}
+设 $X_1,X_2,\dots$ 是一列\textbf{独立}的随机变量。那么其任意尾事件发生的概率要么是 $0$ 要么是 $1$。
+\end{theorem}
+
+\begin{proof}
+取一个尾事件 $B\in\@F^*_\infty$。我们定义
+\[
+    \@G=\set{A\in\@F\cmid \Pr{A\cap B} = \Pr{A}\cdot\Pr{B}}.
+\]
+
+我们接下来的目标是说明 $B$ 自己也属于 $\@G$，也就是说 $\Pr{B} = \Pr{B}^2$。因此 $\Pr{B} = 0$ or $1$。
+
+注意到，对于每一个 $n\ge 0$，我们有 $\@F_n$ 和 $\@F_n^*$ 是独立的（因为它们分别涉及不相交的独立随机变量）。而 $B\in \@F_n^*$，所以 $\@F_n\subseteq \@G$。于是 $\bigcup_{n} \@F_n\subseteq \@G$。我们想说明 $\@F_\infty = \sigma\tp{\bigcup_n \@F_n}\subseteq \@G$。由于 $\bigcup_{n} \@F_n$ 是一个代数而不一定是一个 $\sigma$-代数（why？回忆我们作业里投掷无穷硬币的概率空间的例子），根据单调类定理，我们只需要说明 $\@G$ 是一个单调类就行了。设 $A_1\subseteq A_2\subseteq \cdots \in \@G$，那么
+\[
+    \Pr{\bigcup_{i=1}^\infty A_i \cap B} = \lim_{n\to\infty} \Pr{A_n\cap B} = \lim_{n\to\infty} \Pr{A_n}\cdot \Pr{B} = \Pr{\bigcup_{i=1}^\infty A_i}\cdot \Pr{B}.
+\]
+
+这说明 $\bigcup_{i=1}^\infty A_i\in\@G$。对于 $A_1\supseteq A_2\supseteq \cdots$ 的情况也类似可以说明。于是，$\@G$ 是单调类。
+
+但显然（Why?），$B\in \@F_\infty$。因此，我们有 $B\in \@G$，证明结束。
+\end{proof}

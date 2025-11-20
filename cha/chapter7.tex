@@ -1,0 +1,251 @@
+\chapter{测度与单调类定理}
+
+今天我们正式开始关于概率论严格理论的学习。我们会用到不少分析和测度论的结论。有一些结论非常深刻，无法在课堂上证明，我会给出相应的参考。
+
+\section{$(0,1]$ 上的均匀概率测度}
+
+我们首先还是从如何定义 $(0, 1]$ 上的均匀分布说起。我们之前提到，我们需要对所有 Borel 集 $\mathscr{B}$，也就是那些包含了开区间的最小的 $\sigma$-代数里的集合定义概率。这件事情是比较困难的，因为 $\mathscr{B}$ 里集合的形态比较复杂。于是，我们从更简单的集合，也就是那些区间开始，一步一步的构造概率。我们将要构造的这个概率测度用 $\lambda$ 表示。
+
+\subsection{区间与有限区间的并}
+
+直观上来说，我们就是要给 $(0, 1]$ 的子集定义出它的大小/长度。最简单的自然是区间。对于 $a \leq b$，一个左开右闭区间 $I = (a, b]$ 指的是 $\{ x \in \mathbb{R} : a < x \leq b \}$。对于 $\Omega = (0, 1]$ 上的区间 $I = (a, b]$，我们定义 $\lambda(I) = b - a$ 为 $I$ 的长度。
+
+区间的长度定义好了，接下来要考虑的集合就是那些\textbf{有限}个区间的并。我们说一个集合 $I \subseteq (0, 1]$ 是有限个区间的非交并，当且仅当 $I = \bigsqcup_{i=1}^n I_i$，其中 $I_i = (a_i, b_i]$ 是一个区间。
+
+\begin{anymark}[记号惯例]
+为了省略墨水，从今以后，我们用 $A \sqcup B$ 或者 $\bigsqcup A_n$ 表示非交并（disjoint union），并不再额外说明涉及的集合是非交的了。
+\end{anymark}
+
+对于 $I = \bigsqcup_{i=1}^n I_i$，我们定义 $\lambda(I) = \sum_{i=1}^n \lambda(I_i) = \sum_{i=1}^n (b_i - a_i)$。我们用 $\mathscr{B}_0(\Omega)$ 来表示 $\Omega$ 上所有的可以写成有限个区间的并的集合的集合。
+
+我们可以验证，$\mathscr{B}_0(\Omega)$ 对于两个集合的并，以至于任意有限个集合的并是封闭的：因为有限个可以写成有限个区间的并的集合的并可以写成有限个区间的并（好绕口）。那我们的构造是不是到 $\mathscr{B}_0(\Omega)$ 就可以结束了呢？并不是，因为 $\mathscr{B}_0(\Omega)$ 还不是一个 $\sigma$-代数，它对于\textbf{可数并}并不封闭。比如说，只包含一个点的集合 $\{0.5\} \notin \mathscr{B}_0(\Omega)$，但显然 $\{0.5\} = \bigcap_{n \geq 1} \left(0.5 - \frac{1}{2^{n+1}}, 0.5\right]$（由于对补封闭，由 De-Morgan 律，对可数并封闭等价于对可数交封闭）。
+
+事实上，$\mathscr{B}_0(\Omega)$ 是一个代数（algebra）。
+
+\begin{definition}[代数]
+对于一个集合 $\Omega$ 和定义在上面的子集集合 $\mathscr{F}$，如果它满足如下条件，我们就称其为代数：
+\begin{enumerate}
+\item $\varnothing \in \mathscr{F}$；
+    \item 如果 $A \in \mathscr{F}$，则 $A^c \in \mathscr{F}$；
+    \item 如果 $A, B \in \mathscr{F}$，则 $A \cup B \in \mathscr{F}$。
+\end{enumerate}
+\end{definition}
+第三条可以推出对于任何有限个 $A_1, \dots, A_n \in \mathscr{F}$，我们有 $\bigcup_{i=1}^n A_i \in \mathscr{F}$。这个定义和我们之前学过的 $\sigma$-代数唯一的区别就是第三条，我们把可数并的要求弱化成了有限并（$\sigma$-代数名字里面的 $\sigma$ 便是可数并的意思）。
+
+我们同样也可以在代数上定义概率测度。
+
+\begin{definition}[代数上的测度]
+    我们说非负函数 $\mathbb{P} : (\Omega, \mathscr{F}_0) \to [0, 1]$（其中 $\mathscr{F}_0$ 是 $\Omega$ 上的一个代数）上的一个（$\sigma$-可加）概率测度，当且仅当
+    \begin{enumerate}
+\item $\mathbb{P}(\Omega) = 1$；
+    \item 如果 $A \in \mathscr{F}_0$，那么 $\mathbb{P}(A) + \mathbb{P}(A^c) = \mathbb{P}(\Omega)$；
+    \item 如果不相交的 $A_1, A_2, \cdots \in \mathscr{F}_0$ 并且 $\bigsqcup_{n \geq 1} A_n \in \mathscr{F}_0$，则 $\mathbb{P}(\bigsqcup_{n \geq 1} A_n) = \sum_{n \geq 1} \mathbb{P}(A_n)$。
+    \end{enumerate}
+\end{definition}
+
+
+我们注意到，这儿和 $\sigma$-代数 $\mathscr{F}$ 上定义的概率测度唯一的区别是，我们第三条只需要在“如果 $\bigsqcup_{n \geq 1} A_n \in \mathscr{F}_0$”成立的情况下对。因为根据定义，$\mathscr{F}_0$ 对可数并不一定封闭。这一条性质被称为 $\sigma$-可加性。
+
+如果我们把第一条里的 $\mathbb{P}(\Omega) = 1$ 去掉，则是测度的定义。有的时候，我们允许 $\mathbb{P}$ 在某些集合上的取值是 $\infty$，因此，我们会说 $\mathbb{P}$ 的值域是 $[0, \infty]$。这儿，$\infty$可以想象成我们在 $\mathbb{R}$ 里添加了一个称为无穷大的数，它的一些运算法则包括：
+
+\begin{enumerate}
+     
+\item $\forall a \in [0, \infty],\ a + \infty = \infty$; 
+
+\item $\forall a \in (0, \infty],\ a \cdot \infty = \infty$; 
+
+\item $\forall a \in [0, \infty),\ \infty - a = \infty$;
+
+\item $0 \cdot \infty = 0$;
+
+\item $\infty - \infty \text{ 无定义}$.
+
+\end{enumerate}
+
+我们称测度 $\mathbb{P}$ 是有限的，当且仅当 $\mathbb{P}(\Omega) < \infty$，否则称之为无限的。
+
+\subsection{测度的扩张}
+
+我们希望我们的概率论是定义在 $\sigma$-代数上的（比如我们希望上面提到的 $\lambda(\{0.5\})$ 是有定义的），因此，我们要扩展 $\mathscr{B}_0(\Omega)$。我们定义 $\mathscr{B}(\Omega) = \sigma(\mathscr{B}_0(\Omega))$ 为包含 $\mathscr{B}_0(\Omega)$ 的最小的 $\sigma$-代数。我们之前已经说过这是良定义的，并且也说明了它严格比 $\mathscr{B}_0(\Omega)$ 大。下面这个定理是测度论中的重要定理，它说明，对于代数上的一个（$\sigma$-可加）测度，它可以被扩张到更大的 $\sigma$-代数上去。
+
+\begin{theorem}[Carathéodory 扩张定理]
+设 $\Sigma_0$ 是集合 $\Omega$ 上的一个代数（algebra）。假设集合函数 $\mu_0: \Sigma_0 \to [0, \infty]$ 是 $\sigma$-可加的，即对于不相交的 $A_1, A_2, \cdots \in \Sigma_0$，如果 $\bigcup_{n=1}^\infty A_n \in \Sigma_0$，则有
+\[
+\mu_0\left( \bigcup_{n=1}^\infty A_n \right) = \sum_{n=1}^\infty \mu_0(A_n).
+\]
+
+那么，$\mu_0$ 可以被扩张成 $\Sigma = \sigma(\Sigma_0)$ 上的一个集合函数 $\mu: \Sigma \to [0, \infty]$，并且 $\mu_0$ 和 $\mu$ 在 $\Sigma_0$ 上是一致的。
+\end{theorem}
+
+为了应用这个定理，我们必须首先证明 $\lambda$ 在 $\mathscr{B}_0(\Omega)$ 上是 $\sigma$-可加的。证明这件事需要利用到实数集的一些不平凡的性质。我们把它的证明放在本次讲义的最后。
+
+\begin{lemma}
+$\lambda$ 在 $\mathscr{B}_0(\Omega)$ 上是 $\sigma$-可加的。
+\end{lemma}
+
+上述引理和 Carathéodory 扩张定理保证了我们可以把 $\lambda$ 的定义域从 $\mathscr{B}_0(\Omega)$ 扩张到 $\mathscr{B}(\Omega)$。$\lambda$ 被称为勒贝格（Lebesgue）测度。
+
+\section{$\mathbb{R}$ 与 $\mathbb{R}^d$ 上的勒贝格测度}
+
+由于我们引入了 $\infty$，我们前面在 $(0, 1]$ 构造勒贝格测度的方法可以无痛推广到 $\mathbb{R}$ 上。也就是说，对于 $a \leq b \in \mathbb{R}$，我们定义 $\lambda((a, b]) = b - a$，然后使用同样的方法把测度扩张到 $\mathbb{R}$ 上所有的 Borel 集 $\mathscr{B}(\mathbb{R})$ 上。我们未来会用 $\mathscr{B}$ 来直接代表 $\mathscr{B}(\mathbb{R})$。注意到，这样定义的勒贝格测度可能会取无穷大，比如 $\lambda(\mathbb{R}) = \infty$。
+
+同样，对于整数 $d \geq 2$，我们可以类似的定义 $\mathbb{R}^d$ 上的勒贝格测度。仅仅需要把区间 $(a, b]$ 换成矩形 $\prod_{i=1}^d (a_i, b_i]$，并定义其体积为 $\prod_{i=1}^d (b_i - a_i)$。
+
+\section{单调类定理（Monotone Class Theorem）}
+
+在未来，我们通常会想做如下的事情：已知某个性质在一个代数 $\mathscr{F}_0$ 上是成立，现在需要证明该性质在生成的 $\sigma$-代数，也就是 $\sigma(\mathscr{F}_0)$ 上也是成立的。从代数到 $\sigma$-代数，我们需要该验证性质对于可数并是封闭的，这有时候会比较困难，而单调类定理就给了我们处理类似问题的一个工具。
+
+现在固定一个集合 $\Omega$。我们为了表述方便，我们再回顾一下 $\Omega$ 上代数的定义。我们说 $\mathscr{F} \subseteq 2^\Omega$ 是一个代数，当且仅当：
+\begin{enumerate}
+\item $\varnothing \in \mathscr{F}$；
+    \item $A \in \mathscr{F} \implies A^c \in \mathscr{F}$；
+    \item $A, B \in \mathscr{F} \implies A \cup B \in \mathscr{F}$。
+\end{enumerate}
+
+我们定义一类新的集合类 $\mathscr{M} \subseteq 2^\Omega$，叫单调类（Monotone Class），如果其满足：
+\begin{enumerate}
+\item 如果 $A_1 \subseteq A_2 \subseteq \cdots \in \mathscr{M}$，则 $\bigcup_{n \geq 1} A_n \in \mathscr{M}$；
+    \item 如果 $A_1 \supseteq A_2 \supseteq \cdots \in \mathscr{M}$，则 $\bigcap_{n \geq 1} A_n \in \mathscr{M}$。
+\end{enumerate}
+也就是说 $\mathscr{M}$ 对集合取极限封闭。很显然，一个 $\sigma$-代数是一个单调类。对于一个集族 $\mathscr{G}$，我们也会用 $\mathscr{M}(\mathscr{G})$ 来表示包含 $\mathscr{G}$ 的最小的单调类（容易验证这是良定义的）。
+
+单调类定理是说的下面这件事情：
+
+\begin{theorem}[单调类定理]
+设 $\mathscr{F}_0$ 是一个代数，$\mathscr{F}_0 \subseteq \mathscr{M}$，并且 $\mathscr{M}$ 是一个单调类。那么 $\sigma(\mathscr{F}_0) \subseteq \mathscr{M}$。特别的，$\mathscr{M}(\mathscr{F}_0) = \sigma(\mathscr{F}_0)$。
+\end{theorem}
+
+在证明单调类定理之前，我们先来看一个应用，来解决本节一开始提出的那类问题。这个解决方法也是非常典型的，我们在未来也会多次用到。
+
+\subsection{单调类定理应用：关于 $\sigma$-代数上测度的两个小结论}
+
+我们前面构造 Borel 集的方法是先考虑所有的可以写成有限个区间的并的集合的集合 $\mathscr{B}_0$，这是一个代数，在取 $\mathscr{B} = \sigma(\mathscr{B}_0)$。$\mathscr{B}$ 里面的集合的结构是非常复杂的。但下面这个定理说，$\mathscr{B}$ 中每一个集合，均可以被 $\mathscr{B}_0$ 中的某个集合很好的“逼近”。
+
+我们先定义什么叫逼近。
+
+给定两个集合 $A, B$，我们定义它的对称差 $A \Delta B$ 为 $(A \setminus B) \cup (B \setminus A)$。
+
+\begin{theorem}
+固定 $(\Omega, \mathscr{F}, \mathbb{P})$ 为一个概率空间。设 $\mathscr{F}_0 \subseteq \mathscr{F}$ 是一个代数。对于任何 $\varepsilon > 0$，给定集合 $A \in \sigma(\mathscr{F}_0)$，存在集合 $B_\varepsilon \in \mathscr{F}_0$，满足 $\mathbb{P}[A \Delta B_\varepsilon] \leq \varepsilon$。
+\end{theorem}
+
+\begin{proof}
+
+我们这儿应用一个典型技巧。我们设 $\mathscr{G} = \{ A \subseteq \Omega : \exists B_\varepsilon \in \mathscr{F}_0,\ \mathbb{P}[A \Delta B_\varepsilon] \leq \varepsilon \},$即所有那些满足我们想要性质的集合的集合。我们只需要证明，$\sigma(\mathscr{F}_0) \subseteq \mathscr{G}$ 就行了。显然，$\mathscr{F}_0 \subseteq \mathscr{G}$，由单调类定理，我们只需要证明 $\mathscr{G}$ 是一个单调类即可。
+
+我们现在证明，对于 $A_1 \subseteq A_2 \subseteq \cdots \in \mathscr{G}$，有 $A = \bigcup_{n \geq 1} A_n \in \mathscr{G}$。证明的思路也是比较直接的：由于概率函数的连续性，我们首先可以选取足够大的 $N$，使得 $\bigcup_{n=1}^N A_n$ 足够接近 $A$。然后，由于每个 $A_n \in \mathscr{G}$，它们均能够被 $\mathscr{F}_0$ 中集合很好的逼近，因此 $\bigcup_{n=1}^N A_n$ 也能够被 $\mathscr{F}_0$ 中集合很好的逼近。
+
+我们来执行上述证明计划。我们首先选取 $N$，使得 $\mathbb{P}[A \Delta \bigcup_{n=1}^N A_n] \leq \varepsilon/2$。然后，对于每一个 $n = 1, 2, \dots, N$，我们选取 $B_n \in \mathscr{F}_0$，满足 $\mathbb{P}[A_n \Delta B_n] \leq \varepsilon / 2^{n+1}$。最后，我们定义 $B_\varepsilon := \bigcup_{n=1}^N B_n$。我们现在来说明 $B_\varepsilon$ 是对 $A$ 的一个足够好的逼近。
+
+我们首先可以用定义验证，对于任意两个集合 $X, Y$，如果 $X' \subseteq X$，那么 $\mathbb{P}[X \Delta Y] \leq \mathbb{P}[X \setminus X'] + \mathbb{P}[X' \Delta Y]$。于是，
+\[
+\mathbb{P}[A \Delta B_\varepsilon] \leq \mathbb{P}\left[A \setminus \left( \bigcup_{n=1}^N A_n \right)\right] + \mathbb{P}\left[\left( \bigcup_{n=1}^N A_n \right) \Delta B_\varepsilon\right] \leq \frac{\varepsilon}{2} + \mathbb{P}\left[\left( \bigcup_{n=1}^N A_n \right) \Delta \left( \bigcup_{n=1}^N B_n \right)\right].
+\]
+
+根据定义，我们又可以验证
+\[
+\left( \bigcup_{n=1}^N A_n \right) \Delta \left( \bigcup_{n=1}^N B_n \right) \subseteq \bigcup_{n=1}^N (A_n \Delta B_n).
+\]
+
+因此，由 union-bound，我们有
+\[
+\mathbb{P}\left[\left( \bigcup_{n=1}^N A_n \right) \Delta \left( \bigcup_{n=1}^N B_n \right)\right] \leq \mathbb{P}\left[ \bigcup_{n=1}^N (A_n \Delta B_n) \right] \leq \sum_{n=1}^\infty \frac{\varepsilon}{2^{n+1}} \leq \frac{\varepsilon}{2}.
+\]
+
+这说明，$\mathbb{P}[A \Delta B_\varepsilon] \leq \varepsilon$ 成立。
+
+我们可以类似的证明，对于 $A_1 \supseteq A_2 \supseteq \cdots \in \mathscr{G}$，$\bigcap_{n \geq 1} A_n \in \mathscr{G}$ 也成立。这儿就不再赘述了。
+
+\end{proof}
+
+\noindent\rule{\textwidth}{0.4pt}
+
+我们用类似的技巧来说明，对于一个使用 Carathéodory 扩张定理得到的 $\sigma$-代数上的概率测度是唯一的。具体来说，我们假设可测空间 $(\Omega, \mathscr{F})$ 上的概率测度 $\mathbb{P}$ 是由某个代数 $\mathscr{F}_0 \subseteq \mathscr{F}$ 上的测度扩张而得并且 $\mathscr{F} = \sigma(\mathscr{F}_0)$。那么，这个扩张是唯一的。
+
+假设存在两个概率测度 $\mathbb{P}$ 和 $\mathbb{Q}$，满足在 $\mathscr{F}_0$ 上一致。我们现在定义 $\mathscr{G} = \{ A \in \mathscr{F} : \mathbb{P}(A) = \mathbb{Q}(A) \}$，即所有在测度 $\mathbb{P}$ 和测度 $\mathbb{Q}$ 上一致的那些集合的集合。显然 $\mathscr{F}_0 \subseteq \mathscr{G}$。要证明我们的结论，根据单调类定理，我们只需要证明 $\mathscr{G}$ 是单调类。
+
+我们假设 $A_1 \subseteq A_2 \subseteq \cdots \in \mathscr{G}$，那由测度的连续性
+\[
+\mathbb{P}\left(\bigcup_{n \geq 1} A_n\right) = \lim_{N \to \infty} \mathbb{P}\left( \bigcup_{n=1}^N A_n \right) = \lim_{N \to \infty} \mathbb{Q}\left( \bigcup_{n=1}^N A_n \right) = \mathbb{Q}\left(\bigcup_{n \geq 1} A_n\right).
+\]
+
+换句话说，$\bigcup_{n \geq 1} A_n \in \mathscr{G}$。对于 $A_1 \supseteq A_2 \supseteq \cdots \in \mathscr{G}$ 的情形我们可以同样证明。
+
+\subsection{单调类定理的证明}
+
+我们这一小节来证明单调类定理。我们实际上只需要证明 $\mathscr{M}(\mathscr{F}_0) = \sigma(\mathscr{F}_0)$ 即可（因为根据定义，$\mathscr{M}(\mathscr{F}_0) \subseteq \mathscr{M}$）。容易验证，如果一个集合同时是单调类与代数，那么它就是 $\sigma$-代数，因此，我们只需要验证 $\mathscr{M}(\mathscr{F}_0)$ 是代数即可。
+
+由于 $\mathscr{M}(\mathscr{F}_0)$ 包含了 $\mathscr{F}_0$，因此，验证其为代数，只需要验证
+\begin{enumerate}
+\item 其对求补封闭，即 $A \in \mathscr{M}(\mathscr{F}_0) \implies A^c \in \mathscr{M}(\mathscr{F}_0)$；
+    \item 其对求（有限）交封闭，即 $A, B \in \mathscr{M}(\mathscr{F}_0) \implies A \cap B \in \mathscr{M}(\mathscr{F}_0)$。
+\end{enumerate}
+
+我们验证的策略，正如同我们之前应用单调类定理那般，便是把所有满足条件的集合拿出来放一起，再证明它们组成了一个单调类即可。
+
+\begin{enumerate}
+
+\item 我们先来验证 $\mathscr{M}(\mathscr{F}_0)$ 对求补封闭。我们设
+$\mathscr{G}_1 := \{ A \in \mathscr{M}(\mathscr{F}_0) : A^c\in \mathscr{M}(\mathscr{F}_0) \}.$那么对于 $A_1 \subseteq A_2 \subseteq \cdots \in \mathscr{G}_1$，我们有
+\[
+\left( \bigcup_{n \geq 1} A_n \right)^c = \bigcap_{n \geq 1} A_n^c.
+\]
+
+由于 $A_n^c \in \mathscr{M}(\mathscr{F}_0)$，所以 $\bigcap_{n \geq 1} A_n^c \in \mathscr{M}(\mathscr{F}_0)$，这说明 $\bigcup_{n \geq 1} A_n \in \mathscr{G}_1$。我们对于递降的集合 $A_1 \supseteq A_2 \supseteq \cdots \in \mathscr{G}_1$ 也可以同样说明 $\bigcap_{n \geq 1} A_n \in \mathscr{G}_1$。因此 $\mathscr{G}_1$ 是单调类，而根据定义 $\mathscr{G}_1 \subseteq \mathscr{M}(\mathscr{F}_0)$ 且 $\mathscr{F}_0 \subseteq \mathscr{G}_1$，所以 $\mathscr{G}_1 = \mathscr{M}(\mathscr{F}_0)$。即 $\mathscr{M}(\mathscr{F}_0)$ 对补封闭。
+
+\item 我们接着验证 $\mathscr{M}(\mathscr{F}_0)$ 对求有限交封闭。设
+$\mathscr{G}_2 := \{ A \in \mathscr{M}(\mathscr{F}_0) : \forall B \in \mathscr{M}(\mathscr{F}_0), A \cap B \in \mathscr{M}(\mathscr{F}_0) \}.$同样，我们想说 $\mathscr{G}_2 = \mathscr{M}(\mathscr{F}_0)$。这需要验证两件事：首先 $\mathscr{G}_2$ 是单调类，并且 $\mathscr{F}_0 \subseteq \mathscr{G}_2$。
+
+\begin{itemize}
+
+\item 先来验证 $\mathscr{G}_2$ 是单调类。设 $A_1 \subseteq A_2 \subseteq \cdots \in \mathscr{G}_2$，对于任何的 $B \in \mathscr{M}(\mathscr{F}_0)$，有
+\[
+\left( \bigcup_{n \geq 1} A_n \right) \cap B = \bigcup_{n \geq 1} (A_n \cap B).
+\]
+
+由于 $A_n \cap B \in \mathscr{M}(\mathscr{F}_0)$，由单调类的性质，$\bigcup_{n \geq 1} (A_n \cap B) \in \mathscr{M}(\mathscr{F}_0)$，也就是说 $\bigcup_{n \geq 1} A_n \in \mathscr{G}_2$。对于递减的 $A_n$，我们也可以同样验证 $\mathscr{G}_2$ 对于它们的极限封闭。因此 $\mathscr{G}_2$ 是单调类。
+
+$\phantom{aaaaa}$
+
+\item 接着我们要说明 $\mathscr{F}_0 \subseteq \mathscr{G}_2$。我们要做一个类似于“跷跷板”的操作。定义$
+\mathscr{G}_3 := \{ A \in \mathscr{M}(\mathscr{F}_0) : \forall B \in \mathscr{F}_0, A \cap B \in \mathscr{M}(\mathscr{F}_0) \}.$注意到，和 $\mathscr{G}_2$ 的不同在于后者只考虑 $B \in \mathscr{F}_0$。这样可以直接得到 $\mathscr{F}_0 \subseteq \mathscr{G}_3$。我们可以用对于 $\mathscr{G}_2$ 同样的的方法说明 $\mathscr{G}_3$ 是单调类，因此，$\mathscr{G}_3 = \mathscr{M}(\mathscr{F}_0)$。有了这个结论，我们就可以说，对于任意 $B \in \mathscr{F}_0$，其满足对于任何 $A \in \mathscr{M}(\mathscr{F}_0) = \mathscr{G}_3$，$A \cap B \in \mathscr{M}(\mathscr{F}_0)$，也就是说 $B \in \mathscr{G}_2$。
+\end{itemize}
+\end{enumerate}
+
+\section{$\lambda$ 在 $\mathscr{B}_0((0, 1])$ 上 $\sigma$-可加性的验证}
+
+我们最后来验证定义在 $\mathscr{B}_0((0, 1])$ 上的 $\lambda$ 的 $\sigma$-可加性。这是应用 Carathéodory 扩张定理把 $\lambda$ 从 $\mathscr{B}_0((0, 1])$ 扩张到 $\mathscr{B}((0, 1])$ 的必要条件。
+
+我们先证明一个重要的引理。
+
+\begin{lemma}
+如果 $I = \bigsqcup_{k \geq 1} I_k$，其中 $I_k = (a_k, b_k]$，则 $\lambda(I) = \sum_{k \geq 1} \lambda(I_k)$。
+\end{lemma}
+
+这个引理的强大之处在于它从 $\lambda$ 定义中的有限可加性突破到了可数可加性，实现了从有限到无限的突破。而这一点成立的关键原因是实数集上有界闭区间的紧性。我们接下来的讨论里假设 $I = (a, b]$。
+
+\begin{proof}
+\begin{enumerate}
+\item 首先简单说明一下如果 $\bigsqcup_{k \geq 1} I_k \subseteq I$，那么 $\sum_{k \geq 1} \lambda(I_k) \leq \lambda(I)$。我们只需要对任意 $N > 0$，证明 $\sum_{k=1}^N \lambda(I_k) \leq \lambda(I)$，再取极限即可。而对于有限的 $N$，我们可以使用归纳法证明。这个比较简单，留作练习。
+
+\item 我们接着来说明如果 $I \subseteq \bigcup_{k \geq 1} I_k$，那么 $\lambda(I) \leq \sum_{k \geq 1} \lambda(I_k)$。注意到我们这儿不要求 $I_k$ 是不相交的，结论也正确。同样的，有限和的情况是可以用归纳法容易证明的，也就是说，如果对于 $N$，有 $I \subseteq \bigcup_{k=1}^N I_k$，那么 $\lambda(I) \leq \sum_{k=1}^N \lambda(I_k)$。现在假设 $N = \infty$。根据我们的条件，对于任何 $\varepsilon \in (0, b - a)$，我们均有 $[a + \varepsilon, b] \subseteq \bigcup_{k \geq 1} (a_k, b_k + \varepsilon 2^{-k})$。Heine-Borel 定理说明闭区间是紧集，也就是闭区间的每一个开覆盖一定存在一个有限的子覆盖。所以，存在一个 $N \in \mathbb{N}$，满足 $[a + \varepsilon, b] \subseteq \bigcup_{k=1}^N (a_k, b_k + \varepsilon 2^{-k}]$。根据有限情况的结论，我们有
+\[
+b - (a + \varepsilon) \leq \sum_{k=1}^N (b_k + \varepsilon 2^{-k} - a_k) \leq \sum_{k \geq 1} (b_k - a_k) + \varepsilon.
+\]
+
+由于 $\varepsilon$ 可以取任意小，故得证。
+\end{enumerate}
+\end{proof}
+
+有了这个引理，$\lambda$ 的 $\sigma$-可加性便容易验证了。我们假设不相交的 $A_1, A_2, \cdots \in \mathscr{B}_0((0, 1])$，并且 $A := \bigsqcup_{k \geq 1} A_k \in \mathscr{B}_0((0, 1])$。由于它们都是 $\mathscr{B}_0((0, 1])$ 里的元素，因此可以假设 $A = \bigsqcup_{i=1}^n I_i$，$A_k = \bigsqcup_{j=1}^{m_k} J_{kj}$，并且 $I_i = \bigsqcup_{k \geq 1, j \in [m_k]} (I_i \cap J_{kj})$。那么，根据刚才的引理，我们有
+\[
+\lambda(A) = \sum_{i=1}^n \lambda(I_i) = \sum_{i=1}^n \sum_{k \geq 1} \sum_{j=1}^{m_k} \lambda(I_i \cap J_{kj}) = \sum_{k \geq 1} \sum_{j=1}^{m_k} \lambda(J_{kj}) = \sum_{k \geq 1} \lambda(A_k).
+\]
+
+\section{参考书籍}
+
+本课程并不会对测度论进行全面的介绍，只会引入我们未来将用到的内容和概念。如果想了解更详细的内容，可以参考如下两本非常优秀的教材。
+\begin{itemize}
+\item \href{https://book.douban.com/subject/1650731/}{\underline{Probability and Measure}}, by Patrick Billingsley.
+    \item \href{https://book.douban.com/subject/7062228/}{\underline{An Introduction to Measure Theory}}, by Terence Tao.
+\end{itemize}

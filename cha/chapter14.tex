@@ -1,0 +1,242 @@
+\chapter{联合分布，联合密度函数，条件密度函数}
+
+我们之前介绍了一个随机变量的分布函数、分布、概率质量/密度函数等，今天，我们开始介绍定义在同一个概率空间上的多个随机变量的“联合”分布。
+
+\section{联合分布（\href{https://en.wikipedia.org/wiki/Joint_probability_distribution}{\underline{Joint Distribution}}）}
+
+我们还是固定一个概率空间 $(\Omega, \mathscr{F}, \mathbb{P})$。对于定义在上面的两个随机变量 $X, Y: \Omega \to \mathbb{R}$，我们定义它们的联合分布函数 $F: \mathbb{R}^2 \to [0, 1]$ 为
+\[
+\forall x, y \in \mathbb{R}, \quad F(x, y) := \mathbb{P}[X \leq x, Y \leq y].
+\]
+
+这个定义可以直接推广成任意有限个随机变量的联合分布
+\[
+\forall x_1, \dots, x_n \in \mathbb{R}, \quad F(x_1, \dots, x_n) := \mathbb{P}[X_1 \leq x_1, \dots, X_n \leq x_n].
+\]
+
+对于一般的 $n$，联合分布的大部分性质和 $n = 2$ 时并没有本质区别，因此，我们接下来的讨论均以 $n = 2$ 为例。除非额外说明，我们所述的性质都可以被推广到一般的有限 $n$。
+
+\begin{proposition}[多元分布函数的性质]
+\begin{enumerate}
+\item $x \mapsto F(x, y)$ 以及 $y \mapsto F(x, y)$ 均是左极限存在，右连续的非降函数；
+    \item $F(x, \infty) := \lim_{y \to \infty} F(x, y)$，$F(\infty, y) := \lim_{x \to \infty} F(x, y)$ 均存在；
+    \item 对于每一个 $x, y$，$\lim_{x \to -\infty} F(x, y) = \lim_{y \to -\infty} F(x, y) = 0$，$\lim_{x,y \to \infty} F(x, y) = 1$；
+    \item $\mathbb{P}[X = x, Y = y] = F(x, y) - F(x-, y) - F(x, y-) + F(x-, y-)$，其中 $F(x-, y) := \lim_{u \uparrow x} F(u, y)$（其余类似）。
+\end{enumerate}
+\end{proposition}
+
+当我们谈论 $X$ 和 $Y$ 的联合分布函数的时候，有时候会把 $X, Y$ 作为下标，记作 $F_{XY}$。我们定义 $\textbf{边缘分布函数}$（marginal distribution function）
+\[
+F_X(x) := F_{XY}(x, \infty), \quad F_Y(y) := F_{XY}(\infty, y).
+\]
+
+显然, $F_X(x)$ 和 $F_Y(y)$ 就是 $X$ 和 $Y$ 对应的分布函数。我们这儿称之为“边缘”的原因是强调它们分别是一个联合分布的一部分。
+
+\subsection{概率质量函数与概率密度函数}
+
+对于离散随机变量 $X$ 和 $Y$，我们有$\textbf{联合质量函数}$
+\[
+p_{XY}(x, y) := \mathbb{P}[X = x, Y = y].
+\]
+
+显然，随机变量 $X$ 和 $Y$ 的概率质量函数 $p_X$ 和 $p_Y$ 分别满足
+\[
+p_X(x) = \sum_{y \in \mathsf{Im}(Y)} p(x, y), \quad p_Y(y) = \sum_{x \in \mathsf{Im}(X)} p(x, y).
+\]
+
+我们有时候把它们称为 $X$ 或者 $Y$ 对应的$\textbf{边缘概率质量函数}$（marginal probability mass function）。
+
+类似的，假设 $X$ 和 $Y$ 是连续随机变量，如果存在一个非负的函数 $f(x, y)$，满足
+\[
+F(x, y) = \int_{-\infty}^y \int_{-\infty}^x f(u, v)  du  dv,
+\]
+
+则称 $f(x, y)$ 是 $X$ 和 $Y$ 的$\textbf{联合概率密度}$。我们可以使用单调类定理说明，对于任何的 $A \in \mathscr{B}(\mathbb{R}^2)$，
+\[
+\mathbb{P}[(X, Y) \in A] = \int_A f(x, y)  dx \otimes dy.
+\]
+
+由微积分基本定理，如果 $f$ 在 $(x, y)$ 连续，那么
+\[
+f(x, y) = \frac{\partial^2}{\partial x \partial y} F(x, y).
+\]
+
+我们同样可以定义$\textbf{边缘密度函数}$ $f_X$ 和 $f_Y$ 为
+\[
+f_X(x) := \int_{-\infty}^\infty f(x, y)  dy, \quad f_Y(y) := \int_{-\infty}^\infty f(x, y)  dx.
+\]
+
+容易验证，它们实际上分别是 $F_X$ 和 $F_+Y$ 的密度函数。
+
+值得注意的是，如果 $(X, Y)$ 具有联合密度函数，那么它们就有边缘密度函数，但反过来不一定成立。比如 $X$ 是 $(0, 1)$ 上均匀取的一个数，$Y = X$，容易验证，$(X, Y)$ 不存在联合密度函数（why?）。
+
+如果 $X$ 和 $Y$ 有连续的联合密度函数 $f_{XY}(x, y)$，那么 $X$ 和 $Y$ 独立当且仅当 $f_{XY}(x, y) = f_X(x) f_Y(y)$。为了说明这一点，我们只需要注意到
+\[
+f_{XY}(x, y) = \frac{\partial^2}{\partial x \partial y} F_{XY}(x, y) = \frac{\partial^2}{\partial x \partial y}(F_X(x) F_Y(y)) = f_X(x) f_Y(y)
+\]
+
+即可。
+
+\section{条件分布与条件密度（\href{https://en.wikipedia.org/wiki/Conditional_probability_distribution}{\underline{Conditional Distribution}}）}
+
+我们接下来讨论条件概率。我们在之前介绍概率空间的时候已经定义过条件概率了。给定两个事件 $A, B \in \mathscr{F}$，如果 $\mathbb{P}[B] \neq 0$，那么我们定义条件概率
+\[
+\mathbb{P}[A \mid B] = \frac{\mathbb{P}[A \cap B]}{\mathbb{P}[B]}.
+\]
+
+这个定义可以自然的给出离散的随机变量的条件期望的定义。假设 $X$ 是一个离散的随机变量，那么，对于任何可测集 $A$ 和 $x$，如果 $\mathbb{P}[X = x] > 0$，那么，我们可以无缝使用上面的定义得到
+\[
+\mathbb{P}[Y \in A \mid X = x] = \frac{\mathbb{P}[Y \in A \wedge X = x]}{\mathbb{P}[X = x]}.
+\]
+
+如果 $\mathbb{P}[X = x] = 0$，这个时候 $\mathbb{P}[Y \in A \mid X = x]$ 是无定义的。我们可以同时自然的定义出
+条件分布函数
+\[
+F_{Y \mid X}(y \mid x) := \mathbb{P}[Y \leq y \mid X = x];
+\]
+
+以及得到对应的
+条件质量函数
+\[
+p_{Y \mid X}(y \mid x) = \begin{cases} \dfrac{p_{YX}(y, x)}{p_X(x)}, & \text{if } p_X(x) > 0; \\ 0, & \text{otherwise}. \end{cases}
+\]
+
+我们可以同时给出条件期望的定义。如果 $Y$ 可积并且 $\mathbb{P}[X = x] > 0$，那么定义
+\[
+\mathbb{E}[Y \mid X = x] := \frac{\mathbb{E}[Y \cdot \mathbb{I}_{X=x}]}{\mathbb{P}[X = x]}.
+\]
+
+上面这些定义都是非常自然，而且我们之前在作业里也多次显式或者隐式的使用过了。但是，当 $X$ 不是离散随机变量的时候，这样的定义就会出现一些问题。比如说，假设 $X$ 和 $Y$ 是独立的从 $[0, 1]$ 中均匀得到的两个数，那么直观上，我们应该有 $\mathbb{P}[Y \leq \frac{1}{2} \mid X = \frac{1}{3}] = \frac{1}{2}$。但由于 $\mathbb{P}[X = \frac{1}{3}] = 0$，我们上述给出的条件概率定义是一个形如 $\frac{0}{0}$ 的没有意义的数。因此，我们需要对条件概率有新的定义。实际上，在概率论里面，条件概率是\href{https://en.wikipedia.org/wiki/Conditional_expectation}{\underline{条件期望}}的特殊情况，而\href{https://en.wikipedia.org/wiki/Conditional_expectation#Conditional_expectation_with_respect_to_a_sub-\%CF\%83-algebra}{\underline{最一般}}的条件期望的定义，我们现在还没有准备好。
+
+大约在这门课的最后，我们会给出定义。今天，我们先讨论一个特殊情况，即在 $X$ 和 $Y$ 有连续的联合密度函数$ f_{XY}$的时候，定义条件期望与条件概率。
+
+我们刚才说了，由于 $\mathbb{P}[X = x] = 0$，我们从近似的角度来考虑这个问题。根据微积分基本定理，对于一个很小的 $h > 0$，我们有
+\begin{align*}
+\mathbb{P}\left[ Y \le y \mid X \in [x, x + h] \right]
+&= \frac{
+    \int_{-\infty}^{y} \int_{x}^{x+h} f_{XY}(u, v) \, du \, dv
+}{
+    \int_{x}^{x+h} f_X(u) \, du
+} \\
+&= \frac{
+    \int_{-\infty}^{y} h \cdot f_{XY}(x, v) + o(h) \, dv
+}{
+    (h + o(h)) f_X(x)
+} \\
+&= \frac{
+    \int_{-\infty}^{y} f_{XY}(x, v) \, dv + h^{-1} \int_{-\infty}^{y} o(h) \, dv
+}{
+    f_X(x) + o(1)
+}.
+\end{align*}
+
+如果我们假设 $f_{XY}$ 有一定的正则性使得 $\lim_{h \to 0} h^{-1} \int_{-\infty}^y o(h)  dv = \int_{-\infty}^y \lim_{h \to 0} h^{-1} o(h) = 0$，则我们可以对于可测的 $A$，定义
+\[
+\mathbb{P}[Y \in A \mid X = x] := \lim_{h \to 0} \mathbb{P}[Y \in A \mid X \in [x, x+h]].
+\]
+
+更一般的（$f_{XY}$ 不一定连续），我们可以自然的定义条件分布函数
+\[
+F_{Y \mid X}(y \mid x) := \begin{cases} \int_{-\infty}^y \dfrac{f_{XY}(x, v)}{f_X(x)}  dv, & \text{if } f_X(x) > 0, \\ 0, & \text{if } f_X(x) = 0. \end{cases}
+\]
+
+其对应的条件密度函数为
+\[
+f_{Y \mid X}(y \mid x) = \begin{cases} \dfrac{f_{XY}(x, y)}{f_X(x)}, & \text{if } f_X(x) > 0, \\ 0, & \text{if } f_X(x) = 0. \end{cases}
+\]
+
+我们也定义条件期望
+\[
+\mathbb{E}[Y \mid X = x] := \int_{-\infty}^\infty y f_{Y \mid X}(y \mid x)  dy.
+\]
+
+条件期望是一个非常重要的概念，我们在未来会专门讨论条件期望的性质并给出对应的应用，今天，我们暂时了解这个定义即可。
+
+我们接着验证一下，所谓全概率公式，对于具有连续联合密度的随机变量也成立。
+
+\begin{proposition}[全概率公式]
+\[
+\mathbb{P}[Y \in A] = \int_{-\infty}^\infty \int_A f_{Y \mid X}(y \mid x) f_X(x)  dy  dx.
+\]
+\end{proposition}
+
+我们仅需要把定义代进去，并使用 Fubini-Tonelli 交换积分顺序即可证明。注意到
+\begin{align*}
+\int_{-\infty}^{\infty} \int_A f_{Y|X}(y|x) f_X(x) \, dy \, dx
+&= \int_{-\infty}^{\infty} \int_A \frac{f_{XY}(x, y)}{f_X(x)} \cdot f_X(x) \, dy \, dx \\
+&= \int_{-\infty}^{\infty} \int_A f_{XY}(x, y) \, dy \, dx \\
+&= \int_A f_Y(y) \, dy \\
+&= \mathbb{P}\left[ Y \in A \right].
+\end{align*}
+
+使用类似的证明，我们可以更一般的得到，对于 $A, B \in \mathscr{F}$,
+\[
+\mathbb{P}[Y \in A \wedge X \in B] = \int_B \int_A f_{Y \mid X}(y \mid x) f_X(x)  dy  dx.
+\]
+
+\subsection{积分的换元}
+
+我们现在考虑一个在计算中经常会遇到的问题，假设我们知道随机变量 $X$ 和 $Y$ 的联合密度函数 $f_{XY}$，那么对于新的随机变量 $(U, V) = g(X, Y) = (g_1(X, Y), g_2(X, Y))$，它们的联合密度函数 $f_{UV}$ 是什么？这儿 $g_1, g_2: \mathbb{R}^2 \to \mathbb{R}$ 是两个可测函数，并且我们假设它们是可微的。
+
+对于一个可积的测试函数 $\phi: \mathbb{R}^2 \to \mathbb{R}$，我们考虑用两种方法来计算 $\mathbb{E}[\phi(U, V)]$。首先是通过 $U, V$ 的联合密度函数 $f_{UV}$：
+\[
+\mathbb{E}[\phi(U, V)] = \int_{-\infty}^\infty \int_{-\infty}^\infty \phi(u, v) f_{UV}(u, v)  du  dv.
+\]
+
+接着是通过 $X, Y$ 的联合密度函数 $f_{XY}$：
+\[
+\mathbb{E}[\phi(U, V)] = \mathbb{E}[\phi(g(X, Y))] = \int_{-\infty}^\infty \int_{-\infty}^\infty \phi(g(x, y)) f_{XY}(x, y)  dx  dy.
+\]
+
+我们再把上面第一个式子使用换元公式得到
+\[
+\int_{-\infty}^\infty \int_{-\infty}^\infty \phi(u, v) f_{UV}(u, v)  du  dv = \int_{-\infty}^\infty \int_{-\infty}^\infty \phi(g(x, y)) f_{UV}(g(x, y)) |\det J_g(x, y)|  dx  dy,
+\]
+
+其中 $J_g(x, y)$ 是 $g$ 在 $(x, y)$ 处的雅可比矩阵
+\[
+J_g(x, y) = \begin{pmatrix} \frac{\partial g_1}{\partial x} & \frac{\partial g_1}{\partial y} \\ \frac{\partial g_2}{\partial x} & \frac{\partial g_2}{\partial y} \end{pmatrix}.
+\]
+
+所以，我们可以得到如下命题：
+
+\begin{proposition}
+\[
+f_{XY}(x, y) = f_{UV}(g(x, y)) |\det J_g(x, y)|.
+\]
+\end{proposition}
+
+\begin{example}[极坐标的例子]
+我们考虑下面的例子，假设 $X$ 和 $Y$ 是两个独立的标准正态分布随机变量，那么它们的联合密度函数为 $f_{XY}(x, y) = \frac{1}{2\pi} e^{-\frac{x^2 + y^2}{2}}$。我们可以把 $(X, Y)$ 看成 $\mathbb{R}^2$ 上的随机的点。我们考虑这些点的极坐标 $(R, \Theta)$，其中 $R = \sqrt{X^2 + Y^2}$，$\Theta = \arctan \frac{Y}{X}$。我们想知道 $(R, \Theta)$ 的联合密度函数是什么。
+
+我们首先知道，$X = R \cos \Theta$，$Y = R \sin \Theta$。这个变换的雅可比矩阵的行列式是 $r$。因此，根据 命题14.3，我们有
+\[
+f_{R\Theta}(r, \theta) = f_{XY}(r \cos \theta, r \sin \theta) \cdot r = \frac{r}{2\pi} e^{-\frac{r^2}{2}}.
+\]
+
+大家会发现这个式子是与 $\theta$ 无关的，这说明关于 $\theta$ 的边缘分布是均匀分布。这件事情的一个推论是，如果我们希望从二维的单位圆上均匀的取出一个点来，我们只需独立的取两个标准高斯变量 $(X, Y)$，然后把它归一化成长度为 $1$ 的向量 $\left( \frac{X}{\sqrt{X^2+Y^2}}, \frac{Y}{\sqrt{X^2+Y^2}} \right)$ 即可。这件事情对于高维也是成立的，对于算法设计很有意义。
+\end{example}
+
+\begin{example}[随机变量的和]
+假设知道 $X$ 和 $Y$ 的联合概率密度 $f_{XY}$，我们来考虑两个随机变量的和 $Z = X + Y$ 的概率密度。我们首先引入一个辅助变量 $W = Y$，于是对于 $(Z, W)$, $(X, Y) = g(Z, W)$，我们有
+\[
+|\det J_g(z, w)| = \begin{vmatrix} 1 & -1 \\ 0 & 1 \end{vmatrix} = 1.
+\]
+
+所以根据 命题14.3，我们有
+\[
+f_{ZW}(z, w) = f_{XY}(z - w, w).
+\]
+
+我们可以计算出 $Z$ 的边缘密度函数为
+\[
+f_Z(z) = \int_{-\infty}^\infty f_{ZW}(z, w)  dw = \int_{-\infty}^\infty f_{XY}(z - w, w)  dw = \int_{-\infty}^\infty f_Y(w) \cdot f_{X \mid Y}(z - w \mid w)  dw.
+\]
+
+特别的，如果 $X$ 和 $Y$ 独立，那么
+\[
+f_Z(z) = \int_{-\infty}^\infty f_X(z - w) f_Y(w)  dw.
+\]
+\end{example}
+
+\newpage

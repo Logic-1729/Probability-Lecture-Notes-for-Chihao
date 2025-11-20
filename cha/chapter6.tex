@@ -1,0 +1,420 @@
+\chapter{离散期望的一些应用}
+
+我们上节课介绍了期望和方差的定义。我们今天使用它们来解决一些实际的问题。使用离散概率工具解决算法、组合数学问题是一个很深刻的主题，感兴趣的同学可以参考 \href{https://book.douban.com/subject/27105338/}{\underline{Mitzenmacher and Upfal, Probability and Computing}} 以及 \href{https://book.douban.com/subject/26713558/}{\underline{Alon and Spencer, The Probabilistic Method}} 两本名著。
+
+\section{几何分布（\href{https://en.wikipedia.org/wiki/Geometric_distribution}{\underline{Geometric Distribution}}）}
+
+我们今天要介绍一类重要的分布，叫做几何分布。它有一个参数 $p \in [0, 1]$，被记作 $\mathsf{Geom}(p)$。我们上一节课说过，描述一个（离散）分布，给出它的概率质量函数 $p_k = \mathbb{P}[X = k]$ 就好了。当然，更加“合适”的做法是描述出这个满足分布的随机变量背后的随机试验。几何分布对应了如下随机试验：
+
+考虑不停地扔一枚 $p$-偏差的硬币（即每次 $p$ 的概率出正面，$1-p$ 的概率出反面），$X$ 表示第一次出现正面的时候扔的次数。根据这个定义，我们“显然”有
+\[
+p_k = \mathbb{P}[X = k] = (1 - p)^{k-1} \cdot p.
+\]
+
+这便定义了几何分布 $\mathsf{Geom}(p)$。
+
+我们这儿要十分小心。我们现在通过直接给出概率质量函数 $\forall k \geq 1,\, p_k = (1 - p)^{k-1} p$ 的形式“定义”了几何分布 $\mathsf{Geom}(p)$。我们上节课也说过，一旦给出基于概率质量函数的定义，我们可以构造一个平凡的概率空间与随机变量，使得它的分布是这个给定分布。在我们这个例子里，我们让 $\Omega' = \mathbb{Z}_{\geq 1}$为所有正整数，$\mathscr{F}' = 2^{\Omega'}$，$\mathbb{P}'(\{k\}) = (1 - p)^{k-1} p$，$X'(k) = k$。那么 $X' \sim \mathsf{Geom}(p)$。但这个概率空间并不是我们直观上引入几何分布的那个概率空间。
+
+我们现在来看看直观上引入概率几何分布的那个随机试验，所对应的概率空间是什么。一番思索之后，大家应该能发现样本空间是 $\Omega = \{H, T\}^{\mathbb{N}}$，即所有“无限长”的 $HT$ 串的集合（注意，这不是 $\{H,T\}^*$，$\{H,T\}^*$ 是所有“有限长” $HT$ 串的集合）。因此 $\Omega$ 并不是一个可数集，我们目前还没有办法在上面定义概率测度。事实上，$\Omega$ 中的元素可以看成无限（二进制）小数，因此可以把 $\Omega$ 和 $[0, 1]$ 对应起来。我们在未来会让大家在作业里证明，这儿的 $\sigma$-代数可以取 $[0, 1]$ 上的所有 Borel 集，对于 $p = \frac{1}{2}$ 而言，我们可以使用在 $[0, 1]$ 上定义均匀分布同样的方法定义 $\Omega$ 上的均匀分布。
+
+但是无论如何，我们有了概率质量函数我们可以做计算了。使用高中曾经擅长的数列求和技巧，对于 $X \sim \mathsf{Geom}(p)$，我们有
+\[
+\textbf{E}[X] = \sum_{k=1}^\infty k \cdot (1 - p)^{k-1} \cdot p = \frac{1}{p}.
+\]
+
+我们同样可以计算出
+\[
+\textbf{Var}[X] = \textbf{E}[X^2] - \textbf{E}[X]^2 = \frac{1 - p}{p^2}.
+\]
+
+因此我们可以说，扔一枚均匀硬币，平均两次，会出现一次正面。虽然我们目前还没有完全严格的把这个分布和扔硬币的随机试验对应起来。
+
+\section{冒泡排序交换次数的期望与方差}
+
+冒泡排序是一种直观的排序算法，其核心操作是不断交换相邻的逆序对，直到整个序列有序。一个关键的观察是：冒泡排序的总交换次数等于输入序列中逆序对的总数。
+
+假设我们从 $n!$ 个不同的排列中均匀随机地选取一个作为输入。令随机变量 $X$ 表示该排列的逆序对数（即冒泡排序的交换次数）。下面我们用两种不同的方法来计算 $\mathbb{E}[X]$ 和 $\mathrm{Var}(X)$。
+
+对于任意一对索引 $(i, j)$，其中 $1 \le i < j \le n$，我们定义一个指示随机变量：
+\[
+X_{i,j} =
+\begin{cases}
+1, & \text{如果 } a_i > a_j \text{ (即 } (i,j) \text{ 是一个逆序对)}, \\
+0, & \text{否则}.
+\end{cases}
+\]
+
+显然，总的逆序对数为：
+\[
+X = \sum_{1 \le i < j \le n} X_{i,j}.
+\]
+
+由于输入是均匀随机排列，对于任意一对 $(i, j)$，$a_i$ 和 $a_j$ 的大小关系是等可能的，即 $\mathbb{P}(a_i > a_j) = \frac{1}{2}$。因此，
+\[
+\mathbb{E}[X_{i,j}] = \mathbb{P}(a_i > a_j) = \frac{1}{2}.
+\]
+
+根据期望的线性性质，我们有：
+\[
+\mathbb{E}[X] = \sum_{1 \le i < j \le n} \mathbb{E}[X_{i,j}] = \binom{n}{2} \cdot \frac{1}{2} = \frac{n(n-1)}{4}.
+\]
+
+接下来，我们计算方差 $\mathrm{Var}(X) = \mathbb{E}[X^2] - (\mathbb{E}[X])^2$。为此，我们需要计算 $\mathbb{E}[X^2]$。
+\[
+\mathbb{E}[X^2] = \mathbb{E}\left[ \left( \sum_{1 \le i < j \le n} X_{i,j} \right)^2 \right] = \mathbb{E}\left[ \sum_{1 \le i_1 < j_1 \le n} \sum_{1 \le i_2 < j_2 \le n} X_{i_1,j_1} X_{i_2,j_2} \right].
+\]
+
+这个双重求和可以按索引对 $(i_1, j_1)$ 和 $(i_2, j_2)$ 的重叠情况进行分类：
+
+\begin{enumerate}
+\item \textbf{情况1:} $(i_1, j_1) = (i_2, j_2)$。此时 $X_{i_1,j_1} X_{i_2,j_2} = X_{i_1,j_1}^2 = X_{i_1,j_1}$，因为 $X_{i,j}$ 是0-1变量。共有 $\binom{n}{2}$ 项，每项期望为 $\frac{1}{2}$。
+    \item \textbf{情况2:} $(i_1, j_1)$ 和 $(i_2, j_2)$ 共享一个索引（例如 $i_1 = i_2$ 但 $j_1 \ne j_2$）。此时，三个元素 $a_{i_1}, a_{j_1}, a_{j_2}$ 的相对顺序是随机的，$X_{i_1,j_1} X_{i_2,j_2} = 1$ 当且仅当这三个元素是严格递减的，概率为 $\frac{1}{3!} \times 2 = \frac{1}{3}$。此类项共有 $2 \binom{n}{2} (n-2)$ 项（选择两个共享索引的对，再选第三个不同的索引）。
+    \item \textbf{情况3:} $(i_1, j_1)$ 和 $(i_2, j_2)$ 共享两个索引（即 $j_1 = i_2$ 或 $j_2 = i_1$）。这相当于考察一个三元组 $(i, k, j)$，其中 $i<k<j$，要求 $a_i > a_k$ 且 $a_k > a_j$。三个元素的六种排列中只有一种满足，故概率为 $\frac{1}{6}$。此类项共有 $\binom{n}{2} (n-2)$ 项。
+    \item \textbf{情况4:} $(i_1, j_1)$ 和 $(i_2, j_2)$ 完全不相交。四个元素的相对顺序是随机的，$X_{i_1,j_1} X_{i_2,j_2} = 1$ 当且仅当两对都是逆序，概率为 $\frac{1}{4}$。此类项共有 $\binom{n}{2} \binom{n-2}{2}$ 项。
+\end{enumerate}
+
+将以上各项代入并化简，可得：
+\[
+\mathbb{E}[X^2] = \frac{n(n-1)(9n^2 - 5n + 10)}{144}.
+\]
+
+因此，方差为：
+\[
+\mathrm{Var}(X) = \mathbb{E}[X^2] - (\mathbb{E}[X])^2 = \frac{n(n-1)(2n+5)}{72}.
+\]
+
+当然我们也可以通过构建递推关系，从规模为 $n-1$ 的问题推导出规模为 $n$ 的问题。
+
+考虑一个随机排列 $\pi_n$。我们可以将其视为：先生成一个 $[n-1]$ 的随机排列 $\pi_{n-1}$，然后将元素 $n$（最大值）以等概率 $\frac{1}{n}$ 插入到 $\pi_{n-1}$ 的 $n$ 个位置之一。
+
+设 $X_n$ 为 $\pi_n$ 的逆序对数，$X_{n-1}$ 为 $\pi_{n-1}$ 的逆序对数。令 $Y_n$ 为因插入元素 $n$ 而新产生的逆序对数。显然，$Y_n$ 是一个离散均匀随机变量，取值于 $\{0, 1, \dots, n-1\}$，且 $X_{n-1} \perp\!\!\!\perp Y_n$。
+
+于是，我们得到递推关系：
+\[
+X_n = X_{n-1} + Y_n.
+\]
+
+\textbf{期望：}
+\[
+\mathbb{E}[X_n] = \mathbb{E}[X_{n-1}] + \mathbb{E}[Y_n] = \mathbb{E}[X_{n-1}] + \frac{n-1}{2}.
+\]
+
+由初始条件 $\mathbb{E}[X_1] = 0$，解得：
+\[
+\mathbb{E}[X_n] = \sum_{k=2}^{n} \frac{k-1}{2} = \frac{n(n-1)}{4}.
+\]
+
+\textbf{方差：}
+\[
+\mathrm{Var}(X_n) = \mathrm{Var}(X_{n-1}) + \mathrm{Var}(Y_n).
+\]
+
+其中，$\mathrm{Var}(Y_n) = \mathbb{E}[Y_n^2] - (\mathbb{E}[Y_n])^2 = \frac{(n-1)(2n-1)}{6} - \left(\frac{n-1}{2}\right)^2 = \frac{n^2 - 1}{12}$。
+
+由初始条件 $\mathrm{Var}(X_1) = 0$，解得：
+\[
+\mathrm{Var}(X_n) = \sum_{k=2}^{n} \frac{k^2 - 1}{12} = \frac{n(n-1)(2n+5)}{72}.
+\]
+
+两种方法殊途同归，均得到了相同的结果：
+\[
+\boxed{\mathbb{E}[X] = \frac{n(n-1)}{4}, \quad \mathrm{Var}(X) = \frac{n(n-1)(2n+5)}{72}.}
+\]
+
+\section{奖券收集问题（Coupon Collector's Problem）}
+
+奖券收集问题是概率分析里面的一个重要的概率模型。我们使用今天介绍的技巧和不等式来研究这个模型。
+
+考虑玩一个抽卡手游。现在总共有 $n$ 种不同类型的卡，每一抽可以均匀的得到其中一种。现在想问平均要抽多少次，可以集齐一套，即 $n$ 种卡每种至少一张。
+
+我们考虑这个问题的概率空间建模。这儿的一个方便的样本空间和几何分布很类似，是 $\Omega = [n]^{\mathbb{N}}$，因此 $\Omega$ 是不可数的。我们不妨假设上面可以合理的定义均匀测度 $(\Omega, \mathscr{F}, \mathbb{P})$。定义随机变量 $X$ 为第一次集齐一套的抽卡次数。我们关心的是 $\textbf{E}[X]$ 即 $X$ 的期望。由于 $X$ 的取值还是离散的，我们可以把之前对于期望的定义稍微扩展一下，即定义 $\textbf{E}[X] = \sum_{k=1}^\infty k \cdot \mathbb{P}[X = k]$。
+
+\begin{anymark}[再次警告]
+我们接下来的计算是基于随机变量、随机试验、期望、独立性的直观进行的，它们是对的，但正确性的严格证明需要我们未来学习了更多的语言之后才能进行。现在我们暂时贷款一下。
+\end{anymark}
+
+直接通过 $\textbf{E}[X]$ 的定义进行计算显然是困难的。我们又再次使用期望的线性性技巧。下面这种构造，第一次见是非常巧妙的，但它也是非常常用的构造，请大家务必理解。对于 $i = 1, 2, \dots, n$，我们定义随机变量 $X_i$ 表示，“在当且已经有了 $i-1$ 种不同类型的卡之后，要获得另外一种新的类型的卡，还要抽几次”这个随机变量。那么，我们有如下几个不言自明的观察：
+\begin{enumerate}
+\item $X = \sum_{i=1}^n X_i$；
+    \item $X_1, X_2, \dots, X_n$ 是相互独立的；
+    \item $X_i \sim \mathsf{Geom}\left(\frac{n - i + 1}{n}\right)$。
+\end{enumerate}
+
+于是，我们便可以使用期望的线性性和几何分布的性质得到
+\[
+\textbf{E}[X] = \sum_{i=1}^n \textbf{E}[X_i] = \sum_{i=1}^n \frac{n}{n - i + 1} = \sum_{i=1}^n \frac{n}{i} = n H_n,
+\]
+
+其中 $H_n = \sum_{i=1}^n \frac{1}{i}$ 是\href{https://en.wikipedia.org/wiki/Harmonic_series_(mathematics)}{\underline{调和级数}}。我们知道 $\lim_{n \to \infty} H_n = \log n + \gamma$，其中 $\gamma \approx 0.5772$ 是\href{https://en.wikipedia.org/wiki/Euler%27s_constant}{\underline{欧拉常数}}。
+
+以上的计算告诉我们，如果 $n = 1000$，那么要收集一套卡，平均需要 $n H_n = 7485.47$ 次。但实际上，因为存在欧皇和非酋的缘故，我们往往并不关心平均数，我们关心，抽多少卡，可以“保证”凑齐一套。当然了，由于是随机问题，不可能100\%保证，因此，我们想计算，假设希望以99\%的概率收集齐一套，至少需要抽多少次？
+
+我们用三种方法来估计这个上界。
+\begin{enumerate} 
+
+ \item 首先尝试用 Markov 不等式来估算。回忆 Markov 不等式它表达的是一个随机变量不太可能以特别大的概率特别大。这正好满足我们的要求。使用 Markov 不等式，我们有
+\[
+\mathbb{P}[X \geq a] \leq \frac{\textbf{E}[X]}{a} = \frac{n H_n}{a}.
+\]
+
+如果我们想让上面的概率不超过 $1\%$，我们需要取 $a = 100 n H_n$。即在我们上面的例子里，Markov 不等式告诉我们说，如果抽了 $100 n H_n = 748547$ 次卡，那么以 $99\%$ 的概率，能凑齐一套。
+
+ \item 当然游戏公司没有这么黑。上面估算的数值看起来很坏的原因在于，Markov 不等式在我们的例子上太松了，它并没有用到随机变量足够多的信息。我们这儿用上方差的信息试一试。由 Chebyshev's 不等式，
+\[
+\mathbb{P}[|X - \textbf{E}[X]| \geq a] \leq \frac{\textbf{Var}[X]}{a^2}.
+\]
+
+如果让上式不超过 $1\%$，我们需要取 $a = 10 \sqrt{\textbf{Var}[X]}$。因此，我们来计算一下 $\textbf{Var}[X]$。我们注意到 $X = \sum_{i=1}^n X_i$，并且这些 $X_i$ 是相互独立的。因此，我们可以用方差的线性性，得到
+\[
+\textbf{Var}[X] = \sum_{i=1}^n \textbf{Var}[X_i] = \sum_{i=1}^n \frac{1 - \frac{n - i + 1}{n}}{\left(\frac{n - i + 1}{n}\right)^2} = \sum_{i=1}^n \frac{(i - 1) n}{(n - i + 1)^2} \leq \sum_{i=1}^n \frac{n^2}{(n - i + 1)^2}.
+\]
+
+我们注意到
+\[
+\sum_{i=1}^n \frac{1}{(n - i + 1)^2} = \sum_{i=1}^n \frac{1}{i^2} \leq \int_1^\infty \frac{dx}{x^2} = 1.
+\]
+
+因此 $\textbf{Var}[X] \leq n^2$。我们取 $a = 10\sqrt{2} n$，即如果我们抽了 $H_n + 10\sqrt{2} n \approx 21628$ 次卡，便可以以 $99\%$ 的概率收集一套了。
+
+ \item 实际上，我们可以直接计算抽了 $m$ 张卡后还没有收集一套的概率。我们有
+\[
+\mathbb{P}[\text{抽了 } m \text{ 张卡还没集齐}] = \mathbb{P}[\exists i \in [n]，\text{抽了 } m \text{ 次之后都没有抽到它}] \leq \sum_{i=1}^n \mathbb{P}[\text{抽了 } m \text{ 次都没有抽到 } i].
+\]
+
+上面这个小于等于号使用的是 union-bound。对于固定的卡 $i$，抽了 $m$ 轮之后没有抽到它的概率是
+\[
+\left(1 - \frac{1}{n}\right)^m \leq e^{-m/n}.
+\]
+
+因此，我们令 $n e^{-m/n} \leq 1\%$，可以得到 $m \geq n \log(100 n) \approx 11513$。也就是说，抽了11513次之后，有超过99\%的概率已经收集全一套了，这比之前计算的，又要好了一些。
+\end{enumerate}
+
+
+上面几个分析可以看出，如果我们对于随机变量有更多的信息，可以让我们的估算更加准确。
+
+\section{随机图上的相变}
+
+考虑 \textbf{Erdős–Rényi} 随机图 $G(n, p(n))$，其中 $p(n): \mathbb{N} \to [0, 1]$ 是一个关于顶点个数的函数。我们称一个图性质 $\mathcal{P}$ 具有相变性，如果 $\exists r: \mathbb{N} \to [0, 1]$ 使得
+\begin{enumerate}
+\item 如果 $p(n) \ll r(n)$，$\lim_{n \to \infty} \mathbb{P}_{G \sim G(n, p(n))}[G \text{ satisfies } \mathcal{P}] = 0$；
+    \item 如果 $p(n) \gg r(n)$，$\lim_{n \to \infty} \mathbb{P}_{G \sim G(n, p(n))}[G \text{ satisfies } \mathcal{P}] = 1$。
+\end{enumerate}
+
+\begin{anymark}[Remark]
+图的性质 $\mathcal{P}:G \mapsto 0 \; \text{or} \; 1$ 指的是从图到 0 或者 1 的一个映射.
+\end{anymark}
+
+这儿 $r$ 被称之为 $\mathcal{P}$ 的阈值函数。下面我们将用二阶矩方法证明性质“一个图包含一个 $K_4$”具有相变性，并且其阈值函数是 $n^{-2/3}$。
+
+\begin{theorem}
+图性质“包含一个 $K_4$”具有阈值函数 $n^{-2/3}$。
+\end{theorem}
+
+令随机变量 $X$ 表示 $G$ 中 $K_4$ 的数量。当 $p(n) \ll n^{-2/3}$ 时，根据马尔可夫不等式，我们有
+\[
+\mathbb{P}_{G \sim G(n, p(n))}[G \text{ contains a } K_4] = \mathbb{P}[X \geq 1] \leq \textbf{E}[X].
+\]
+
+对于任意的图中的 4 个顶点构成的集合 $S \in \binom{[n]}{4}$，令 $X_S = \mathbf{1}[G[S] \text{ is a clique}]$。那么
+\[
+\textbf{E}[X] = \textbf{E}\left[ \sum_{S \in \binom{[n]}{4}} X_S \right] = \binom{n}{4} \cdot p^6 \leq n^4 p^6 = o(1).
+\]
+
+另一方面，当 $p(n) \gg n^{-2/3}$，使用切比雪夫不等式
+\[
+\mathbb{P}[X = 0] \leq \mathbb{P}[|X - \textbf{E}[X]| \geq \textbf{E}[X]] \leq \frac{\textbf{Var}[X]}{(\textbf{E}[X])^2} = \frac{\textbf{E}[X^2] - (\textbf{E}[X])^2}{(\textbf{E}[X])^2}.
+\]
+
+注意到
+\begin{align*}
+&\mathbf{E}\left[X^2\right] - (\mathbf{E}\left[X\right])^2 \\
+&= \mathbf{E}\left[\left(\sum_{S \in \binom{[n]}{4}} X_S\right)^2\right] - \left(\mathbf{E}\left[\sum_{S \in \binom{[n]}{4}} X_S\right]\right)^2 \\
+&= 2 \sum_{S \ne T} \mathbf{E}\left[X_S X_T\right] + \sum_{S} \mathbf{E}\left[X_S^2\right] - 2 \sum_{S \ne T} \mathbf{E}\left[X_S\right] \mathbf{E}\left[X_T\right] - \sum_{S} (\mathbf{E}\left[X_S\right])^2 \\
+&= 2 \sum_{|S \cap T| = 2} \left( \mathbf{E}\left[X_S X_T\right] - \mathbf{E}\left[X_S\right] \mathbf{E}\left[X_T\right] \right) + 2 \sum_{S \cap T = 3} \left( \mathbf{E}\left[X_S X_T\right] - \mathbf{E}\left[X_S\right] \mathbf{E}\left[X_T\right] \right) \\
+&\quad + \sum_{S} \left( \mathbf{E}\left[X_S^2\right] - (\mathbf{E}\left[X_S\right])^2 \right) \\
+&\le 2 \sum_{|S \cap T| = 2} \mathbf{E}\left[X_S X_T\right] + 2 \sum_{S \cap T = 3} \mathbf{E}\left[X_S X_T\right] + \sum_{S} \mathbf{E}\left[X_S^2\right].
+\end{align*}
+
+正如 Figure~1 所示，当 $|S \cap T| = 2$ 时，$X_S = X_T = 1$ 当且仅当这 11 条边都被包含。因此
+\[
+\textbf{E}[X_S X_T] = \mathbb{P}[X_S = 1 \wedge X_T = 1] = p^{11}.
+\]
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.3\textwidth]{cha/Figure1.png}
+\caption{Figure1}
+\end{figure}
+
+类似地，当 $|S \cap T| = 3$（如 Figure~2 所示），
+\[
+\textbf{E}[X_S X_T] = \mathbb{P}[X_S = 1 \wedge X_T = 1] = p^{9}.
+\]
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.3\textwidth]{cha/Figure2.png}
+\caption{Figure2}
+\end{figure}
+
+因此，
+
+\begin{align*}
+\mathbf{E}\left[X^2\right] - (\mathbf{E}\left[X\right])^2 
+&\le 2 \sum_{|S \cap T| = 2} \mathbf{E}\left[X_S X_T\right] + 2 \sum_{S \cap T = 3} \mathbf{E}\left[X_S X_T\right] + \sum_{S} \mathbf{E}\left[X_S^2\right] \\
+&= 2 \binom{n}{2} \binom{n-2}{2} \binom{n-4}{2} p^{11} 
+   + 2 \binom{n}{3} \binom{n-3}{1} \binom{n-4}{1} p^{9} 
+   + \binom{n}{4} p^{6} \\
+&\le n^6 p^{11} + n^5 p^{9} + n^4 p^{6} = o\big( (\mathbf{E}\left[X\right])^2 \big).
+\end{align*}
+
+这说明了当 $p(n) \gg n^{-2/3}$ 时，$\mathbb{P}[G \text{ contains a } K_4] \to 1$。
+
+事实上，我们可以更进一步拓展这个问题。
+
+\begin{theorem}
+对于任意一个固定的、边数为正的图 $H$，其“包含 $H$ 作为子图”这一性质在 Erdős–Rényi 随机图 $G(n, p(n))$ 中的阈值函数为 $n^{-1/r(H)}$，其中 $r(H) = \max_{H_0 \subseteq H} \frac{|E(H_0)|}{|V(H_0)|}$。
+\end{theorem}
+
+\begin{proof}
+
+令 $S_1, S_2, \dots, S_{m_n}$ 为在 $n$ 个顶点的完全图中所有与 $H$ 同构的子图。注意，$m_n$ 是这些子图的数量，它是一个关于 $n$ 的函数。对于每个 $i \in [m_n]$，我们定义一个指示随机变量：
+\[
+X_i := \mathbf{1}\{G \text{ 包含 } S_i\}.
+\]
+
+那么，随机变量 $X := \sum_{i=1}^{m_n} X_i$ 就表示图 $G$ 中包含的与 $H$ 同构的子图的总数。显然，事件 “$G$ 包含 $H$ 作为子图” 等价于事件 “$X \ge 1$”。我们的目标是分析 $\mathbb{P}(X \ge 1)$ 的渐进行为。为此，我们首先计算 $X$ 的期望和方差。
+
+根据期望的线性性质，我们有：
+\[
+\mathbb{E}[X] = \sum_{i=1}^{m_n} \mathbb{E}[X_i].
+\]
+
+由于 $G \sim G(n, p(n))$，一个特定的子图 $S_i$ 出现在 $G$ 中的概率等于其所有边都存在的概率，即 $p(n)^{|E(H)|}$。因此，
+\[
+\mathbb{E}[X_i] = p(n)^{|E(H)|}, \quad \forall i.
+\]
+
+于是，
+\[
+\mathbb{E}[X] = m_n \cdot p(n)^{|E(H)|}.
+\]
+
+由于 $m_n = \Theta(n^{|V(H)|})$（因为我们需要从 $n$ 个顶点中选择 $|V(H)|$ 个，并考虑它们之间的同构映射），所以
+\[
+\mathbb{E}[X] = \Theta(n^{|V(H)|} p(n)^{|E(H)|}).
+\]
+
+方差的计算更为复杂，因为它涉及不同子图之间的相关性。我们有：
+\[
+\mathrm{Var}(X) = \mathbb{E}[X^2] - (\mathbb{E}[X])^2 = \sum_{i,j=1}^{m_n} \left( \mathbb{E}[X_i X_j] - \mathbb{E}[X_i]\mathbb{E}[X_j] \right).
+\]
+
+关键观察是：当两个子图 $S_i$ 和 $S_j$ 没有公共边时，$X_i$ 和 $X_j$ 是独立的，此时协方差项为零。只有当它们共享至少一条边时，协方差才可能非零。因此，我们可以将方差的上界写为：
+\[
+\mathrm{Var}(X) \le \sum_{\substack{i,j \in [m_n] \\ E(S_i \cap S_j) \neq \varnothing}} \mathbb{P}(G \text{ 包含 } S_i \cup S_j).
+\]
+
+现在，我们来正式推导“包含 $H$ 作为子图”这一性质的阈值函数。我们定义 $r(H)$ 为：
+\[
+r(H) := \max_{H_0 \subseteq H} \frac{|E(H_0)|}{|V(H_0)|},
+\]
+
+其中 $H_0$ 取遍 $H$ 的所有子图。假设 $H^*$ 是达到上述最大值的子图，即 $r(H) = \frac{|E(H^*)|}{|V(H^*)|}$。我们考虑性质 $\mathcal{P}'$：“包含 $H^*$ 作为子图”。显然，如果 $G$ 包含 $H$，则它必然包含 $H^*$。因此，
+\[
+\mathbb{P}(G \text{ 满足 } \mathcal{P}) \le \mathbb{P}(G \text{ 满足 } \mathcal{P}').
+\]
+
+令 $X'$ 为 $G$ 中包含 $H^*$ 的数量。与之前类似，我们有：
+\[
+\mathbb{E}[X'] = \Theta(n^{|V(H^*)|} p(n)^{|E(H^*)|}) = \Theta((n \cdot p(n)^{r(H)})^{|V(H^*)|}).
+\]
+
+如果 $p(n) \ll n^{-1/r(H)}$，那么 $n \cdot p(n)^{r(H)} \to 0$，从而 $\mathbb{E}[X'] \to 0$。根据马尔可夫不等式，$\mathbb{P}(X' \ge 1) \le \mathbb{E}[X'] \to 0$。
+
+因此，$\mathbb{P}(G \text{ 满足 } \mathcal{P}) \to 0$。
+
+对于另一边，我们使用切比雪夫不等式：
+\[
+\mathbb{P}(X = 0) \le \mathbb{P}(|X - \mathbb{E}[X]| \ge \mathbb{E}[X]) \le \frac{\mathrm{Var}(X)}{(\mathbb{E}[X])^2}.
+\]
+
+因此，要证明 $\mathbb{P}(X \ge 1) \to 1$，我们只需证明 $\frac{\mathrm{Var}(X)}{(\mathbb{E}[X])^2} \to 0$。
+
+根据前面的结论，我们有：
+\[
+\mathrm{Var}(X) \le \sum_{\substack{i,j \in [m_n] \\ E(S_i \cap S_j) \neq \varnothing}} \mathbb{P}(G \text{ 包含 } S_i \cup S_j).
+\]
+
+对于任意一对 $(i,j)$，设 $S_i \cap S_j$ 恰好包含 $v$ 个顶点和 $e$ 条边。那么 $S_i \cup S_j$ 包含 $2|V(H)| - v$ 个顶点和 $2|E(H)| - e$ 条边。因此，
+\[
+\mathbb{P}(G \text{ 包含 } S_i \cup S_j) = p(n)^{2|E(H)| - e}.
+\]
+
+满足条件的 $(i,j)$ 对的数量可以通过组合计数得到，其阶为 $O(n^{2|V(H)| - v})$。
+
+于是，整个求和可以按 $v$ 和 $e$ 分组：
+\[
+\mathrm{Var}(X) = O\left( \sum_{v,e} n^{2|V(H)| - v} p(n)^{2|E(H)| - e} \right).
+\]
+
+另一方面，$(\mathbb{E}[X])^2 = \Theta(n^{2|V(H)|} p(n)^{2|E(H)|})$。
+
+因此，比值为：
+\[
+\frac{\mathrm{Var}(X)}{(\mathbb{E}[X])^2} = O\left( \sum_{v,e} n^{-v} p(n)^{-e} \right).
+\]
+
+由于 $S_i \cap S_j$ 是 $H$ 的一个子图，我们有 $\frac{e}{v} \le r(H)$，即 $e \le r(H) \cdot v$。因此，$n^{-v} p(n)^{-e} \le (n \cdot p(n)^{r(H)})^{-v}$。
+
+如果 $p(n) \gg n^{-1/r(H)}$，那么 $n \cdot p(n)^{r(H)} \to \infty$，从而 $(n \cdot p(n)^{r(H)})^{-v} \to 0$ 对于所有 $v \ge 1$ 成立。因此，整个求和趋于0。
+
+所以定理得证。
+
+\end{proof}
+
+\section{Weierstrass近似定理}
+
+我们在数学分析中曾经学过，在一个闭区间上的任意一个连续的函数都可以被一个多项式函数任意地近似。我们现在使用二阶矩方法来证明这个定理。
+
+\begin{theorem}[Weierstrass近似定理]
+给定一个连续函数 $f: [0, 1] \to [-1, 1]$。对于任意的 $\varepsilon > 0$ 都存在一个多项式 $p$ 满足 $\forall x \in [0, 1],\, |p(x) - f(x)| \leq \varepsilon$。
+\end{theorem}
+
+我们可以用以下的观点来看待这个问题：
+
+
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.3\textwidth]{cha/Figure3.png}
+\caption{Figure3}
+\end{figure}
+
+\begin{proof}
+
+如 Figure~3 所示，我们从函数中选定 $n+1$ 个点，第 $i$ 个点的取值为 $f(\frac{i}{n})$。然后我们定义
+\[
+\mathbb{P}_n(x) = \sum_{i=0}^n E_i(x) \cdot f\left(\frac{i}{n}\right).
+\]
+
+我们希望 $E_i(x)$ 满足下列条件：
+\begin{enumerate}
+\item 对于任意的 $x$，$\sum_i E_i(x) = 1$。也就是说，系数是一个依赖于 $x$ 的概率分布；
+    \item 对于任意的 $i, x$，$E_i(x)$ 是一个多项式；
+    \item 对于任意的 $x$，系数比较集中在离 $x$ 最近的点 $\frac{i^*}{n}$ 上（$i^* = \arg\min_i |x - i/n|$）。
+\end{enumerate}
+
+我们可以定义出某些随机变量来表达 $E_i(x)$，也即令 $E_i(x) = \mathbb{P}[Y = i]$。注意到我们希望当$x$  接近于$\frac{i^*}{n}$ 的时候 $E_i(x)$ 很大，并且对于其他离 $x$ 比较远的点我们希望他们的系数之和比较小。考虑随机变量 $Y \sim \mathsf{Bin}(n, x)$。我们有 $\textbf{E}[Y] = n x$ 并且 $\textbf{Var}[Y] = x(1 - x) n \leq n/4$。根据切比雪夫不等式，
+\[
+\mathbb{P}\left[ \left| \frac{Y}{n} - x \right| \geq n^{-1/3} \right] = \mathbb{P}[|Y - n x| \geq n^{2/3}] \leq \frac{n/4}{n^{4/3}} = \frac{1}{4 n^{1/3}}.
+\]
+
+令 $E_i(x) = \mathbb{P}[Y = i] = \binom{n}{i} x^i (1 - x)^{n - i}$。对于任意 $x \in [0, 1]$，
+\begin{align*}
+|\mathbb{P}_n(x) - f(x)| &\leq \sum_{i=0}^n E_i(x) \left| f\left(\frac{i}{n}\right) - f(x) \right| \\
+&= \sum_{i: |i - n x| \leq n^{2/3}} E_i(x) \left| f\left(\frac{i}{n}\right) - f(x) \right| + \sum_{i: |i - n x| > n^{2/3}} E_i(x) \left| f\left(\frac{i}{n}\right) - f(x) \right|.
+\end{align*}
+由于函数 $f$ 是连续的，那么存在 $\delta$ 使得 $\forall |x - y| < \delta,\, |f(x) - f(y)| < \varepsilon/2$。当 $n^{-1/3} < \delta$，我们有第一项 $\leq \varepsilon/2$。同时，当 $n^{-1/3} < \epsilon$时，第二项 $\leq 2 \sum_{i:\|i-nx\|>n^{\frac{2}{3}}} E_i(x) \leq \frac{n^{-\frac{1}{3}}}{2} \leq \frac{\epsilon}{2}$。因此，选定 $n \geq \max\{\varepsilon^{-3}, \delta^{-3}\}$，对于所有 $x \in [0, 1]$，我们有 $|\mathbb{P}_n(x) - f(x)| \leq \varepsilon$。
+
+\end{proof}

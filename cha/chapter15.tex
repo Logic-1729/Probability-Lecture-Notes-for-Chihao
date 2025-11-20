@@ -1,0 +1,321 @@
+\def\*#1{\mathbf{#1}} 
+\def\+#1{\mathcal{#1}} 
+\def\-#1{\mathrm{#1}}
+\def\^#1{\mathbb{#1}}
+\def\!#1{\mathtt{#1}}
+\def\bb#1{\mathbb{#1}}
+\def\@#1{\mathscr{#1}} 
+\newcommand{\norm}[1]{\left\Vert#1\right\Vert}
+\newcommand{\abs}[1]{\left\vert#1\right\vert}
+\newcommand{\set}[1]{\left\{#1\right\}}
+\newcommand{\tuple}[1]{\left(#1\right)} 
+\newcommand{\eps}{\varepsilon}
+\newcommand{\inner}[2]{\langle #1,#2\rangle} 
+\newcommand{\tp}{\tuple}
+\renewcommand{\mid}{\;\middle\vert\;} 
+\newcommand{\cmid}{\,:\,}
+\newcommand{\numP}{\#\mathbf{P}} 
+\renewcommand{\P}{\mathbf{P}}
+\newcommand{\defeq}{:=} 
+\renewcommand{\d}{\,\-d}
+\newcommand{\ol}{\overline}
+\newcommand{\ul}{\underline}
+\renewcommand{\dd}[1]{\mathrm{d}#1}
+\newcommand{\dv}[3][]{\frac{\mathrm{d}^{#1}#2}{\mathrm{d}#3^{#1}}}
+\newcommand{\ddv}[3][]{\frac{\mathrm{d}^{#1}}{\mathrm{d}#3^{#1}}#2}
+\newcommand{\pdv}[3][]{\frac{\partial^{#1}#2}{\partial#3^{#1}}}
+\newcommand{\argmin}{\mathop{\arg\min}}
+\newcommand{\argmax}{\mathop{\arg\max}}
+\newcommand{\wh}{\widehat}
+\renewcommand{\mod}{\;\mathrm{mod}\;}
+\renewcommand{\Pr}[2][]{\bb P_{#1}\left(#2\right)}
+\newcommand{\Var}[2][]{\mathbf{Var}_{#1}\left[#2\right]}
+\newcommand{\Cov}[2][]{\mathbf{Cov}_{#1}\left[#2\right]}
+\newcommand{\E}[2][]{\mathbf{E}_{#1}\left[#2\right]}
+\renewcommand{\emptyset}{\varnothing}
+
+\chapter{指数分布与泊松过程}
+
+我们接下来的几次课都会使用之前介绍的工具来解决一些实际的问题。我们通过研究一些具体的分布，理解它们直观上的含义，证明一些有趣的性质，解决一些初看起来并不是那么容易处理的问题。便让我们从\href{https://en.wikipedia.org/wiki/Poisson_distribution}{\underline{泊松分布}}开始。
+
+\section{泊松分布}
+
+考虑一个场景：某餐厅过去五天的顾客数量分别是 100、120、80、75 和 110。为了确保明天的食材准备足够，我们需要根据前几天的顾客数量预测明天的顾客数量。一个常见的方法是计算顾客数量的平均值（在本例中为 97）。然而，仅仅使用期望的信息往往是不够的，有可能造成大量天数出现食材短缺的情况。因此，我们尝试建模每天顾客到来人数的分布。为了得到这个分布，我们需要做一些假设。一个最常见的假设是假设顾客的到来是均匀且独立的。我们可以假设一天被分为 $n$ 个等长的时间段，每个时间段足够短，以至于在该时间段内最多只能有一位顾客进入餐厅，并且在每个时间段以 $p$ 的概率独立有一位顾客进入餐厅。
+
+形式化地表示，对于 $i\in [n]$，我们令 $X_i = \bb I_{\text{第 } i \text{ 个时间段有顾客进入}}$，则 $X_i \sim \!{Ber}(p)$，并且 $X_i$ 相互独立。设 
+\[
+Z_n = \sum_{i=1}^n X_i, \quad \lambda = \E{Z_n} = p \cdot n.
+\]
+
+现在我们计算顾客数量 $Z_n$ 的分布。对于任何常数 $k \in \mathbb{N}$，有：  
+\[
+  \begin{aligned}
+    \Pr{Z_n = k} 
+    &=\binom{n}{k} p^k (1-p)^{n-k}\\
+    &=\frac{n(n-1) \cdots (n-k+1)}{k!} \left(\frac{\lambda}{n}\right)^k \left(1 - \frac{\lambda}{n}\right)^{n-k}.
+  \end{aligned}
+\]  
+
+由于我们假设 $k$ 和 $\lambda$ 是常数，当 $n \to \infty$，上述表达式收敛于：  
+\[
+\Pr{Z_n = k} = \frac{\lambda^k}{k!} e^{-\lambda}.
+\]
+
+我们便把概率质量函数满足任意 $k\in\bb N$，$p(k) = \frac{\lambda^k}{k!} e^{-\lambda}$ 的分布称为均值为 $\lambda$ 的泊松分布，并把这个分布记作 $\!{Pois}(\lambda)$。
+
+设 $X\sim\!{Pois}(\lambda)$。由于我们在上面是通过取极限的方式定义了泊松分布，因此需要验证它确实是一个分布，并且其均值确实为 $\lambda$：
+\begin{itemize}
+\item 验证分布性质
+    \[
+      \sum_{k=0}^\infty \frac{\lambda^k}{k!} e^{-\lambda} = e^{-\lambda} \sum_{k=0}^\infty \frac{\lambda^k}{k!} = 1.
+    \]
+      因此它确实是一个分布。  
+
+    \item 验证均值
+    \[
+      \E{X} = \sum_{k=0}^\infty k \cdot \frac{\lambda^k}{k!} e^{-\lambda} = \lambda.
+    \]
+\end{itemize}
+
+两个独立的满足泊松分布的随机变量之和依旧满足泊松分布。
+
+\begin{proposition}
+假设 $X_1 \sim \!{Pois}(\lambda_1)$ 并且 $X_2 \sim \!{Pois}(\lambda_2)$ 是两个独立的随机变量。那么：  
+\[
+X_1 + X_2 \sim \!{Pois}(\lambda_1 + \lambda_2).
+\]
+\end{proposition}
+
+\begin{proof}
+对于任意的 $n\ge 0$，
+\[
+\begin{aligned}
+    \Pr{X_1+X_2 = n}
+    &=\sum_{m=0}^n \Pr{X_1=m}\cdot\Pr{X_2=n-m}\\
+    &=\sum_{m=0}^n \frac{\lambda_1^m}{m!}e^{-\lambda_1} \cdot \frac{\lambda_2^{n-m}}{(n-m)!}e^{-\lambda_2}\\
+    &=e^{-(\lambda_1+\lambda_2)}\cdot\sum_{m=0}^n \binom{n}{m}\frac{\lambda_1^m\lambda_2^{n-m}}{n!}\\
+    &=e^{-(\lambda_1+\lambda_2)}\frac{(\lambda_1+\lambda_2)^n}{n!}.
+\end{aligned}
+\]
+\end{proof}
+
+这个结论可以推广到任意 $n$ 个满足泊松分布的随机变量：
+
+如果 $X_1, X_2, \dots, X_n$ 是 $n$ 个相互独立的随机变量，且 $X_i \sim \!{Pois}(\lambda_i)$，则：  
+\[
+\sum_{i=1}^n X_i \sim \!{Pois}\tp{\sum_{i=1}^n \lambda_i}.
+\]
+
+\section{泊松过程（\href{https://en.wikipedia.org/wiki/Poisson_point_process}{\underline{Poisson Process}}）}
+
+\subsection{泊松过程的定义}
+
+我们刚才说了，均值为 $\lambda$ 的泊松分布可以用来描述单位时间内平均顾客数为 $\lambda$ 人的时候，顾客人数的分布。如果我们统计一段时间内的顾客数量（例如从时间 $t_1$ 到时间 $t_2$ ），假设 $t_2-t_1$ 是整数，并且顾客的到来依然是均匀的话，那么按照我们上述的多个泊松分布变量之和的结论，这段时间内来的顾客人数应该符合 $\!{Pois}((t_2-t_1)\lambda)$ 分布。我们可以使用泊松过程来描述一段时间内到来的顾客人数。
+
+我们说一族随机变量 $\set{N(s)}_{s\ge 0}$ 为速率为 $\lambda$ 的泊松过程，当且仅当其满足以下条件：
+\begin{enumerate}
+    \item $N(0) = 0$；  
+    \item 对于任意 $t, s \geq 0$，有：  
+    \[
+        N(t + s) - N(s) \sim \!{Pois}(\lambda t);
+    \]   
+    \item 对于任意 $t_0 \leq t_1 \leq \cdots \leq t_n$，随机变量：  
+    \[
+    N(t_1) - N(t_0), \, N(t_2) - N(t_1), \, \dots, \, N(t_n) - N(t_{n-1})
+    \]  
+    相互独立。
+\end{enumerate}
+
+实际上，满足条件的这样一族随机变量的概率空间长什么样子，这些随机变量作为概率空间上的可测函数为什么存在，如何构造，并不是一件容易的事情，是随机过程课需要讨论的内容。在我们这个课上，我们不妨假设泊松过程是存在的，然后研究它的性质。
+
+我们可以从另外一个角度来描述一个泊松过程，也就是考虑相邻两个顾客到达的间隔时间。事实上，对于一个速率为 $\lambda$ 的泊松过程，两名顾客之间的间隔时间满足速率为 $\lambda$ 的指数分布 $\!{Exp}(\lambda)$。为了说明这一点，我们先来考虑指数分布的一些性质。
+
+\subsection{指数分布}
+
+回忆到我们曾经说过，速率为 $\lambda > 0$ 的指数分布的概率密度函数为：  
+\[
+f(x) = 
+\begin{cases} 
+\lambda e^{-\lambda x}, & x \geq 0 \\ 
+0, & x < 0 
+\end{cases}
+\]
+
+它的累积分布函数为：  
+\[
+F(t) = \int_{0}^t \lambda e^{-\lambda x} dx = 1 - e^{-\lambda t}.
+\]
+
+指数分布可以用来建模顾客到来的时间。比如说，速率为 $\lambda$ 的指数分布可以用来表示，在一个速率为 $\lambda$ 的泊松过程里，从 $0$ 时刻开始，第一个顾客在 $t$ 时刻还未到来的概率是 $1-F(t) = e^{-\lambda t}$。我们今天主要的目标之一便是严格的证明这件事情。
+
+我们之前计算过指数分布的概率矩生成函数为 $\forall \theta<\lambda, M_X(\theta) = \frac{\lambda}{\lambda-\theta}$。因此可以容易的计算出，对于 $X\sim\!{Exp}(\lambda)$，我们有
+\[
+    \E{X} = \frac{1}{\lambda},\quad \Var{X} = \frac{1}{\lambda^2}.
+\]
+
+指数分布的一个重要性质就是所谓的“无记忆性”，直观上来说，就是“假设已经等了第一个顾客 $s$ 时间之后，他还没来，那此时还需等待的他到来时间的分布与一开始他到来时间的分布相同”。
+
+\begin{proposition}[指数分布的无记忆性]
+设 $X \sim \operatorname{Exp}(\lambda)$。那么对于任意 $t, s > 0$，有
+\[
+\mathbb{P}(X > t + s | X > s) = \mathbb{P}(X > t).
+\]
+\end{proposition}
+
+这个性质用定义可以简单证明，但是它却意义深远…
+
+\begin{proof}
+我们有
+\begin{align*}
+\mathbb{P}(X > t + s | X > s)
+&= \frac{\mathbb{P}(X > t + s,\, X > s)}{\mathbb{P}(X > s)} \\
+&= \frac{\mathbb{P}(X > t + s)}{\mathbb{P}(X > s)} \\
+&= \frac{e^{-\lambda(t + s)}}{e^{-\lambda s}} \\
+&= e^{-\lambda t} \\
+&= \mathbb{P}(X > t).
+\end{align*}
+\end{proof}
+
+指数分布另外一个有趣的性质是所谓“指数竞赛”。假设有两家商店，第一家商店第一位顾客到来时间服从 $\!{Exp}(\lambda_1)$ 分布，第二家商店第一位顾客到来时间服从 $\!{Exp}(\lambda_2)$ 分布。那么，这两家店同时开门后，第一位顾客的到来时间符合什么分布？答案是 $\!{Exp}(\lambda_1+\lambda_2)$。
+
+\begin{proposition}[指数竞赛]
+设 $X_1\sim\!{Exp}(\lambda_1)$，$X_2\sim\!{Exp}(\lambda_2)$ 为两个独立的随机变量。那么 $Y\defeq X_1\land X_2 \sim \!{Exp}(\lambda_1+\lambda_2)$。
+\end{proposition}
+
+\begin{proof}
+\[
+    \Pr{Y>t} = \Pr{X_1>t\land X_2>t} = \Pr{X_1>t}\Pr{X_2>t} = e^{-(\lambda_1+\lambda_2)t}.
+\]
+\end{proof}
+
+这个性质可以自然推广到 $n$ 个独立指数分布，即如果 $\forall i\in [n],\; X_i\sim\!{Exp}(\lambda_i)$，那么 $\min\set{X_1,\dots,X_n}\sim\!{Exp}(\lambda_1+\dots+\lambda_n)$。
+
+我们接下来考虑“谁赢了竞赛”的问题，也就是说 $X_1<X_2$ 的概率。我们用 $f_\lambda$ 来表示 $\!{Exp}(\lambda)$ 的概率密度函数，那么使用全概率公式，我们有
+\[
+\begin{aligned}
+\Pr{X_1<X_2}
+&=\int_0^\infty f_{\lambda_1}(t)\cdot \Pr{X_2>t}\d t\\
+&=\int_0^\infty \lambda_1 e^{-\lambda_1 t} e^{-\lambda_2 t}\d t\\
+&=\frac{\lambda_1}{\lambda_1+\lambda_2}.
+\end{aligned}
+\]
+
+这个结论同样可以自然推广到 $n$ 个指数分布的场合：$X_i$ 是 $X_1,\dots,X_n$ 中最小的概率为 $\frac{\lambda_i}{\sum_{j=1}^n \lambda_j}$。
+
+\subsection{泊松过程的指数分布刻画}
+
+我们接下来证明一个重要的结论，它说明我们一开始定义的泊松过程可以用指数分布的间隔来描述。
+
+\begin{theorem}
+设 $\tau_1,\tau_2,\dots,\tau_n$ 为一系列独立的指数分布随机变量，满足 $\tau_i\sim\!{Exp}(\lambda)$。设 $T_n=\sum_{i=1}^n \tau_i$。对于 $t\ge 0$，定义 $N(t)\defeq \max\set{n\mid T_n\le t}$。那么 $\set{N(t)}_{t\ge 0}$ 是一个泊松过程。
+\end{theorem}
+
+根据定理描述，我们可以想象 $\tau_i$ 就是第 $i-1$ 个顾客和第 $i$ 个顾客到达的时间间隔。$T_n$ 就表示第 $n$ 个顾客到达的时间。那么 $N(t)$ 就表示 $t$ 时刻之前到达了多少顾客。
+
+\begin{proof}
+我们在上次的作业里已经知道，$T_n$ 满足所谓的 Gamma 分布 $\Gamma(n,\lambda)$，其概率密度为
+\[
+    g_n(t)=
+    \begin{cases}
+        \lambda e^{-\lambda t}\cdot \frac{(\lambda t)^{n-1}}{(n-1)!}, & t\ge 0;\\
+        0, & t<0.
+    \end{cases}
+\]
+
+于是，我们便可以使用全概率公式来计算 $N(t)$ 的分布。
+\[
+    \begin{aligned}
+        \Pr{N(t)=n}
+        &=\Pr{T_n\ge t\land T_{n+1}>t}\\
+        &=\int_0^t g_n(s)\cdot \Pr{\tau_{n+1}>t-s}\d s\\
+        &=\int_0^t \lambda e^{-\lambda s}\cdot \frac{(\lambda s)^{n-1}}{(n-1)!}\cdot e^{-\lambda (t-s)}\d s\\
+        &=\lambda^n e^{-\lambda t}\cdot \frac{t^n}{n!}.
+    \end{aligned}
+\]
+
+因此，$N(t)\sim \!{Pois}(\lambda t)$。我们接着来一一验证 $\set{N(t)}_{t\ge 0}$ 满足泊松过程定义的三个条件。
+
+首先，$N(0)=0$ 是显然的。根据指数分布的无记忆性，我们知道 $N(s+t)-N(s)$ 的分布和 $N(t)-N(0)$ 一样是 $\!{Pois}(\lambda t)$，因此第二个条件也满足。我们同样可以使用指数分布的无记忆性验证第三个独立性条件。
+\end{proof}
+
+\subsection{泊松过程的稀疏化（Thinning）}
+
+在我们用泊松过程建模顾客到店的例子里，我们可以分别考虑男顾客和女顾客。假设男女比是 1:1，我们可以用下面的方式等价的建模：对于每一个到达的顾客，投掷一个公平的硬币，如果是正面，这位顾客就是男顾客，如果是反面，这位顾客就是女顾客。泊松过程的稀疏化定理就是说，男女顾客人数分别为一个满足 $\!{Pois}(\frac{\lambda}{2})$ 的泊松过程，并且这两个过程是\textbf{独立}的。
+
+严格的说，给定一个泊松过程 $\set{N(t)}_{t\ge 0}$，我们可以给第 $i$ 位到达的顾客引入一个独立同分布的随机变量 $Y_i$，用来表示该顾客的种类，从而把泊松过程划分成若干个子过程。我们假设 $Y_i$ 的取值是有限的非负整数，并且设 $p_k = \Pr{Y_i=k}$ 为其概率质量函数。对于每一个 $Y_i$ 可能的取值 $k$，我们用 $N_k(t)$ 表示截止时间 $t$ 时具有种类 $k$ 顾客的到达数量。那么 $\set{N_k(t)}_{t\ge 0}$ 被称为泊松过程的一个“稀疏化”。我们有如下一个有用且令人惊讶的命题。
+
+\begin{proposition}
+对于每个 $k$，$\set{N_k(t)}_{t \geq 0}$ 是一个参数为 $\lambda p_k$ 的泊松过程。此外，所有过程的集合
+\[
+ \set{\set{N_k(t)}_{t\ge 0} \cmid  k\in \!{Im}(Y_1) }
+\]
+
+是相互独立的。
+\end{proposition}
+
+注意到，我们说两个随机过程 $N_1(t)$ 和 $N_2(t)$ 独立，指的是对于任意 $t_0\le t_1\le\dots\le t_n$，随机变量  $\bigcup_{i\in [n]} \set{N_1(t_i)-N_1(t_{i-1}),N_2(t_i)-N_2(t_{i-1})}$ 是相互独立的。
+
+我觉得这个命题的结论是比较让人意外的。举一个栗子，假设进入餐厅的顾客是一个速率为 $1$ 的泊松过程，并且每位顾客是男性或女性的概率分别为 $\frac{1}{2}$。实际上，我们可以假设通过抛硬币来决定到来的顾客是男性还是女性。直观上来看，如果在一个小时内到来的男性数量很大（如 50 人），这可能意味着业务量很大，从而女性顾客的数量也会比较多。然而，这个命题告诉我们，男性顾客和女性顾客的数量是独立的。
+
+\begin{proof}
+我们只需要证明 $Y_i$ 取两种值的情况即可，多种值的情况可以类似证明。假设 $Y_i \in \{0, 1\}$。由于泊松分布本身的独立增量性质，为了验证独立性，我们只需要验证对任何 $s,t\ge 0$， $N_0(t+s) - N_0(s)$ 和 $N_1(t+s)-N_1(s)$ 独立即可（why）。我们下面计算 $N_0(t)$ 和 $N_1(t)=n$ 的联合分布。这验证了每一个 $N_i(t)$ 都是泊松过程。由泊松过程的无记忆性，便可以得到我们的独立性结果。
+\begin{align*}
+\mathbb{P}\left(N_0(t) = m \land N_1(t) = n\right)
+&= \mathbb{P}\left(N_0(t) = m \land N(t) = m + n\right) \\
+&= \mathbb{P}\left(N(t) = m + n\right) \cdot \mathbb{P}\left(N_0(t) = m \mid N(t) = m + n\right) \\
+&= \frac{e^{-\lambda t} (\lambda t)^{m+n}}{(m + n)!} \cdot \binom{m + n}{m} p_0^m p_1^n \\
+&= \frac{e^{-\lambda p_0 t} (\lambda p_0 t)^m}{m!} \cdot \frac{e^{-\lambda p_1 t} (\lambda p_1 t)^n}{n!}.
+\end{align*}
+
+\end{proof}
+
+\subsection{泊松过程的一个应用}
+
+我们来看泊松过程最大似然估计（\href{https://en.wikipedia.org/wiki/Maximum_likelihood_estimation}{\underline{maximum likelihood estimation}}）的一个应用。
+
+假设有两位编辑在阅读一本 300 页的书。编辑 A 在书中发现了 100 个错别字，编辑 B 发现了 120 个错别字，其中 80 个是两人都发现的。
+
+假设作者的错别字遵循一个参数为 $\lambda$ 的泊松过程，每页的错误率未知。两位编辑分别以未知的成功概率 $p_A$ 和 $p_B$ 抓到错别字。我们想知道总共有多少错别字。这可以通过估计 $\lambda$、$p_A$ 和 $p_B$ 来解决这个问题。
+
+显然，总共有四种类型的错别字：
+
+\begin{enumerate}
+
+\item \textbf{类型 1}：未被两位编辑发现的错别字。发生概率为 $p_1 = (1 - p_A)(1 - p_B)$。
+    \item \textbf{类型 2}：仅被编辑 A 发现的错别字。发生概率为 $p_2 = p_A(1 - p_B)$。
+    \item \textbf{类型 3}：仅被编辑 B 发现的错别字。发生概率为 $p_3 = (1 - p_A)p_B$。
+    \item \textbf{类型 4}：被两位编辑都发现的错别字。发生概率为 $p_4 = p_A p_B$。
+\end{enumerate}
+
+因此，每种类型的错别字发生过程是一个独立的泊松过程，参数为 $\lambda p_i$。令 $N_1, N_2, N_3, N_4$ 分别表示书中对应类型的错别字数量，则 $N_i \sim \!{Pois}(300 \lambda p_i)$。
+
+书中有 20 个类型 2 的错别字，40 个类型 3 的错别字，80 个类型 4 的错别字。我们声称最可能的参数值满足方程组：
+
+\[
+\begin{cases} 
+300 \lambda p_A (1 - p_B) = 20, \\
+300 \lambda (1 - p_A)p_B = 40, \\
+300 \lambda p_A p_B = 80.
+\end{cases}
+\]
+
+换句话说，我们在得到一个 $X\sim\!{Pois}(\mu)$ 的样本 $x$ 之后，认为最有可能的 $\mu$ 的值就是 $x$。这是泊松分布的最大似然估计，我们马上进行验证。假设承认这件事情，我们可以马上解得
+\[
+\lambda = \frac{1}{2}, \quad p_A = \frac{2}{3}, \quad p_B = \frac{4}{5}.
+\]
+
+我们最后证明这个最大似然估计。假设 $N \sim \!{Pois}(\lambda)$，其中 $\lambda$ 未知。给定 $N = n$，我们的目标是找到：
+\[
+\argmax_\lambda \Pr{N = n} \mbox{ provided } N\sim\!{Pois}(\lambda).
+\]
+
+注意到在已知 $N\sim\!{Pois}(\lambda)$ 时，$\Pr{N = n} = \frac{e^{-\lambda} \lambda^n}{n!}$，且 $\log \Pr{N = n} = -\lambda + n \log \lambda - \log n!$。
+
+因此，最大化的目标等价于：
+\[
+\argmax_\lambda \{-\lambda + n \log \lambda\}.
+\]
+
+对上式求导并令其为 0，得到 $\lambda = n$。
+
+\newpage

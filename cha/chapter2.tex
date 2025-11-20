@@ -1,0 +1,210 @@
+\chapter{概率空间}
+
+我们今天开始介绍概率论的 \underline{\href{https://en.wikipedia.org/wiki/Probability_axioms}{Kolmogorov 公理体系}}。首先，我们要明确一点，就是严格的定义概率是必要的。我们可以看看著名的伯特兰悖论：“在一个圆内随机取一条弦，有多大概率它比内接三角形的边长要长？”这句用自然语言定义的话实际上是极不严谨的，取决于对“随机取一条弦”的理解方式，我们可能得到很多不同的答案。\href{https://zh.wikipedia.org/wiki/%E4%BC%AF%E7%89%B9%E8%98%AD%E6%82%96%E8%AB%96}{\underline{维基百科}}上关于这个悖论的解释说的非常清楚，我这儿就不再赘述了。
+
+\section{概率公理}
+
+概率公理都来自于对我们现实生活中随机试验的抽象。生活中常见的随机试验比如“投掷一枚硬币”，“投掷两个骰子“，或者“在平面上的单位圆内随机选一个点”等等。
+
+在我们前两周的课程中，\textbf{我们会把注意力集中在所谓“离散概率空间”}，即那些随机实验的结果是有限个或者至多可数无限个的情况。因此，类似“在平面上的单位圆内随机选一个点”这样的随机试验（单位圆内的点的个数显然是不可数的）暂时还不在我们讨论的范围。
+
+我们这样做的原因在于，我们需要先在离散的场合建立关于概率正确的直观，而不必过早的把精力花在由于不可数的概率空间引起的一些过于复杂的系统性问题上（比如我们在本次讲义最后一节所说的）。
+
+当然，在这门课里，我们的目标是建立一个一般性的理论。我们将在对于离散的世界理解的足够好之后，再讨论一般的概率空间，并期待大家能够发现哪一些直观是能够直接类比过去，而哪一些是不能的。
+
+因此，我们在介绍抽象的概率公理的时候，我们脑海中最好能有一个例子，从而明白每一条公理出现的理由。在这儿，我们不妨假设关心的随机试验是连续扔两枚 6 面的骰子。
+
+一个概率空间是一个三元组 $(\Omega, \mathscr{F}, \mathbb{P})$。我们分别来解释其含义。
+
+其中 $\Omega$ 是“样本集”，即所有随机实验的可能结果。在我们投掷两个骰子的例子里，我们可以让 $\Omega = [6]^2$ （对于自然数 $n \in \mathbb{N}$，我们用记号 $[n]$ 表示集合 $\{1, 2, ..., n\}$）。
+
+一个很自然的问题是，我们为什么不把 $\mathscr{F}$ 直接取成 $2^\Omega$，而说它是 $2^\Omega$ 的一个子集呢？这里我认为有好几个原因。首先一个比较重要的原因是，如果 $\Omega$ 是不可数的集合，那么把 $\mathscr{F}$ 定义成 $2^\Omega$ 会“太大了”，以至于没有办法定义合适的概率。这一点我们今天之后会解释。另外一个原因是，允许 $\mathscr{F}$ 是 $2^\Omega$ 的子集给我们提供了一些便利，这一点在未来学习条件期望、随机过程的时候就可以看到，我们更多的会把 $\mathscr{F}$ 解释成某种意义上的“信息”。
+
+如果你同意 $\mathscr{F}$ 不是一定要取 $2^\Omega$，那么我们就要给其加一些限制，因为并不是 $2^\Omega$ 的每一个子集都合适当成事件集的。在这儿，我们要求 $\mathscr{F}$ 构成一个 $\sigma$-\href{https://en.wikipedia.org/wiki/%CE%A3-algebra}{\underline{\text{代数}}}，又称$\sigma$-域。
+
+\begin{definition}[$\sigma$-代数]
+我们说集合族 $\mathscr{F} \subseteq 2^\Omega$ 是一个$\sigma$-代数，如果其满足：
+\begin{enumerate}
+    \item $\varnothing \in \mathscr{F}$, $\Omega \in \mathscr{F}$.
+    \item 如果事件 $A \in \mathscr{F}$，则它（在 $\Omega$ 下）的补集 $A^c \in \mathscr{F}$.
+    \item 如果可数（或者有限个）事件 $A_1, A_2, ..., A_n, \cdots \in \mathscr{F}$，则 $\bigcup_{n \geq 1} A_n \in \mathscr{F}$.
+\end{enumerate}
+\end{definition}
+
+在上面的定义中， $\bigcup_{n \geq 1} A_n := \{ \omega \in \Omega : \exists n \geq 1, \omega \in A_n \}$。
+
+对于 $\sigma$-代数定义里的三条要求，实际上是与我们在生活中对于随机试验的直观理解是非常对应的。首先第一条告诉我们，我们需要有“不可能事件”和“必然事件”这两个事件。第二条告诉我们，如果 $A$ 是一个合理的事件，那么“$A$ 不发生”也应该是一个合理的事件。第三条是说，如果 $A_1, ..., A_n, ...$ 都是合理的事件，那么“$A_1, ..., A_n, ...$ 中至少有一个事情发生”也应该是—个合理的事件。
+
+三元组中第三项 $\mathbb{P}: \mathscr{F} \to [0, 1]$ 给每一个事件赋予一个 $[0, 1]$ 之间的数，表示这个事件发生的概率，被称之为概率测度。由于 $\mathscr{F}$ 是一个 $\sigma$-代数，我们相对应的对于 $\mathbb{P}$ 也有要求。
+
+\begin{definition}[概率测度]
+函数 $\mathbb{P}: \mathscr{F} \to [0, 1]$ 被称为概率测度，如果它满足：
+\begin{enumerate}
+    \item $\mathbb{P}(\varnothing) = 0$, $\mathbb{P}(\Omega) = 1$.
+    \item 对于任意 $A \in \mathscr{F}$, $\mathbb{P}(A) = 1 - \mathbb{P}(A^c)$.
+    \item 对于任意的不相交的 $A_1, A_2, ..., A_n, \cdots \in \mathscr{F}$, $\mathbb{P}(\bigcup_{n \geq 1} A_n) = \sum_{n \geq 1} \mathbb{P}(A_n)$.
+\end{enumerate}
+\end{definition}
+
+其中最后一条里面的 $\sum_{n \geq 1} \mathbb{P}(A_n)$ 意思是 $\lim_{N \to \infty} \sum_{n=1}^{N} \mathbb{P}(A_n)$。这个极限显然是存在的。当然，这里的几条定义是有冗余的，比如第二条是第一条和第三条的推论，我们这样写的目的是为了和$\sigma$-代数的要求对应起来。如果你把样本集合 $\Omega$ 直观上解释成随机试验中的事件 $A$，那么，我想对于 $\mathbb{P}$ 的以上几条公理要求都是很自然的。
+
+也许有人会问，为什么 $\mathbb{P}$ 要定义为在事件集 $\mathscr{F}$ 上的函数，而不是样本集 $\Omega$ 上的函数呢？事实上，在 $\Omega$ 是离散的（可数或者有限）时候，这两种定义并没有多大区别。我们假设 $\mathscr{F} = 2^\Omega$，那么根据我们的定义，对于每一个 $\omega \in \Omega$，在单点集 $\{\omega\}$ 上有定义，我们记 $p_\omega := \mathbb{P}(\{\omega\})$。那么，根据关于 $\mathbb{P}$ 的公理的第三条，我们有
+\[
+\forall A \in \mathscr{F}, \mathbb{P}(A) = \sum_{\omega \in A} p_\omega.
+\]
+
+也就是说，在单点集 $\{\omega\}$ 上的取值决定了它的全部取值。但值得注意的是，在 $\Omega$ 不可数时，这种做法是不一定行的通的，我们不得不按照公理的形式把 $\mathbb{P}$ 定义成事件上的函数。
+
+所以我们可以这样给出扔两个独立六面骰子的概率空间。
+
+\begin{example}[独立六面骰子的概率空间]
+我们令 $\Omega = [6]^2$, $\mathscr{F} = 2^\Omega$, 并且对于任何单点 $\omega \in \Omega$, $\mathbb{P}(\{\omega\}) = \frac{1}{|\Omega|} = \frac{1}{36}$。
+\end{example}
+
+\section{基本性质}
+
+从上面关于概率公理的讨论可以看到，所谓概率，完全就是对于集合的操作。特别当 $\Omega$ 是离散的时候，计算概率无非就是组合计数。这是事实，但在很多时候，我们希望把纯粹对于概率空间的操作和实际背后的随机试验结合起来，这样能够给出我们一些重要的直观。这些直观能够帮助我们从“概率”的视角去看待问题。在未来，你一定会发现，有很多在概率视角看起来显然正确，无比简单的事情，如果你机械的把它翻译成概率空间上的对集合或者元素的数数问题，就会变的无比笨拙或者繁琐。
+
+我们首先可以看一些简单的布尔代数和随机试验之间的对应。
+
+\begin{tabular}{ll}
+\hline
+集合视角 & 随机试验视角 \\
+\hline
+$A$ & 事件 $A$ 发生 \\
+$A \cup B$ & 事件 $A$ 和 $B$ 至少有一个发生 \\
+$A \cap B$ & 事件 $A$ 和 $B$ 同时发生 \\
+$A \setminus B$ & 事件 $A$ 发生但是 $B$ 没有发生 \\
+$A \subseteq B$ & 事件 $A$ 蕴含事件 $B$ \\
+$A \cap B = \varnothing$ & 事件 $A$ 和 $B$ 不可能同时发生 \\
+$A \cup B = \Omega$ & 事件 $A$ 和 $B$ 必有一个发生 \\
+\hline
+\end{tabular}
+
+\phantom{aaaaa}
+
+上面表格里其实用到了一些$\sigma$-代数的性质，比如我们默认了如果 $A, B \in \mathscr{F}$，那么 $A \cap B$ 以及 $A \setminus B$ 均在 $\mathscr{F}$ 中。我们马上来验证这些基本性质。在下面的讨论中，我们均假设集合 $A, B, A_1, A_2, ...$ 都是 $\mathscr{F}$ 中的元素。
+
+\begin{proposition}
+$\bigcap_{n} A_n \in \mathscr{F}$。
+\end{proposition}
+
+\begin{proof}
+我们使用 \href{https://en.wikipedia.org/wiki/De_Morgan%27s_laws}{\underline{De Morgan's law}}，有
+\[
+\bigcap_{n} A_n = \left( \bigcup_{n} A_n^c \right)^c.
+\]
+
+由于 $\mathscr{F}$ 是一个 $\sigma$-代数，$\bigcup_{n} A_n^c \in \mathscr{F}$，因此其补集也在 $\mathscr{F}$ 中。
+\end{proof}
+
+\begin{proposition}
+$A \setminus B \in \mathscr{F}$。
+\end{proposition}
+
+\begin{proof}
+$A \setminus B = A \cap B^c$。由于 $\mathscr{F}$ 是一个 $\sigma$-代数，$B^c \in \mathscr{F}$，因此 $A \cap B^c \in \mathscr{F}$。
+\end{proof}
+
+\begin{proposition}
+$A \subseteq B \implies \mathbb{P}(A) \leq \mathbb{P}(B)$。
+\end{proposition}
+
+\begin{proof}
+$\mathbb{P}(B) = \mathbb{P}(A \cup (B \setminus A)) = \mathbb{P}(A) + \mathbb{P}(B \setminus A) \geq \mathbb{P}(A)$。
+\end{proof}
+
+\begin{proposition}
+$\mathbb{P}(A \cup B) = \mathbb{P}(A) + \mathbb{P}(B) - \mathbb{P}(A \cap B)$。
+\end{proposition}
+
+\begin{proof}
+我们同样把 $A \cup B$ 拆成若干不相交的集合的并。
+\[
+\mathbb{P}(A \cup B) = \mathbb{P}((A \setminus B) \cup (A \cap B) \cup (B \setminus A)) = \mathbb{P}(A \setminus B) + \mathbb{P}(A \cap B) + \mathbb{P}(B \setminus A).
+\]
+
+我们又注意到有 $\mathbb{P}(A \setminus B) + \mathbb{P}(A \cap B) = \mathbb{P}(A)$ 以及 $\mathbb{P}(B \setminus A) + \mathbb{P}(A \cap B) = \mathbb{P}(B)$。于是得证。
+\end{proof}
+
+这一个结论有一个推论，即
+
+\begin{corollary}[Union Bound]
+$\mathbb{P}(A \cup B) \leq \mathbb{P}(A) + \mathbb{P}(B)$，或者更一般的有 $\mathbb{P}(\bigcup_{n} A_n) \leq \sum_{n} \mathbb{P}(A_n)$。
+\end{corollary}
+
+这个被称之为 union bound，或者是 \href{https://en.wikipedia.org/wiki/Boole%27s_inequality}{\underline{Boole's inequality}}，在概率分析中有很广泛的应用，因为它无条件的给出了若干个事件至少有一个发生的概率的上界。
+
+接着我们来定义\href{https://en.wikipedia.org/wiki/Set-theoretic_limit}{\underline{集合序列的极限}}。这个定义只在集合序列是单调的时候才有意义（我们暂时先不定义上极限和下极限）。设非降集合序列 $A_1 \subseteq A_2 \subseteq \cdots \subseteq A_n \subseteq \cdots$，则定义
+\[
+\lim_{n \to \infty} A_n := \bigcup_{n \geq 1} A_n.
+\]
+
+类似的，对于非增的集合序列 $A_1 \supseteq A_2 \supseteq \cdots \supseteq A_n \supseteq \cdots$，定义
+\[
+\lim_{n \to \infty} A_n := \bigcap_{n \geq 1} A_n.
+\]
+
+我们接下来想说明，概率测度 $\mathbb{P}$，作为一个定义在集合上的函数，是“连续”的，即它可以和求极限交换。
+
+\begin{proposition}
+设 $A_1 \subseteq A_2 \subseteq \cdots \subseteq A_n \subseteq \cdots$，则有 $\mathbb{P}(\lim_{n \to \infty} A_n) = \lim_{n \to \infty} \mathbb{P}(A_n)$。\\
+设 $A_1 \supseteq A_2 \supseteq \cdots \supseteq A_n \supseteq \cdots$，则有 $\mathbb{P}(\lim_{n \to \infty} A_n) = \lim_{n \to \infty} \mathbb{P}(A_n)$。
+\end{proposition}
+
+\begin{proof}
+我们只证明非降的情况，非增的情况可以从它使用 De Morgan's law 得到。使用极限的定义以及单调性，我们有
+\[
+\mathbb{P}(\lim_{n \to \infty} A_n) = \mathbb{P}(\bigcup_{n \geq 1} A_n) = \mathbb{P}(A_1 \cup \bigcup_{n \geq 2} (A_n \setminus A_{n-1})).
+\]
+
+这样我们便把 $\lim_{n \to \infty} A_n$ 写成了一堆集合的不交并，于是使用 $\mathbb{P}$ 之公理第三条，可以得到
+\[
+\mathbb{P}(\lim_{n \to \infty} A_n) = \mathbb{P}(A_1) + \sum_{n \geq 2} \mathbb{P}(A_n \setminus A_{n-1}) = \mathbb{P}(A_1) + \lim_{N \to \infty} \sum_{n=2}^{N} \mathbb{P}(A_n \setminus A_{n-1}).
+\]
+
+由于 $A_{n-1}$ 是 $A_n$ 的子集，再次使用 $\mathbb{P}$ 之公理第三条，我们有
+\[
+\mathbb{P}(\lim_{n \to \infty} A_n) = \mathbb{P}(A_1) + \lim_{N \to \infty} \sum_{n=2}^{N} (\mathbb{P}(A_n) - \mathbb{P}(A_{n-1})) = \lim_{N \to \infty} \mathbb{P}(A_N).
+\]
+\end{proof}
+
+\section{为什么 $\mathscr{F}$ 不能总取 $2^\Omega$？}
+
+我们一开始说了，在 $\Omega$ 是不可数的时候，如果选 $\mathscr{F} = 2^\Omega$，也许没有办法定义出合适的概率测度。我们这儿给出一个证明。我们取 $\Omega = [0, 1)$, $\mathscr{F} = 2^\Omega$，并且试图在上面定义一个均匀分布 $\mathbb{P}$。那么 $\Omega$ 上的均匀分布应该满足对于每一个集合 $I \subseteq \Omega$，给出一个“长度”，而对于这个长度，我们有一些最基本的期待：首先是对于比如区间 $(a, b) \subset [0, 1)$，这个长度应该就是 $b - a$。另外就是所谓的“平移不变性”，也就是说如果我们把某个集合 $I$ 整体平移一个距离 $r$，那么它的长度应该是不变的，即 $\mathbb{P}(I) = \mathbb{P}(I + r)$，这里 $I + r$ 是把 $I$ 平移了 $r$ 之后的集合，即
+\[
+I + r = \{ (x + r) \bmod 1 : x \in I \},
+\]
+
+其中记号 $k \bmod 1$ 的意思是如果 $k$ 不在 $[0, 1)$ 内的话，则把 $k$ 加上或者减去整数使得其属于区间 $[0, 1)$。
+
+我们首先在 $\Omega$ 上定义一个等价关系：$x \sim y$ 当且仅当 $x - y \in \mathbb{Q}$。那么，根据等价关系的基本性质，这个等价关系诱导出的等价类构成了 $\Omega$ 的一个划分，即 $\Omega = \bigcup_{i \in I} \mathbb{P}_i$，满足对于 $i \ne j$，$\mathbb{P}_i \cap \mathbb{P}_j = \varnothing$ 并且任意 $x, y \in \mathbb{P}_i$，$x \sim y$。
+
+我们现在从每一个 $\mathbb{P}_i$ 中选出一个元素 $s_i$ 来，把它们放在一起，构成集合 $N$，即 $N = \{ s_i : i \in I \}$（这一步需要\href{https://en.wikipedia.org/wiki/Axiom_of_choice}{\underline{选择公理}}保证）。我们对于每一个 $r \in \mathbb{Q} \cap [0, 1)$，我们考虑集合 $N_r := N + r = \{ (x + r) \bmod 1 : x \in N \}$。
+
+我们首先证明 $\{N_r\}_{r \in \mathbb{Q} \cap [0,1)}$ 构成了 $[0, 1)$ 的一个分划。首先，任意一个 $x \in [0, 1)$ 一定属于某个 $N_r$。实际上，假设 $x \in \mathbb{P}_i$，那么 $x - s_i \in \mathbb{Q}$，因此 $x \in N + (x - s_i) = N_r$ 其中 $r = x - s_i \in \mathbb{Q} \cap [0,1)$。另一方面，如果同时 $x \in N_{r_1} \cap N_{r_2}$，说明我们可以找到两个不同的 $s, s' \in N$，使得 $s + r_1 = x = s' + r_2$。这样的话，$s - s'$ 就会是一个有理数，与我们对 $N$ 的构造矛盾。
+
+知道了 $\{N_r\}$ 是 $\Omega$ 的一个分划之后，我们的公理就保证了，一定有
+\[
+\mathbb{P}(\Omega) = \sum_{r} \mathbb{P}(N_r).
+\]
+
+我们知道上式的左手边 等于 $1$，而且由于平移不变性，每一个 $\mathbb{P}(N_r)$ 都是相同的，并且都等于 $\mathbb{P}(N)$。因此，我们有可数个 $\mathbb{P}(N)$ 相加等于 $1$。但这显然是不可能的：如果 $\mathbb{P}(N) = 0$，则右手边 等于 $0$；如果 $\mathbb{P}(N) > 0$，则偶手边 为无穷大。
+
+这个证明告诉我们，$2^\Omega$ 里面的集合太多了，以至于我们没有办法给每个集合一个合法的长度。所以我们应该如何设定 $\mathscr{F}$ 从而定义出 $[0, 1)$ 上的均匀分布呢？我们刚才说了，直观上对于区间 $(a, b) \in [0, 1)$，我们一定要有 $\mathbb{P}((a, b)) = b - a$。因此我们要把所有的区间都放到 $\mathscr{F}$ 里面去。我们考虑能省则省的原则，认为这就够了。由于我们要求 $\mathscr{F}$ 一定要是一个$\sigma$-代数，我们可以取 $\mathscr{F}$ 为包含所有区间的“最小”的那个 $\sigma$-代数，这个被称之为 \href{https://en.wikipedia.org/wiki/Borel_set}{\underline{Borel 代数}}。我们接着定义这个最小的概念以及说明它总是存在的。
+
+首先我们说明一下 $\sigma$-代数是对求交封闭的。固定样本空间 $\Omega$ 。假设对于（可能不可数的）指标集 $I$ 以及每一个 $\alpha \in I$，$\mathscr{F}_\alpha \subseteq 2^\Omega$ 均为 $\sigma$-代数，则有 $\mathscr{F} := \bigcap_{\alpha \in I} \mathscr{F}_\alpha$ 也是$\sigma$-代数。这件事情的证明非常简单，按照 $\sigma$-的定义逐条验证即可。值得说明的事情，如果把 $\bigcap$ 换成 $\bigcup$ 就不一定对了。
+
+设 $\mathscr{G} \subseteq \Omega$ 是 $\Omega$ 的一些子集的集合（不一定是 $\sigma$-代数），我们用 $\sigma(\mathscr{G})$ 表示包含 $\mathscr{G}$ 的最小的 $\sigma$-代数。
+
+\begin{itemize}
+
+\item 首先，$\sigma(\mathscr{G})$ 是一个 $\sigma$-代数； 
+
+\item 对于任何 $\mathscr{F}' \subsetneq \sigma(\mathscr{G})$，均不是 $\sigma$-代数。这便是“最小”的意思。
+
+\end{itemize}
+
+对于任何 $\mathscr{G}$，$\sigma(\mathscr{G})$ 总是存在的。这是由于首先 $2^\Omega$ 本身是包含了 $\mathscr{G}$ 的一个 $\sigma$-代数。因此，我们可以取 $\sigma(\mathscr{G})$ 为所有包含了 $\mathscr{G}$ 的 $\sigma$-代数的交。它一定是存在的，而且根据交的定义也一定是最小的。
+
+\newpage

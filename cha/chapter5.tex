@@ -1,0 +1,234 @@
+\chapter{离散期望的基本性质}
+
+我们今天来讨论离散随机变量的期望的一些基本性质，这些性质在解决具体问题中起着非常重要的作用。
+
+\section{LOTUS}
+
+下面这个结论，被称之为 LOTUS （\href{https://en.wikipedia.org/wiki/Law_of_the_unconscious_statistician}{\underline{law of the unconcious statistician}}），原因是它是如此显然，以至于在很多书上被直接当成期望的定义。实际上，它是我们刚才定义的期望的一个推论，是需要证明的。我们说一个函数 $f:\mathbb{R}\to \mathbb{R}$ 是可测的，当且仅当对于任何 $A \in \mathscr{B}$，$f^{-1}(A) \in \mathscr{B}$。我们未来会仔细讨论“可测性”的问题，现在大家不用太在意这个条件。对于可测的 $f$，$f(X): \omega \mapsto f(X(\omega))$ 也是一个随机变量。
+
+\begin{theorem}[Law of the Unconscious Statistician (LOTUS)]
+对于可测函数 $f$，如果满足 $\sum_{i=1}^\infty |f(x_i)| \mathbb{P}[X = x_i] < \infty$，则随机变量 $f(X)$ 是可积的，并且
+\[
+\textbf{E}[f(X)] = \sum_{i=1}^\infty f(x_i) \cdot \mathbb{P}[X = x_i].
+\]
+\end{theorem}
+
+\begin{proof}
+我们考虑一个分划 $\{\Lambda_i\}_{i \geq 1}$，$\Lambda_i = X^{-1}(x_i)$。那么 $f(X)$ 在每个 $\Lambda_i$ 上均为常数 $f(x_i)$。条件保证了可积性，因此，
+\[
+\textbf{E}[f(X)] = \sum_{i \geq 1} f(x_i) \cdot \mathbb{P}[\Lambda_i] = \sum_{i \geq 1} f(x_i) \cdot \mathbb{P}[X = x_i].
+\]
+\end{proof}
+
+\section{期望的线性性}
+
+下面一个结论，被称为期望的线性性（Linearity of expectation），是非常有用的性质。我们在未来真的用概率论解决一些问题的时候，会发现其妙用无穷。我们现在，先证明它。
+
+\begin{theorem}[期望的线性性]
+如果定义在同一个概率空间上的随机变量 $X$ 和 $Y$ 都是可积的，那么对于 $a, b \in \mathbb{R}$，$aX + bY$ 也是可积的，并且有
+\[
+\textbf{E}[aX + bY] = a\textbf{E}[X] + b\textbf{E}[Y].
+\]
+\end{theorem}
+
+\begin{proof}
+我们先证明 $aX + bY$ 是可积的。我们可以给概率空间找到一个划分 $\{\Lambda_i\}_{i \geq 1}$ 满足对于 $X$ 和 $Y$ 在每个 $\Lambda_i$ 上都是常数。对于每一个 $i \geq 1$，我们记这个常数为 $x_i$ 和 $y_i$。于是，
+\[
+\sum_{i \geq 1} |a x_i + b y_i| \mathbb{P}(\Lambda_i) \leq \sum_{i \geq 1} (|a| |x_i| + |b| |y_i|) \mathbb{P}[\Lambda_i] = |a| \textbf{E}[|X|] + |b| \textbf{E}[|Y|] < \infty.
+\]
+
+对于期望的表达式，我们可以把重复上述计算，把所有的绝对值去掉，并且把不等号换成等号即可。
+\end{proof}
+
+我们可以使用数学归纳法，把上述结论推广到任意 $n$ 个随机变量。即如果定义在同一个概率空间上的随机变量 $X_1, \dots, X_n$ 均是可积的，那么 $\sum_{i=1}^n a_i \cdot X_i$ 也是可积的，并且
+\[
+\textbf{E}\left[\sum_{i=1}^n a_i X_i\right] = \sum_{i=1}^n a_i \cdot \textbf{E}[X_i].
+\]
+
+我们前面已经通过期望的定义，计算了对于 $Y \sim \mathsf{Bin}(n, p)$，其期望 $\textbf{E}[Y] = np$。前面的定义实际上只用到了此分布概率质量函数的性质。事实上，如果回到一开始引入二项式分布的随机试验，即统计“扔 $n$ 个硬币，正面朝上的个数”，我们可以使用期望的线性性更加方便的计算 $Y$ 的期望。回顾我们的样本空间是 $\Omega = \{H, T\}^n$，并且对于每一个 $s \in \Omega$，我们有
+\[
+Y: s \in \Omega \mapsto \text{$s$ 中 H 的个数}.
+\]
+
+我们现在定义 $n$ 个随机变量 $Y_1, \dots, Y_n$，满足
+\[
+\forall i \in [n], \quad Y_i: s \in \Omega \mapsto \mathbb{I}_{\text{$s$ 的第 $i$ 位是 H}}.
+\]
+
+换句话说 $Y_i(s) = 1$ 当且仅当 $s$ 的第 $i$ 位是正面。那么显然 $Y = \sum_{i=1}^n Y_i$（我再强调一下，我们写这个等式的意思是，对于任何 $s \in \Omega$，$Y(s) = \sum_{i=1}^n Y_i(s)$ 成立）。由于 $Y_i$ 表示的就是第 $i$ 个硬币的结果，满足 $Y_i \sim \mathsf{Ber}(p)$。容易计算 $\textbf{E}[Y_i] = p$。
+
+因此，由期望的线性性，
+\[
+\textbf{E}[Y] = \textbf{E}\left[\sum_{i=1}^n Y_i\right] = \sum_{i=1}^n \textbf{E}[Y_i] = np.
+\]
+
+那么，期望的线性性不能推广到无穷多个随机变量，即 $\textbf{E}[\sum_{i=1}^\infty X_i] = \sum_{i=1}^\infty \textbf{E}[X_i]$ 不一定成立（你能想到反例吗？）。对于无穷多个随机变量，求和和期望什么时候能交换，是我们未来会重点研究的一个问题。
+
+\section{期望线性性的一些应用}
+
+期望的线性性可以方便很多计算，我们来看几个例子。
+
+\begin{example}
+考虑一个箱子里有100个球，其中10个是红球，剩下的是白球。现在无放回的随机摸20个球出来，请问平均会有多少个红球。
+
+对于这个概率实验，我们先用概率空间建模。这儿 $\Omega = \binom{[100]}{20}$ 表示集合 $\{1, 2, \dots, 100\}$ 的所有大小为 20 的子集的集合。$\mathscr{F} = 2^\Omega$，$\mathbb{P}$ 为 $\Omega$ 上的均匀分布。我们用随机变量 $X$ 来表示抽出来的 20 个球里红球的个数。对于 $i = 1, 2, \dots, 20$，我们定义 $X_i =\mathbb{I}_{[\text{第 } i \text{ 个球是红球}]}$ 为事件“第 $i$ 个球是红球”的指示变量。那么显然有 $X = \sum_{i=1}^{20} X_i$。使用期望的线性性，我们有 $\textbf{E}[X] = \textbf{E}[\sum_{i=1}^{20} X_i] = \sum_{i=1}^{20} \textbf{E}[X_i]$。接下来，我们有两个观察。
+\begin{enumerate}
+
+\item 对于 $X_1$，$\textbf{E}[X_1] = \mathbb{P}[X_1\text{  是红球}] = 0.1$。
+    \item 由对称性，对于每一个 $i$，它的分布和 $X_1$ 是一样的。因此 $\textbf{E}[X_i] = \textbf{E}[X_1]$。
+\end{enumerate}
+
+所以，$\textbf{E}[X] = 20 \cdot \textbf{E}[X_1] = 2$。
+
+\end{example}
+
+大家可以看到，上面例子里 $X_i$ 之间看起来是有一些“联系”的，但是期望的线性性依旧无条件成立。下面是一个类似的例子。
+
+\begin{example}
+考虑一个抽屉里有 10 双袜子（每双都是不同的款式），我们现在随机的摸五只袜子出来，请问这五只里平均会有配成几双。
+
+在很多时候，我们不再严格的指出概率空间，而是直接定义随机变量。我们用 $X$ 来表示这五只袜子里有能配成多少双。我们用 $X_i := \mathbb{I}{[\text{第 } i \text{ 只袜子被配对了}]}$ 来表示我们抽出来的第 $i$ 只袜子在这五只里被凑成一对的这个事件的指示变量。那么显然，$X = \frac{1}{2} \sum_{i=1}^5 X_i$。这儿 $\frac{1}{2}$ 是由于我们问的是“双数”。那么，由期望的线性性，
+\[
+\textbf{E}[X] = \textbf{E}\left[ \frac{1}{2} \sum_{i=1}^5 X_i \right] = \frac{1}{2} \sum_{i=1}^5 \textbf{E}[X_i].
+\]
+
+同样，我们有两个观察。
+\begin{enumerate}
+\item 对于摸出来的第一只袜子，$\textbf{E}[X_1] = \mathbb{P}[\text{第一只袜子被配对}]$。而第一只袜子被配对，当且仅当我们摸出来的第二到第五只袜子里，有一只正好是抽屉里第一只袜子的孪生兄弟。这个概率，我们用简单的组合计数就可以算出来，是 $\frac{1}{19}$。
+    \item 对于摸出来的其它袜子，由于对称性，它被配对的分布和第一只袜子是一样的。因此 $\textbf{E}[X_i] = \textbf{E}[X_1]$。
+\end{enumerate}
+
+所以，$\textbf{E}[X] = \frac{1}{2} \cdot 5 \cdot \frac{1}{19} = \frac{5}{38}$。
+
+注意到在刚才的例子里，我们并没有严格的给出 $X$ 和 $X_i$ 所存在的概率空间，就开始进行计算了。大家需要仔细的想明白这背后的概率空间是什么，它的存在性是显然的。在今天后面我们会讲一些例子，所用随机变量的概率空间存在性并不那么显然，需要一些额外的知识才能严格的证明其存在，我们会在下周的课程中来证明。但我们所用的式子的正确性在直观上是显然的，我们今天暂且相信直观，把证明和计算进行下去。这就好比牛顿和莱布尼茨的微积分提出一百多年后严格性才被真正解决，但这之前大家已经用它计算出不少天体运行的规律了。严格性警察请暂时不要上班。
+\end{example}
+
+\section{随机变量的独立性}
+
+我们接下来介绍随机变量的独立性。同样的，今天我们只考虑离散概率空间上的随机变量。对于一般的情况，我们在未来还会重新审视这个定义。给定离散概率空间 $(\Omega, \mathscr{F}, \mathbb{P})$，我们之前已经定义了两个事件独立的概念，即对于 $A, B \in \mathscr{F}$，我们说 $A$ 与 $B$ 独立，当且仅当 $\mathbb{P}[A \cap B] = \mathbb{P}[A] \cdot \mathbb{P}[B]$。我们用这个定义来给出随机变量 $X$ 和 $Y$ 独立的定义。对于两个定义在同一\textbf{离散}样本空间上的随机变量 $X, Y: \Omega \to \mathbb{R}$，我们说 $X$ 和 $Y$ 独立，记作 $X \perp Y$，当且仅当对于任何 $a, b \in \mathbb{R}$，事件 $[X = a]$ 和事件 $[Y = b]$ 独立，或者等价的
+\[
+\mathbb{P}[X = a \wedge Y = b] = \mathbb{P}[X = a] \cdot \mathbb{P}[Y = b].
+\]
+
+\begin{anymark}[Remark]
+在谈论随机变量的取值定义的事件的时候，我们有时候会把 $\cap, \cup$ 写成 $\wedge, \vee$，意思是一样的。
+\end{anymark}
+
+同样的，我们说定义在同一样本空间上的随机变量 $X_1, X_2, \dots, X_n$ 相互独立，当且仅当对于任何指标集 $I \subseteq [n]$，任何实数 $(a_i : i \in I)$，有
+\[
+\mathbb{P}\left[ \bigwedge_{i \in I} (X_i = a_i) \right] = \prod_{i \in I} \mathbb{P}[X_i = a_i].
+\]
+
+而我们说无穷多个随机变量相互独立，当且仅当它的任意有限子集相互独立。我们也可以类似的定义两两独立的随机变量。
+
+我们今天，希望大家把独立性的定义更多的停留在\textbf{直观}上，即随机变量 $X$ 和 $Y$ 是相互没有影响的。比如我们扔两个骰子，$X$ 表示第一个骰子的点数，$Y$ 表示第二个骰子的点数，那么 $X$ 和 $Y$ 是独立的。我们在未来，当我们学会了足够多的黑话之后，会回过头来说明独立性和乘积概率空间的等价性。于是，在我们给定了概率空间后，独立性便容易严格的验证了。
+
+我们可以容易验证，对于两个集合 $A, B$，$X \perp Y$ 可以蕴含
+\[
+\mathbb{P}[X \in A \wedge Y \in B] = \mathbb{P}[X \in A] \cdot \mathbb{P}[Y \in B].
+\]
+
+我们接下来考察独立性的一个应用，即对于独立的 $X$ 和 $Y$，乘积的期望等于期望的乘积。假设 $X$ 和 $Y$ 可积，则
+\[
+X \perp Y \implies \textbf{E}[XY] = \textbf{E}[X] \cdot \textbf{E}[Y].
+\]
+
+我们接下来的证明稍微修改一下便是 $XY$ 的可积性的证明，因此我们略过。我们直接来验证 $\textbf{E}[XY] = \textbf{E}[X] \cdot \textbf{E}[Y]$。假设 $\mathsf{Im}(X) = \{x_1, x_2, \dots\}$，$\mathsf{Im}(Y) = \{y_1, y_2, \dots\}$。考虑分划 $(\Lambda_{ij})$ 满足 $\Lambda_{ij} = X^{-1}(x_i) \cap Y^{-1}(y_j)$。那么
+\[
+\textbf{E}[XY] = \sum_{i,j} x_i y_j \mathbb{P}[\Lambda_{ij}] = \sum_{i,j} x_i y_j \mathbb{P}[X = x_i \wedge Y = y_j].
+\]
+使用独立性的定义，我们有
+\[
+\textbf{E}[XY] = \sum_{i,j} x_i y_j \mathbb{P}[X = x_i] \cdot \mathbb{P}[Y = y_j] = \left( \sum_i x_i \mathbb{P}[X = x_i] \right) \left( \sum_j y_j \mathbb{P}[Y = y_j] \right) = \textbf{E}[X] \cdot \textbf{E}[Y].
+\]
+注意到，我们这儿第二个等号使用了 $X$ 和 $Y$ 的可积性。
+
+\section{Markov不等式}
+
+我们这儿提一个关于期望的不等式，它想描述如下一件显然的事情：如果一个非负的随机变量期望一定，那么它的取值特别大的概率就不能很大（否则期望就炸了）。用数学的语言说就是
+
+\begin{theorem}[Markov不等式]
+对于非负随机变量 $X \geq 0$，任意 $a > 0$，
+\[
+\mathbb{P}[X \geq a] \leq \frac{\textbf{E}[X]}{a}.
+\]
+\end{theorem}
+
+\begin{proof}
+不等式的证明很简单，仅仅就是把我们觉得它对的原因严格的说一下。我这儿写一下，对于初学者来说，值得好好看一下我们这儿使用的所谓“截断”的技巧，它在未来很多证明里要用到。对于一个固定的 $a$，我们用事件 $[X \geq a]$ 来截断随机变量 $X$，得到
+\[
+X = X \cdot \mathbb{I}[X < a] + X \cdot \mathbb{I}[X \geq a].
+\]
+
+对于初学者，我认为值得好好读一下这个等式。首先，这个等式左右两边均是随机变量，也就是说它均是函数。因此，它的实际意思是，对于每一个样本空间的中的样本 $\omega \in \Omega$，函数左右两边在 $\omega$ 上的取值均是相同的。其次，在这个等式右边，分别乘上了指示变量，指示的是 $[X < a]$ 和 $[X \geq a]$ 这两个\textbf{互补}的事件，所以，其中正好一项非零，等式也因此成立。我们对左右两边取期望，并使用期望的线性性，就有
+\[
+\textbf{E}[X] = \textbf{E}[X \cdot \mathbb{I}[X < a]] + \textbf{E}[X \cdot \mathbb{I}[X \geq a]].
+\]
+
+我们做一些放缩。首先 $X \cdot \mathbb{I}[X < a]$ 作为随机变量肯定是非负的，因此 $\textbf{E}[X \cdot \mathbb{I}[X < a]] \geq 0$。其次，我们简单验算就能知道 $X \cdot \mathbb{I}[X \geq a] \geq a \cdot \mathbb{I}[X \geq a]$ 在每一个样本点上均成立。所以，
+\[
+\textbf{E}[X] \geq \textbf{E}[a \cdot \mathbb{I}[X \geq a]] = a \cdot \mathbb{P}[X \geq a].
+\]
+\end{proof}
+
+从上面的证明可以看出来，马尔可夫不等式是可以取到等号的，只要构造随机变量使得我们证明中用到的放缩都是紧的就行。这个留给大家做练习。
+
+马尔可夫不等式在概率论和计算机科学中特别有用，因为它是一个\textit{尾不等式（Tail inequality）}，即描述某个随机变量特别大（或特别小）的概率不大的不等式。这个可以用来证明某个随机算法，它的输出，大概率在我们想要的结果附近。关于这类应用感兴趣的同学可以参见我另外一门课的 \href{https://chihaozhang.com/teaching/AA2022/notes/lec1.pdf}{\underline{notes}}。
+
+\section{方差}
+
+期望是随机变量的“数字特征”之一，用来描述它的平均值。但有的时候在应用中，期望所反映出来的关于随机变量的信息是不够的。比如说，假设 $X$ 是我们班上随机取样一位同学的身高。我们知道 $\textbf{E}[X]$ 即平均身高是170，这有可能是大家身高都在170附近，也有可能有一部分同学身高极高，有一部分极低，导致平均是170。又或者，两位NBA球员在一场比赛中平均得到40.5分，可能是因为两个人得分能力都很强，也可能是因为其中一位是科比...
+
+方差（Variance）便是一个用来描述和随机变量的偏离程度的数字特征，对于一个可积的随机变量 $X$，它定义为
+\[
+\textbf{Var}[X] = \textbf{E}[(X - \textbf{E}[X])^2].
+\]
+
+从定义便可以看出，方差指的是 $(X - \textbf{E}[X])^2$ 这个描述 $X$ 和它的期望的偏差的随机变量的平均值。
+
+我们可以把这个定义展开，并由期望的线性性，有
+\[
+\textbf{Var}[X] = \textbf{E}[X^2 - 2X \cdot \textbf{E}[X] + \textbf{E}[X]^2] = \textbf{E}[X^2] - (\textbf{E}[X])^2,
+\]
+
+即方差等于“平方的期望减去期望的平方”。在有的地方，我们也把这个写成方差的定义。
+
+这个时候，敏感的严格性警察可能要出警了：你在方差的定义里出现了 $\textbf{E}[X^2]$，那为啥不要求 $X^2$ 可积啊。这儿我们确实稍微扩展了一下期望的定义，由于 $X^2$ 是非负的，如果它不可积，那也一定是发散到正无穷。这个时候，我们稍稍拓展一下期望的定义并称此时的期望是正无穷。我们在未来会严格的说这件事情。
+
+注意到上面方差的式子里出现的（唯一新）量 $\textbf{E}[X^2]$，我们把它称作 $X$ 的二阶矩。同理，对于任意自然数 $k \geq 1$，我们把 $\textbf{E}[X^k]$（如果存在）称之为 $X$ 的 $k$-阶矩。我们在未来，会看到这些矩在实质上刻画了这个随机变量，并且有着丰富的应用。
+
+我们来给出几个方差的基本性质，这些性质根据定义验证即可，大家可以当作练习。
+
+\begin{enumerate}
+\item 对于 $a,b\in\mathbb{R}$,$\textbf{Var}(aX+b)=a^2\cdot \textbf{Var}(X)$
+\item 对于 $X \perp Y$，$\textbf{Var}[X + Y] = \textbf{Var}[X] + \textbf{Var}[Y]$。
+    \item 如果 $X_1, \dots, X_n$ 是两两独立的，则 $\textbf{Var}[\sum_{i=1}^n X_i] = \sum_{i=1}^n \textbf{Var}[X_i]$。
+
+这便是对于独立随机变量的所谓的方差的线性性。和期望的线性性相比，它额外需要这些随机变量是独立的，这个要求的原因来自于我们需要独立性才能够使得 $\textbf{E}[XY] = \textbf{E}[X]\textbf{E}[Y]$ 成立。
+\end{enumerate}
+
+\section{切比雪夫不等式（\href{https://en.wikipedia.org/wiki/Chebyshev\%27s_inequality}{\underline{Chebyshev's inequality}}）}
+
+切比雪夫不等式定量上解释并描述了我们引入方差的动机。我们关心一个可积随机变量与它的期望的偏差程度，这件事情通常被使用形如
+\[
+\mathbb{P}[|X - \textbf{E}[X]| \geq a] \leq b
+\]
+
+这样的不等式所描述。这种不等式被称为集中不等式（\href{https://en.wikipedia.org/wiki/Concentration_inequality}{\underline{Concentration Inequality}}），其重要性，在概率论和计算机科学中是难以衡量的。
+
+切比雪夫不等式指的是：
+
+\begin{theorem}[切比雪夫不等式]
+\[
+\forall a > 0, \quad \mathbb{P}[|X - \textbf{E}[X]| \geq a] \leq \frac{\textbf{Var}[X]}{a^2}.
+\]
+\end{theorem}
+
+\begin{proof}
+其证明，是对 Markov 不等式的直接使用。
+\[
+\mathbb{P}[|X - \textbf{E}[X]| \geq a] = \mathbb{P}[(X - \textbf{E}[X])^2 \geq a^2] \leq \frac{\textbf{E}[(X - \textbf{E}[X])^2]}{a^2}.
+\]
+\end{proof}
+
+\newpage

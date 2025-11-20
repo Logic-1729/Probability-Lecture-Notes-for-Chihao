@@ -1,0 +1,344 @@
+\chapter{矩生成函数以及期望的一些基本性质}
+
+我们在前面几次课定义了很多数学对象，发展了很多数学工具。今天，我们开始使用他们来做一些具体的计算。
+
+\section{矩生成函数（\href{https://en.wikipedia.org/wiki/Moment-generating_function}{\underline{Moment-Generating Function}}）}
+
+我们前面说到过，当我们研究一个分布的时候，我们经常需要计算它的各阶矩。设 $X$ 是满足这个分布的一个随机变量，也就是说，我们想对于 $k = 1, 2, \dots$，计算 $\mathbf{E}[X^k]$。这些量被称为随机变量的数字特征，它们反映了随机变量的各种性质。实际上，我们有一个统一的方法来计算所有阶矩，即计算它的矩生成函数
+\[
+M_X(\theta) := \mathbf{E}[e^{\theta X}], \quad \theta \in \mathbb{R}.
+\]
+当然了，在 $\theta \neq 0$ 的时候，随机变量 $e^{\theta X}$ 不一定可积。但是，如果它在 $0$ 的某个非空邻域可积的话，那我们就可以通过 $M_X(\theta)$ 算出每一阶 $\mathbf{E}[X^k]$。
+
+\begin{theorem}
+假设存在某个 $b > 0$，使得 $M_X(\theta)$ 在 $-b \leq \theta \leq b$ 的时候存在，那么
+\[
+\mathbf{E}[X] = \left. \frac{\mathrm{d} M_X(\theta)}{\mathrm{d}\theta} \right|_{\theta=0};
+\]
+
+更一般的，对于任何 $k \geq 1$，
+\[
+\mathbf{E}[X^k] = \left. \frac{\mathrm{d}^k M_X(\theta)}{\mathrm{d}\theta^k} \right|_{\theta=0}.
+\]
+
+\end{theorem}
+
+\begin{proof}
+实际上，由于
+\[
+\frac{\mathrm{d}^k e^{\theta X}}{\mathrm{d}\theta^k} = X^k e^{\theta X},
+\]
+
+如果我们能够说明
+\[
+\frac{\mathrm{d}^k \mathbf{E}[e^{\theta X}]}{\mathrm{d}\theta^k} = \mathbf{E}\left[ \frac{\mathrm{d}^k e^{\theta X}}{\mathrm{d}\theta^k} \right],
+\]
+
+也就是说求导和期望能够（对 $\theta$ 在 $0$ 附近的时候）交换，那么我们的定理自然成立。
+
+我们只对 $k = 1$ 来进行证明，对于 $k > 1$，可以在归纳法的基础上类似的说明。设 $\varepsilon < b$，$\theta$ 和 $h$ 满足 $\theta, \theta + h \in [-b + \varepsilon, b - \varepsilon]$。根据定义，根据在给定范围内矩生成函数的可积性，我们有
+\[
+M_X'(\theta) = \lim_{h \to 0} \frac{1}{h} \cdot (M_X(\theta + h) - M_X(\theta)) = \lim_{h \to 0} \mathbf{E}\left[ \frac{1}{h}(e^{(\theta + h)X} - e^{\theta X}) \right].
+\]
+
+因此，我们需要说明，这儿的极限和期望可以交换。我们用 DCT 来说明这件事情，因此，我们只需要找到一个可积的随机变量 $Y$，对于给定范围内的 $\theta$ 和 $h$，我们说明 $Y \geq \left| \frac{1}{h}(e^{(\theta + h)X} - e^{\theta X}) \right|$ 就行了。
+
+根据中值定理，我们可以找到一个 $\theta' \in [\theta, \theta + h]$，满足
+\[
+\frac{1}{h}(e^{(\theta + h)X} - e^{\theta X}) = X e^{\theta' X}.
+\]
+
+注意到，由于 $|\theta'| \leq b - \varepsilon$，我们有
+\[
+|X e^{\theta' X}| \leq |X| e^{|\theta'| |X|} \leq e^{b |X|} \cdot |X| e^{-\varepsilon |X|}.
+\]
+
+由于一定存在一个常数 $C$，使得 $|X| \cdot e^{-\varepsilon |X|} \leq C$，所以
+\[
+|X e^{\theta' X}| \leq C \cdot e^{b |X|} \leq C \cdot (e^{bX} + e^{-bX}) =: Y.
+\]
+
+根据我们 $b$ 的定义可以知道 $Y$ 是可积的。这便证明了定理 $k = 1$ 的情况。
+\end{proof}
+
+\subsection{一些常见分布的矩生成函数}
+
+\begin{example}[伯努利分布 $\mathsf{Ber}(p)$]
+对于概率质量函数为 $p_X(0) = 1 - p$，$p_X(1) = p$ 的伯努利分布，对于 $X \sim \mathsf{Ber}(p)$，由 $\mathsf{LOTUS}$，我们知道
+\[
+M_X(\theta) = \mathbf{E}[e^{\theta X}] = p \cdot e^{\theta} + (1 - p).
+\]
+对其求导，我们得到 $M_X'(\theta) = M_X''(\theta) = p \cdot e^{\theta}$。因此，$\mathbf{E}[X] = \mathbf{E}[X^2] = p$。
+\end{example}
+
+\begin{example}[二项式分布 $\mathsf{Bin}(n, p)$]
+我们当然可以直接通过概率质量函数来计算二项式分布的矩生成函数。但如果注意到二项式分布的组合意义，对于 $X \sim \mathsf{Bin}(n, p)$，它可以写成 $n$ 个分布为 $\mathsf{Ber}(p)$ 的独立随机变量之和，即 $X = X_1 + X_2 + \cdots + X_n$，其中每个 $X_i \sim \mathsf{Ber}(p)$，并且它们是相互独立的。于是，我们有
+\[
+M_X(\theta) = \mathbf{E}[e^{\theta X}] = \mathbf{E}\left[ e^{\theta (\sum_{i=1}^n X_i)} \right] = \prod_{i=1}^n \mathbf{E}[e^{\theta X_i}] = (p \cdot e^{\theta} + (1 - p))^n.
+\]
+上面的计算也告诉我们，若干个独立的随机变量之和的矩生成函数，是各个随机变量的矩生成函数的乘积。
+\end{example}
+
+\begin{example}[超几何分布 $H(k, m, n)$]
+假设袋子里共有 $n$ 个球，其中有 $m$ 个黑球和 $n - m$ 个白球，现在从袋子中无放回地随机取出 $k$ 个球。令随机变量 $X$ 表示取出的黑球个数，我们称 $X$ 服从参数为 $(k, m, n)$ 的超几何分布。为方便计算，我们假设 $n > 2m > 2$ 以及 $n - m \ge k \ge m$。
+
+其概率质量函数为
+\[
+p_X(x) = \frac{\binom{m}{x} \binom{n - m}{k - x}}{\binom{n}{k}}, \quad x = 0, 1, \dots, \min(k, m).
+\]
+
+由 $\mathsf{LOTUS}$，$X$ 的矩生成函数为
+\[
+M_X(\theta) = \mathbb{E}\!\left[e^{\theta X}\right] = \sum_{x=0}^{m} e^{\theta x} \cdot \frac{\binom{m}{x} \binom{n - m}{k - x}}{\binom{n}{k}}.
+\]
+
+对 $M_X(\theta)$ 求导，并在 $\theta = 0$ 处取值，可得
+\[
+\mathbb{E}[X] = \left. \frac{dM_X}{d\theta} \right|_{\theta=0}
+= \frac{mk}{n},
+\qquad
+\mathbb{E}[X^2] = \left. \frac{d^2M_X}{d\theta^2} \right|_{\theta=0}
+= \frac{m(m - 1)k(k - 1)}{n(n - 1)} + \frac{mk}{n}.
+\]
+
+因此，
+\[
+\operatorname{Var}(X) = \mathbb{E}[X^2] - \bigl(\mathbb{E}[X]\bigr)^2
+= \frac{m(m - 1)k(k - 1)}{n(n - 1)} + \frac{mk}{n} - \left( \frac{mk}{n} \right)^2.
+\]
+\end{example}
+
+\begin{example}[几何分布 $\mathsf{Geom}(p)$]
+对于 $X \sim \mathsf{Geom}(p)$，我们知道其概率质量函数为 $\forall k \geq 1, p_X(k) = (1 - p)^{k-1} \cdot p$。因此，矩生成函数为
+\[
+M_X(\theta) = \mathbf{E}[e^{\theta X}] = \sum_{k \geq 1} (1 - p)^{k-1} p \cdot e^{\theta k} = \frac{p}{1 - p} \sum_{k \geq 1} ((1 - p)e^{\theta})^k.
+\]
+这是一个等比数列求和，因此，在 $(1 - p)e^{\theta} < 1$，或者等价的 $\theta \leq \log(\frac{1}{1 - p})$ 的时候，我们有
+\[
+M_X(\theta) = \frac{p e^{\theta}}{1 - (1 - p)e^{\theta}}.
+\]
+\end{example}
+
+\begin{example}[指数分布 $\mathsf{Exp}(\lambda)$]
+指数分布是一个连续分布，其概率密度函数为 :
+\[
+\forall x \geq 0,\, p_X(x) = \lambda e^{-\lambda x}; \quad \forall x < 0,\, p_X(x) = 0.
+\]
+因此，由连续版本的 $\mathsf{LOTUS}$，我们有
+\[
+M_X(\theta) = \mathbf{E}[e^{\theta X}] = \int_0^\infty e^{\theta x} \cdot \lambda e^{-\lambda x}  dx.
+\]
+我们多数时候关心 $\theta$ 在 $0$ 附近时候的取值，因此我们假设 $\theta < \lambda$，那么上面积分算出来便是
+\[
+M_X(\theta) = \frac{\lambda}{\lambda - \theta}.
+\]
+\end{example}
+
+\begin{example}[Gamma 分布 $\mathsf{Gamma}(\alpha, \lambda)$]
+假设我们要考察一台机器的可靠性，考虑随机变量 $X_1, X_2, \dots, X_n$，其中 $X_i$ 表示这台机器第 $i-1$ 次故障到第 $i$ 次故障之间的间隔时间。假设 $X_1, X_2, \dots, X_n$ 互相独立，且均服从参数为 $\lambda$ 的指数分布，即其概率密度函数为 $p_X(x) = \mathsf{Exp}(\lambda)$
+
+令 $T_n = \sum_{i=1}^n X_i$ 表示从机器开始运行到发生第 $n$ 次故障之间的总时间（假设机器故障后的检修时间为 0）。令 $p_{T_n}$ 表示 $T_n$ 的概率密度函数，可证明对于任意的 $t \ge 0$，
+    \[
+    p_{T_n}(t) = \frac{t^{n-1} \cdot e^{-\lambda t} \lambda^n}{(n-1)!}.
+    \]
+
+而$T_n$ 的分布是 Gamma 分布的一种特殊情况。对于一般的参数为 $(\alpha, \lambda)$ 的 Gamma 分布（$\alpha, \lambda \in \mathbb{R}_+$），其概率密度函数为
+    \[
+    \forall t > 0, \quad f(t) = \frac{t^{\alpha-1} \cdot e^{-\lambda t} \lambda^\alpha}{\Gamma(\alpha)},
+    \]
+    其中 $\Gamma(\alpha) = \int_0^\infty x^{\alpha-1} e^{-x} \mathrm{d}x$ 是 Gamma 函数，对于任意的 $\alpha > 0$，有 $\Gamma(\alpha) < \infty$。这里 $\alpha$ 被称为形状参数，$\lambda$ 被称为尺度参数。我们把这个分布简记为 $\mathsf{Gamma}(\alpha, \lambda)$。
+
+    类似上文过程，我们可以得出，当 $\theta < \lambda$ 时，$M_X(\theta)$ 为
+        \[
+        M_X(\theta) = \left( \frac{\lambda}{\lambda - \theta} \right)^\alpha.
+        \] 
+
+随后对 $M_X(\theta)$ 求导，并在 $\theta = 0$ 处取值，可得
+    \[
+    \mathbb{E}[X] = \left. \frac{dM_X}{d\theta} \right|_{\theta=0}
+    = \frac{\alpha}{\lambda},
+    \qquad
+    \mathbb{E}[X^2] = \left. \frac{d^2M_X}{d\theta^2} \right|_{\theta=0}
+    = \frac{\alpha(\alpha+1)}{\lambda^2}.
+    \]
+
+    因此，
+    \[
+    \operatorname{Var}(X) = \mathbb{E}[X^2] - \bigl(\mathbb{E}[X]\bigr)^2
+    = \frac{\alpha(\alpha+1)}{\lambda^2} - \left( \frac{\alpha}{\lambda} \right)^2
+    = \frac{\alpha}{\lambda^2}.
+    \]
+\end{example}
+
+\begin{example}[Beta 分布 $\mathsf{Beta}(\alpha, \beta)$]
+在扔硬币之前，我们对参数 $q$ 一无所知，因此可以将其视为一个在 $(0,1)$ 上均匀分布的随机变量。考虑样本空间 $\Omega = (0,1) \times ([T] \cup \{0\})$，即对于任意的 $\omega_1 \in (0,1), t \in [T] \cup \{0\}$，$\omega = (\omega_1, t) \in \Omega$。令 $\mathcal{F} = \sigma\left( \mathcal{B}(0,1) \times 2^{[T] \cup \{0\}} \right)$ 表示包含 $\mathcal{B}(0,1) \times 2^{[T] \cup \{0\}}$ 的最小 $\sigma$-代数，考虑概率空间 $(\Omega, \mathcal{F}, \mathbb{P})$，$\forall A \in \mathcal{B}(0,1), t \in [T] \cup \{0\}$，测度定义为
+\[
+\mathbb{P}(A \times \{t\}) = \int_{q \in A} \binom{T}{t} q^t (1 - q)^{T-t} \mathrm{d}q.
+\]
+
+我们定义 $(\Omega, \mathcal{F}, \mathbb{P})$ 上的随机变量 $Q$ 为 $\forall \omega = (\omega_1, t) \in \Omega$, $Q(\omega) = \omega_1$；以及定义随机变量 $Y$ 为 $\forall \omega = (\omega_1, t) \in \Omega$, $Y(\omega) = t$。
+
+对于 $t \in [T] \cup \{0\}$，容易计算得：
+
+\[
+    \begin{aligned}
+    \mathbb{P}(Y = t) &= \binom{T}{t} \int_0^1 q^t (1 - q)^{T-t} \mathrm{d}q \\
+    &= \binom{T}{t} \left( \left. \frac{1}{t+1} q^{t+1} (1 - q)^{T-t} \right|_0^1 + \int_0^1 \frac{T-t}{t+1} q^{t+1} (1 - q)^{T-t-1} \mathrm{d}q \right) \\
+    &= 0 + \binom{T}{t} \int_0^1 \frac{T-t}{t+1} q^{t+1} (1 - q)^{T-t-1} \mathrm{d}q \\
+    &= \mathbb{P}(Y = t+1).
+    \end{aligned}
+    \]
+
+由此，由二项式定理，$Q$ 的边缘概率密度函数为
+    \[
+    p_Q(q) = \sum_{t=0}^T \binom{T}{t} q^t (1 - q)^{T-t} = 1.
+    \]
+    
+    条件概率密度函数 $p_{Q|Y}(q | t)$ 为
+    \[
+    \begin{aligned}
+    p_{Q|Y}(q | t) &= \lim_{h \to 0} \frac{1}{h} \cdot \frac{\mathbb{P}(Q \in [q, q+h], Y=t)}{\mathbb{P}(Y=t)} \\
+    &= (T+1) \lim_{h \to 0} \frac{1}{h} \int_q^{q+h} \binom{T}{t} q'^t (1 - q')^{T-t} \mathrm{d}q' \\
+    &= (T+1) \binom{T}{t} q^t (1 - q)^{T-t}.
+    \end{aligned}
+    \]
+
+直观上看，上问中的条件分布表示一共出现了 $t$ 个正面的情况下参数 $q$ 的后验分布，这实际上是 Beta 分布的一种特殊情况。假设随机变量 $X$ 服从参数为 $\alpha$ 和 $\beta$ 的 Beta 分布（$\alpha, \beta > 0$），记为 $X \sim \mathsf{Beta}(\alpha, \beta)$，其概率密度函数为
+    \[
+    \forall x \in (0,1), \quad p_X(x) = \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\Gamma(\beta)} x^{\alpha-1} (1 - x)^{\beta-1}.
+    \]
+    其中 $\Gamma(\cdot)$ 是前面定义过的 Gamma 函数。
+
+
+可以证明： $X$ 的矩生成函数为
+    \[
+    M_X(\theta) = 1 + \sum_{n=1}^\infty \frac{\theta^n}{n!} \cdot \left( \prod_{k=0}^{n-1} \frac{\alpha + k}{\alpha + \beta + k} \right).
+    \]
+
+    由定义，$M_X(\theta) = \mathbb{E}\!\left[e^{\theta X}\right]$，且其 $n$ 阶导数在 $\theta=0$ 处满足 $\left. \frac{d^n}{d\theta^n} M_X(\theta) \right|_{\theta=0} = \mathbb{E}[X^n]$。$X$ 的 $n$ 阶矩为
+    \[
+    \begin{aligned}
+    \mathbb{E}[X^n] &= \int_0^1 \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\Gamma(\beta)} x^{n+\alpha-1} (1 - x)^{\beta-1} \mathrm{d}x \\
+    &= \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\Gamma(\beta)} \cdot \frac{\Gamma(n+\alpha)\Gamma(\beta)}{\Gamma(n+\alpha+\beta)} \\
+    &= \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)} \cdot \frac{\Gamma(n+\alpha)}{\Gamma(n+\alpha+\beta)} \\
+    &= \prod_{k=0}^{n-1} \frac{\alpha + k}{\alpha + \beta + k} \\
+    &= \frac{\alpha(\alpha+1)\cdots(\alpha+n-1)}{(\alpha+\beta)(\alpha+\beta+1)\cdots(\alpha+\beta+n-1)}.
+    \end{aligned}
+    \]
+    
+    因此，
+    \[
+    M_X(\theta) = \sum_{n=0}^\infty \frac{\theta^n}{n!} \mathbb{E}[X^n] = 1 + \sum_{n=1}^\infty \frac{\theta^n}{n!} \cdot \left( \prod_{k=0}^{n-1} \frac{\alpha + k}{\alpha + \beta + k} \right).
+    \]
+
+    特别地，$\mathbb{E}[X] = M_X'(0)$ 且 $\mathbb{E}[X^2] = M_X''(0)$。我们计算：
+    \[
+    \begin{aligned}
+    M_X'(\theta) &= \sum_{n=1}^\infty \frac{n\theta^{n-1}}{n!} \mathbb{E}[X^n] = \sum_{n=1}^\infty \frac{\theta^{n-1}}{(n-1)!} \mathbb{E}[X^n], \\
+    \Rightarrow M_X'(0) &= \mathbb{E}[X] = \frac{\alpha}{\alpha + \beta}, \\
+    M_X''(\theta) &= \sum_{n=2}^\infty \frac{n(n-1)\theta^{n-2}}{n!} \mathbb{E}[X^n] = \sum_{n=2}^\infty \frac{\theta^{n-2}}{(n-2)!} \mathbb{E}[X^n], \\
+    \Rightarrow M_X''(0) &= \mathbb{E}[X^2] = \frac{\alpha(\alpha+1)}{(\alpha+\beta)(\alpha+\beta+1)}.
+    \end{aligned}
+    \]
+    因此，方差为
+    \[
+    \begin{aligned}
+    \operatorname{Var}(X) &= \mathbb{E}[X^2] - \bigl(\mathbb{E}[X]\bigr)^2 \\
+    &= \frac{\alpha(\alpha+1)}{(\alpha+\beta)(\alpha+\beta+1)} - \left( \frac{\alpha}{\alpha+\beta} \right)^2 \\
+    &= \frac{\alpha\beta}{(\alpha+\beta)^2(\alpha+\beta+1)}.
+    \end{aligned}
+    \]
+
+\end{example}
+
+\begin{example}[标准高斯分布 $\mathcal{N}(0, 1)$]
+标准高斯分布的概率密度函数是 $p_X(x) = \frac{1}{\sqrt{2\pi}} e^{-\frac{x^2}{2}}$。我们数学分析课学习过计算高斯积分
+\[
+I = \int_{-\infty}^\infty e^{-\frac{x^2}{2}}  dx
+\]
+的技巧。即考虑
+\[
+I^2 = \left( \int_{-\infty}^\infty e^{-\frac{x^2}{2}}  dx \right) \left( \int_{-\infty}^\infty e^{-\frac{y^2}{2}}  dy \right) = \int_{-\infty}^\infty \int_{-\infty}^\infty e^{-\frac{x^2 + y^2}{2}}  dx dy.
+\]
+再使用极坐标变换 $x = r \cos \theta, y = r \sin \theta$：
+\[
+I^2 = \int_0^{2\pi} \int_0^\infty e^{-\frac{r^2}{2}} r  dr  \mathrm{d}\theta = 2\pi.
+\]
+因此，我们可以计算其矩生成函数为
+\[
+M_X(\theta) = \frac{1}{\sqrt{2\pi}} \int_{-\infty}^\infty e^{\theta x} \cdot e^{-\frac{x^2}{2}}  dx = \frac{1}{\sqrt{2\pi}} \int_{-\infty}^\infty e^{-\frac{1}{2}(x - \theta)^2}  dx \cdot e^{\frac{\theta^2}{2}} = e^{\frac{\theta^2}{2}}.
+\]
+\end{example}
+
+\section{期望的一些常用结论}
+
+\begin{proposition}[全期望公式（\href{https://en.wikipedia.org/wiki/Law_of_total_expectation}{\underline{Law of Total Expectation}}）]
+我们在之前定义过全概率公式，即假设事件集 $\{A_i\}_{i \geq 1}$ 是对于样本空间 $\Omega$ 的一个分划，那么对于任何事件 $B$，
+\[
+\mathbb{P}[B] = \sum_{i \geq 1} \mathbb{P}[B \cap A_i] = \sum_{i \geq 1 : \mathbb{P}[A_i] > 0} \mathbb{P}[B \mid A_i] \cdot \mathbb{P}[A_i].
+\]
+
+我们现在给出一个类似的$\textit{全期望公式}$。对于一个事件 $A$，如果 $\mathbb{P}(A) \geq 0$，我们定义随机变量的条件期望
+\[
+\mathbf{E}[X \mid A] := \frac{\int_A X  d\mathbb{P}}{\mathbb{P}(A)}.
+\]
+
+它可以直观的理解成，在 $A$ 事件发生的情况下，随机变量 $X$ 的平均值。因此，假设 $\{A_i\}_{i \geq 1}$ 是对于样本空间 $\Omega$ 的一个分划，我们显然有
+\[
+\mathbf{E}[X] = \sum_{i \geq 1} \mathbf{E}[X \mid A_i] \cdot \mathbb{P}[A_i].
+\]
+
+\end{proposition}
+
+我们在之前对于离散随机变量给出了马尔科夫不等式：对于非负随机变量 $X$ 以及任何 $a > 0$，由 $\mathbb{P}[X \geq a] \leq \frac{\mathbf{E}[X]}{a}$。我们现在定义了一般随机变量的期望，同样的结论成立。我们可以照搬离散场合的证明，我们这儿等价的用条件期望的语言说一下：
+
+\begin{theorem}[马尔科夫不等式（\href{https://en.wikipedia.org/wiki/Markov\%27s_inequality}{\underline{Markov Inequality}}）]
+\[
+\mathbf{E}[X] = \mathbf{E}[X \mid [X \geq a]] \mathbb{P}[X \geq a] + \mathbf{E}[X \mid [X < a]] \mathbb{P}[X < a] \geq a \cdot \mathbb{P}[X \geq a].
+\]
+于是
+\[
+\mathbb{P}[X \geq a] \leq \frac{\mathbf{E}[X]}{a}.
+\]
+\end{theorem}
+
+我们在数学分析课中学习过柯西-施瓦茨不等式，它的一般形式是说，两个向量的内积小于等于各自长度的乘积。事实上，两个随机变量的乘积的期望也可以看成是某种内积，所以我们有期望形式的柯西施瓦茨不等式：
+
+\begin{theorem}[柯西-施瓦茨不等式（\href{https://en.wikipedia.org/wiki/Cauchy\%E2\%80\%93Schwarz_inequality}{\underline{Cauchy-Schwarz Inequality}}）]
+对于平方可积的随机变量 $X$ 和 $Y$，
+\[
+\mathbf{E}[XY] \leq \sqrt{\mathbf{E}[X^2]} \cdot \sqrt{\mathbf{E}[Y^2]}.
+\]
+\end{theorem}
+
+\begin{proof}
+这儿实际上我们用到了一个性质，如果 $X$ 是平方可积 ($\mathbf{E}[X^2] < \infty$)，那么 $\mathbf{E}[X] < \infty$。大家可以想想为什么。我们给不等式一个很巧妙的证明。对于任意 $\lambda$，我们都有
+\[
+0 \leq \mathbf{E}[(X - \lambda Y)^2] = \mathbf{E}[X^2] - 2\lambda \mathbf{E}[XY] + \lambda^2 \mathbf{E}[Y^2].
+\]
+因此
+\[
+\mathbf{E}[XY] \leq \frac{1}{2\lambda} \cdot \mathbf{E}[X^2] + \frac{\lambda}{2} \cdot \mathbf{E}[Y^2].
+\]
+
+如果 $X$ 和 $Y$ 中有一个几乎处处是 $0$，那么柯西-施瓦茨不等式显然成立。否则，我们可以在上式中令 $\lambda = \frac{\sqrt{\mathbf{E}[X^2]}}{\sqrt{\mathbf{E}[Y^2]}}$ 即可。
+\end{proof}
+
+我们在数学分析课或者优化课程中学习过琴生不等式，但是在那边遇到的也许是有限求和的版本。我们现在介绍一个期望的版本。由于我们对于期望的定义非常的一般化，这推广了我们遇到过有限版本。
+
+\begin{theorem}[琴生不等式（\href{https://en.wikipedia.org/wiki/Jensen\%27s_inequality}{\underline{Jensen's Inequality}}）]
+
+假设 $f: (a, b) \to \mathbb{R}$ 是一个\href{https://en.wikipedia.org/wiki/Convex_function}{\underline{凸函数}}，随机变量 $X$ 的取值是在 $(a, b)$，并且 $f(X)$ 可积，那么 $\mathbf{E}[f(X)] \geq f(\mathbf{E}[X])$。
+\end{theorem}
+
+\begin{proof}
+我们回忆优化课上对于凸函数的各种定义和刻画，其中之一便是对任何一个点 $x \in \mathbb{R}$ 上，均可以找到过 $(x, f(x))$ 的一条直线，称之为支撑线，使得函数 $f$ 的图像全部落在这个直线的上方。我们便利用这一个性质来证明琴生不等式。
+
+我们设 $x_0 = \mathbf{E}[X]$。考虑过 $x_0$ 的一条支撑线 $y(x) = f(x_0) + k(x - x_0)$。我们知道 $f(x)$ 落在 $y(x)$ 的上方，因此
+\[
+f(X) \geq y(X) = f(x_0) + k(X - x_0).
+\]
+对两边取期望即得证。
+\end{proof}
+
+\newpage

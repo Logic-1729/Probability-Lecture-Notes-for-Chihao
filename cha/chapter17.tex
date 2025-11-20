@@ -1,0 +1,171 @@
+\chapter{一些经典的概率问题}
+
+我们今天使用学过的工具来解决一些经典的概率问题。这一部分的内容主要来自 William Feller 的名著 \href{https://book.douban.com/subject/3155014/}{\underline{概率论及其应用}}。
+
+\section{等待时间悖论}
+
+假设公交车以 $\!{Pois}(1)$ 的方式到达车站，周而复始，日夜无休。现在你在 12:00 （或者任何一个固定时间）到达车站。你平均需要等待多久才能等到下一辆公交车？
+
+有两个自然的答案：
+\begin{itemize}
+\item 由于两辆公交车之间的间隔服从 $\!{Exp}(1)$，而指数分布具有无记忆性。因此，平均等待时间应该是 $1$。
+    \item 由于两辆公交车之间的间隔平均长度为 $1$，而平均来说会在间隔中点到达。因此，平均等待时间应该是 $\frac{1}{2}$。
+\end{itemize}
+
+哪个答案是正确的？
+
+正确答案是 $1$。第二个直观错在哪呢？“在间隔中点到达”的观察是正确的，但较大的间隔发生的概率更高。因此，你遇到的间隔的平均长度实际上大于 $1$。为了严格说明这一点，我们将计算等待时间的累积分布函数，然后确定它的期望值。
+
+首先，定义一些符号。我们用 $S_i$ 表示第 $i$ 次公交车到达的时间，用 $\tau_i$ 表示相邻公交车之间的间隔，其中 $\tau_i = S_i - S_{i-1}$ 服从指数分布 $\!{Exp}(1)$。假设我们到达车站的时间远晚于泊松过程的开始时间，用 $L_t$ 表示包含时间 $t$ 的间隔的长度。回忆一下，$S_n$ 服从伽马分布 $\Gamma(n, \lambda)$，其概率密度函数为：
+\[
+g_n(t)=\lambda e^{-\lambda t}\cdot \frac{(\lambda t)^{n-1}}{(n-1)!}, \text{ 对 }t\geq 0.
+\] 
+
+现在我们计算 $\Pr{L_t \leq x}$，分为两种情况：
+
+\begin{enumerate}
+    \item 如果 $x \leq t$，这意味着一些公交车必须在时间 $t$ 之前到达。我们将枚举在 $t$ 之前到达的公交车数量，并相应地计算概率。
+    \[
+    \begin{aligned}
+    \Pr{L_t\leq x} &= \sum_{n=1}^\infty\int_{0}^t g_n(y)\cdot \Pr{t-y<\tau_{n+1}\leq x}\dd y\\
+    &= \sum_{n=1}^\infty\int_{t-x}^t  g_n(y)\cdot \Pr{t-y<\tau_{n+1}\leq x}\dd y \quad\quad (y>t-x)\\
+    &=\sum_{n=1}^\infty\int_{t-x}^t e^{-y}\frac{y^{n-1}}{(n-1)!}\cdot \tp{e^{y-t}-e^{-x}}\dd y\\
+    &= \int_{t-x}^t\sum_{n=1}^\infty e^{-y}\frac{y^{n-1}}{(n-1)!}\cdot \tp{e^{y-t}-e^{-x}}\dd y \quad\quad (\mbox{Fubini-Tonelli})\\
+    &= \int_{t-x}^t \tp{e^{y-t}-e^{-x}}\dd y = 1-e^{-x}-xe^{-x}.
+    \end{aligned}
+    \]
+
+    \item 如果 $x > t$，我们需要单独处理 $\tau_1 > t$ 的情况，其余部分与前一种情况类似。
+    \[
+    \begin{aligned}
+    \Pr{L_t\leq x} &= \Pr{t<\tau_1\leq x}+\sum_{n=1}^\infty\int_{0}^t g_n(y)\cdot \Pr{t-y<\tau_{n+1}\leq x}\dd y\\
+    &=e^{-t}-e^{-x}+\int_{0}^t {e^{y-t}-e^{-x}}\dd y \\
+    &=e^{-t}-e^{-x} +1-e^{-t}-te^{-x}=1-(1+t)e^{-x}.
+    \end{aligned}
+    \]
+\end{enumerate}
+因此，$L_t$ 的概率密度函数为：
+\[
+f(x)=\begin{cases} xe^{-x}& \text{if }x\leq t,\\ (1+t)e^{-x} & \text{if } x>t .\end{cases}
+\]
+
+尽管 $t$ 会影响 $L_t$ 的期望值，但对于足够大的 $t$，积分 $\int_t^\infty (1 + t)xe^{-x} \d x$ 趋于 $0$。因此，当 $t$ 趋于无穷大时，$\E{L_t}$ 收敛到：$\E{\lim_{t\to\infty}L_t}= \int_{0}^\infty x^2 e^{-x}\dd x=2$，这也表明下一辆公交车的平均等待时间为 $\frac{1}{2}\times 2=1$。
+
+\section{线段和圆环上的点}
+
+在 $[0,1]$ 线段上均匀的扔 $n$ 个点 $X_1,X_2,\dots,X_n$。我们把它们从小到大排列后叫做 $X^{(1)}\le X^{(2)}\le\cdots\le X^{(n)}$。这 $n$ 个点把 $[0,1]$ 分成了 $n+1$ 个线段 $[0,X^{(1)}],[X^{(1)},X^{(2)}],\dots,[X^{(n-1)},X^{[n]}],[X^{[n]},1]$。我们分别用 $L_1,L_2,\dots,L_{n+1}$ 来表示这些线段长度。现在的问题是，对于 $i\in[n+1]$，$L_i$ 是同分布的吗？
+
+它们确实是同分布的。我们可以做这样一个思想实验。假设我们在周长为 $1$ 的圆周上均匀的扔 $n+1$ 个点，这 $n+1$ 个点把圆周分成了 $n+1$ 段，根据对称性，这 $n+1$ 段的长度一定是同分布的。我们随便选一个点，把它标记为原点，把圆周从这里断开成一个 $[0,1]$ 线段，从它开始按照顺时针经过的点叫做 $X^{(1)}, X^{(2)},\dots, X^{(n)}$。这样得到的 $n$ 个点和我们在 $[0,1]$ 上均匀的扔 $n$ 个点一定是同分布的，因此，他们划分的线段长度也是同分布的。
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.5\textwidth]{figure/Figure17.1.png}
+\end{figure}
+
+我们容易计算出 $\Pr{L_1>t} = (1-t)^n$。由于所有的 $L_i$ 都同分布，所以对于 $\forall i\in [n+1], \Pr{L_i>t}=(1-t)^n$。
+
+假设我们在圆环上均匀随机选两个点，这两个点把圆环分成了两个弧。很容易验证，每一条弧的平均长度是 $\frac{1}{2}$。我们现在先在圆环上事先画一个标记点，然后再随机选两个点，请问包含了标记点的那个弧平均有多长？现在，你应该有正确的直观了，这个弧长的平均值应该大于 $\frac{1}{2}$！
+
+我们设这段弧长为 $L$，我们来计算一下它的分布函数。我们可以想象从标记点把圆环割开形成一个 $[0,1]$ 线段，那么\emph{不}包含标记点的那一段就对应了我们一开始所定义的 $L_2$。因此
+\[
+    \Pr{L\le t} = \Pr{L_2>1-t} = t^2.
+\]
+所以
+\[
+    \E{L} = \int_0^1 \Pr{L>t}\d t = \int_0^1 1-t^2\d t = \frac{2}{3}.
+\]
+
+\section{随机分裂}
+
+假设有一个初始质量为 $1$ 的物质，其每单位时间会独立的分裂一次。分裂的方式是变成两块，质量分别为原来的 $p$ 和 $1-p$ 倍，其中 $p$ 是 $[0,1]$ 中的一个均匀数字。那么，当分裂了 $n$ 次之后，一块物质质量的分布是怎么样的呢？
+
+我们用 $Z_n$ 表示分裂了 $n$ 次之后一块的质量。那么 $Z_0=1$ 并且 $Z_n = \prod_{i=1}^n X_i$，其中 $X_i$ 为取值为 $[0,1]$ 的独立随机变量。我们可以看到，如果令 $Y_i = -\log X_i$，那么
+\[
+    \log Z_n = \sum_{i=1}^n \log X_i = -\sum_{i=1}^n Y_i
+\]
+是 $n$ 个独立的随机变量之和。我们现在来看 $Y_i$ 的分布。
+\[
+    \Pr{Y_i\ge t} = \Pr{-\log X_i\ge t} = \Pr{X_i\le e^{-t}} = e^{-t}.
+\]
+因此，$Y\sim\!{Exp}(1)$。于是
+\[
+\Pr{Z_n\le t} = \Pr{\sum_{i=1}^n Y_n\ge -\log t} = 1-G_n\tp{\log\tp{\frac{1}{t}}}.
+\]
+这儿 $G_n(x) = 1-e^{-x}\tp{\sum_{k=0}^{n-1} \frac{x^k}{k!}}$ 是速率为 $1$ 的 $\Gamma(n,1)$ 分布的分布函数。
+
+\section{顺序统计量的分布}
+
+我们把 $[0,1]$ 上随机扔的 $n$ 个点按照大小顺序排好序的随机变量 $X^{(1)},\dots,X^{(n)}$ 称为顺序统计量。我们来研究它的分布。我们用 $F_k$ 表示 $X^{(k)}$ 的分布函数，那么，简单思考之后可以看出来
+\[
+    F_k(t) = \Pr{X^{(k)}\le t} = \sum_{j=k}^n \binom{n}{j}t^j(1-t)^{n-j}.
+\]
+我们可以直接求导来得到 $X^{(k)}$ 的概率密度函数 $f_k$。但这儿我们直接从导数的定义来看可以更容易的得到 $f_k$ 的表达式。
+\[
+\begin{aligned}
+    f_k(t)
+    &=\lim_{h\to 0} \frac{1}{h} \cdot \Pr{X^{(k)}\in [t,t+h]}\\
+    &=\lim_{h\to 0} \frac{1}{h} \cdot n\binom{n-1}{k-1} h\cdot (t+O(h))^{k-1}\cdot (1-t+O(h))^{n-k}\\
+    &=n\binom{n-1}{k-1}t^{k-1}(1-t)^{n-k}.
+\end{aligned}
+\]
+我们来考察 $n X^{(k)}$ 的分布，这等价于我们把 $[0,1]$ scale 成 $[0,n]$, 并且 $\E{n X^{(k)}} = k\cdot \frac{n}{n+1}\overset{n\to \infty}{\to} k$.
+\[
+    \Pr{nX^{(k)}>t} = \Pr{X^{(k)} > \frac{t}{n}} = \sum_{j=0}^{k-1}\binom{n}{j}\tp{\frac{t}{n}}^j\tp{1-\frac{t}{n}}^{n-j}\overset{n\to\infty}{\to} \sum_{j=0}^{k-1}\frac{t^j}{j!}e^{-t}.
+\]
+注意到，这是 Gamma 分布 $\Gamma(k,1)$ 的分布函数。换句话说，当 $n$ 足够大的时候，$n\cdot X^{(k)}$ 的分布会收敛到 $\Gamma(k,1)$ 分布！
+
+\section{均匀分布的和与覆盖概率}
+
+我们现在考虑另外一个问题，假设 $X_1,\dots,X_n\sim\!{Unif}([0,a])$ 是 $n$ 个独立随机变量，那么它们的和 $S_n=\sum_{i=1}^n X_i$ 的分布是什么样的呢？我们用 $U_n$ 和 $u_n$ 分别来表示 $S_n$ 的分布函数和概率密度函数。我们可以使用全概率公式得到
+\[
+\begin{aligned}
+    u_1(x) &= \frac{1}{a},\quad x\in [0,a]\\
+    u_{n+1}(x) &= \frac{1}{a}\int_0^a u_n(x-y)\d y = \frac{1}{a}\tp{U_n(x)-U_n(x-a)}, \forall n\ge 1.
+\end{aligned}
+\]
+因此，$u_n$ 具有所谓“卷积”形式的递推式。为了方便叙述，对于 $x\in\bb R$，我们用 $x_+$ 来表示 $\max\set{x,0}$。那么，
+\[
+    U_1(x) = a^{-1}\cdot (x_+-(x-a)_+).
+\]
+我们接着证明
+
+\begin{theorem}
+\[
+\begin{aligned}
+ U_n(x) &= \frac{1}{a^n n!}\sum_{j=0}^n (-1)^j\binom{n}{j}\tp{(x-j\cdot a)_+}^n\\
+ u_{n+1}(x) &= \frac{1}{a^{n+1}n!}\sum_{j=0}^{n+1}(-1)^j\binom{n+1}{j}\tp{(x-j\cdot a)_+}^n.
+\end{aligned}
+\]
+\end{theorem}
+
+既然表达式都告诉你了，我们使用归纳法进行验证即可。边界条件 $n=1$ 是容易验证的。对于更大的 $n$，使用归纳假设和 Fubini-Tonelli，我们有
+\[
+\begin{aligned}
+    U_n(x)
+    &=\int_0^x u_n(t)\d t\\
+    &=\frac{1}{a^n(n-1)!}\sum_{j=0}^n (-1)^j\binom{n}{j}\int_0^x (t-j\cdot a)_+^{n-1}\d t\\
+    &=\frac{1}{a^n n!}\sum_{j=0}^n (-1)^j\binom{n}{j}(x-j\cdot a)_+^n.
+\end{aligned}
+\]
+当 $j\not\in\set{0,1,\dots,n}$ 时，按照惯例我们让 $\binom{n}{j} = 0$。这样我们在上面求和的时候，可以让 $j$ 的取值范围是所有的整数。那么，我们有
+\[
+\begin{aligned}
+u_{n+1}(x)
+&=a^{-1}\cdot \tp{U_n(x)-U_n(x-a)}\\
+&=\frac{1}{a^{n+1} n!}\sum_{j\in \bb Z} (-1)^j\binom{n}{j}\tp{(x-j\cdot a)_+^n - (x-(j+1)\cdot a)_+^n}\\
+&=\frac{1}{a^{n+1}n!}\sum_{j\in \bb Z}(-1)^j \tp{\binom{n}{j}+\binom{n}{j-1}}(x-j\cdot a)_+^n\\
+&=\frac{1}{a^{n+1}n!}\sum_{j\in\bb Z} (-1)^j \binom{n+1}{j}(x-j\cdot a)_+^n.
+\end{aligned}
+\]
+我们使用上面的结论研究一个有趣的问题：往一个圆环上均匀随机扔 $n$ 个长度为 $a$ 的圆弧，有多大概率能够盖住整个圆环？这个问题在水源上也有人\href{https://shuiyuan.sjtu.edu.cn/t/topic/216985}{\underline{问过}}。
+
+我们用 $\varphi_n(t)$ 表示在长度为 $t$ 的圆环上均匀扔 $n$ 个长度为 $a$ 的圆弧盖住圆环的概率。所谓 $n$ 个圆弧盖住圆环，这等价于在 $[0,t]$ 的区间上扔 $n-1$ 个点，使得相邻两个点（包括两个顶点）的距离不大于 $a$。简单思考一下，我们可以写出递推式
+\[
+    \varphi_n(t) = (n-1)\int_0^a\varphi_{n-1}(t-x)\tp{\frac{t-x}{t}}^{n-2}\cdot \frac{1}{t}\d x.
+\]
+注意到 $\varphi_n(t)$ 的递推式也是“卷积”形式，和 $u_n$ 有一点像。我们可以凑出 $\varphi_n$ 和 $u_n$ 的关系。实际上，我们可以验证，
+\[
+    \varphi_n(t) = a^n(n-1)!u_n(t)\frac{1}{t^{n-1}}.
+\]
+
+\newpage

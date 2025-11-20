@@ -1,0 +1,225 @@
+\chapter{条件期望}
+
+我们今天继续来引入概率论里面的一个核心概念：条件期望。这是我们在未来学习随机过程的时候必不可少的语言。在今天的讨论里，我们还是固定一个概率空间 $(\Omega,\@F,\bb P)$。
+
+\section{条件期望的定义}
+
+给定事件 $A,B\in \@F$，在 $\Pr{B}>0$ 的时候，我们定义过条件概率 $\Pr{A\mid B} \defeq \frac{\Pr{A\cap B}}{\Pr{B}}$。我们也定义过给定事件 $B$ 之后随机变量 $X$ 的条件概率：$\E{X\mid B} \defeq \frac{\E{X\cdot \bb I_{B}}}{\Pr{B}}$。对于两个随机变量 $X$ 和 $Y$，我们今天的目标是定义记号 $\E{Y\mid X}$。在我们今天所有的讨论中，均假设 $X$ 和 $Y$ 是可积的。
+
+\subsection{$X$ 是离散随机变量的场合}
+
+我们首先假设 $X$ 是离散的随机变量，即 $X$ 的取值 $\!{Im}(X) = \set{x_1,x_2,\dots}$。对于每一个 $x_i$，我们知道 $[X=x_i]$ 是一个概率非零的事件，因此按照我们上面的定义
+\[
+\E{Y\mid X=x_i} = \frac{\E{Y\cdot \bb I_{X=x_i}}}{\Pr{X=x_i}}.
+\]
+
+显然这是一个关于 $x_i$ 的函数，换句话说，我们可以找到一个 Borel 函数 $f\colon \bb R\to\bb R$ 满足
+\[
+    f\colon x_i\mapsto \E{Y\mid X=x_i}.
+\]
+
+于是，我们定义 $\E{Y\mid X} \defeq f(X)$。换句话说，$\E{Y\mid X}$ 是一个随机变量，满足
+\[
+    \E{Y\mid X}\colon \omega\in\Omega\mapsto f(X(\omega)).
+\]
+
+我们应该这样看待这个定义：$X$ 定义了样本空间的一个分划 $\Omega=\sqcup_{n\ge 1} \Lambda_n$，其中 $\Lambda_n = X^{-1}(x_n)$。对于每一个 $\omega\in\Omega$，如果其属于 $\Lambda_k$，则 $\E{Y\mid X}(\omega)$ 的值为 $Y$ 在 $\Lambda_k$ 上的条件期望，即 $\E{Y\mid \Lambda_k}$。这是理解条件期望以及它的相关性质的最重要的直观。
+
+回忆一下我们以前在讲 $\sigma$-代数时候的一个 running example，它对于理解今天的概念也非常的重要：考虑投掷一个公平的六面骰子的概率空间 $(\Omega,\@F,\bb P)$，其中 $\Omega = [6]$，$\@F = 2^\Omega$, $\forall i\in \Omega, \Pr{\set{i}}=\frac{1}{6}$。我们定义四个随机变量
+
+\begin{enumerate}
+\item $X_1\colon i\in \Omega\mapsto i$，即 $X_1$ 表示掷出来的点数；
+    \item $X_2\colon i\in \Omega\mapsto \bb I_{[i\ge 4]}$，即 $X_2$ 表示掷出来的点数是“大”还是“小”；
+    \item $X_3\colon i\in \Omega\mapsto i \mod 2$，即 $X_3$ 表示掷出来的点数除 $2$ 之后的余数；
+    \item $X_4\colon i\in \Omega\mapsto i \mod 4$，即 $X_4$ 表示掷出来的点数除 $4$ 之后的余数。
+\end{enumerate}
+
+那么我们有
+\begin{enumerate}
+\item $\E{X_1\mid X_1}(i) = X_1(i)$.
+    \item $\E{X_1\mid X_2}(i) = \begin{cases} 5 & \mbox{ if } i\ge 4; \\ 2 & \mbox{ if } i<4.\end{cases}$
+    \item $\E{X_3\mid X_4}(i) = X_3(i)$.
+    \item $\E{X_4\mid X_2}(i) = \begin{cases} \frac{2+0+2}{3} &\mbox{ if }i\mbox{ is even};\\\frac{1+3+1}{3} & \mbox{ if }i\mbox{ is odd}. \end{cases}$
+\end{enumerate}
+
+此外，我们还可以注意到一个事实，就是 $\E{Y\mid X}$ 的定义实际上只与 $X$ 所定义出来的分划 $\Lambda_1,\Lambda_2,\dots$ 有关，而与 $x_1,x_2,\dots$ 的具体取值无关。换句话说，$\E{Y\mid X}$ 实际上只与 $X$ 生成的 $\sigma$-代数 $\sigma(X)$ 有关。
+
+\subsection{$X$ 与 $Y$ 有联合密度函数的场合}
+
+设 $f_{XY}(x,y)$ 是 $X$ 与 $Y$ 的联合密度函数。在边缘密度函数 $f_X(x)\ne 0$ 的时候，我们之前定义过条件期望
+\[
+\E{Y\mid X=x} = \frac{\int_{\bb R}y f_{XY}(x,y)\dd y}{f_X(x)}.
+\]
+
+可以看出，这也是一个关于 $x$ 的函数。我们可以找到一个 Borel 函数 $f\colon \bb R\to \bb R$ 满足
+\[
+    f\colon x\mapsto \E{Y\mid X=x}.
+\]
+
+于是我们可以类似离散场合定义 $\E{Y\mid X} \defeq f(X)$。
+
+\subsection{一般随机变量的场合}
+
+对于一般的随机变量，合理的定义出 $\E{Y\mid X}$ 不是一件简单的事情。事实上，我们先抽象出前面两种特殊场合定义的条件期望满足的两个重要性质。
+
+\begin{itemize}
+    \item $\E{Y\mid X}$ 是 $\sigma(X)$-可测的。
+    \item 对于任何 $A\in \sigma(X)$，$\int_A Y \d \bb P = \int_A \E{Y\mid X}\d \bb P$。
+\end{itemize}
+
+因为我们知道存在一个 Borel $f$ 满足 $\E{Y\mid X} = f(X)$。所以 $\E{Y\mid X}$ 是 $\sigma(X)$-可测是显然的。我们现在分别对于离散和具有联合分布函数的两种场合验证第二点。
+
+\begin{enumerate}
+\item 离散随机变量：我们知道 $\Omega = \sqcup_{n\ge 1} \Lambda_n$。我们知道对于每一个 $A\in\sigma(X)$，都可以写成若干 $\Lambda_k$ 的并，因此根据积分的可加性，我们只需要对 $A=\Lambda_k$ 证明即可。这个时候，我们知道根据定义，对于每一个 $\omega\in \Lambda_k$，$\E{Y\mid X}(\omega)$ 的取值均为 $\E{Y\mid X = x_k}$，所以
+    \[
+        \int_{\Lambda_k}\E{Y\mid X}\d \bb P = \E{Y\mid X=x_k}\cdot \bb P(\Lambda_k) = \E{Y\cdot \bb I_{[X=x_k]}} = \int_{\Lambda_k} Y \d\bb P.
+    \]
+    
+    \item 具有联合分布的随机变量：对于 $A\in \sigma(X)$，我们知道，存在 $B\in\+B$ 使得 $A = X^{-1}(B)$。我们首先有
+    \[
+        \int_A Y \d \bb P = \int_{\bb R}\int_{\bb R}y\cdot f_{XY}(x,y)\cdot \bb I_{[x\in B]} \d x\otimes \d y.
+    \]
+\end{enumerate}
+    另一方面
+    \[
+        \begin{aligned}
+        \int_A \E{Y\mid X} \d \bb P 
+        &= \int_{B} f_X(x)\cdot\E{Y\mid X=x} \d x\\
+        &=\int_{B}f_X(x)\cdot \tp{\int_{\bb R}y\cdot f_{Y|X}(y|x) \d y} \d x\\
+        &\overset{(Fubini)}{=} \int_{\bb R}y\cdot \tp{\int_{B} f_{XY}(x,y) \d x}\d y\\
+        &=\int_{\bb R}\int_{\bb R}y\cdot f_{XY}(x,y)\cdot \bb I_{[x\in B]}\d x\d y.
+        \end{aligned}
+    \]
+
+我们把上面两个性质当做条件期望的定义。我们更一般的给出一个随机变量 $Y$ 在一个 $\sigma$-代数的条件下的条件期望定义。
+
+\begin{definition}[条件期望]
+设 $(\Omega,\@F,\bb P)$ 是个概率空间，$X$ 是一个定义在其上的可积的随机变量，$\@G\subseteq \@F$ 是一个子 $\sigma$-代数。我们说一个随机变量 $Z\colon \Omega\to \bb R$ 是给定 $\@G$ 后 $X$ 的\emph{条件期望}，并记作 $Z = \E{X\mid \@G}$，当且仅当其满足
+\begin{enumerate}
+    \item $Z$ 是 $\@G$-可测的；
+    \item 对于每一个 $A\in\@G$，$\int_A Z \d\bb P = \int_A X \d\bb P$。
+\end{enumerate}
+在这个定义的基础上，对于随机变量 $X$，我们定义 $\E{Y\mid X}\defeq \E{Y\mid \sigma(X)}$。
+\end{definition}
+
+我们有的时候也使用“条件概率” $\Pr{A\mid \@G}$ 的记号，它被定义为 $\E{\bb I_A\mid \@G}$。
+
+我们对于条件期望的定义比较抽象，它和我们之前遇到过的大多数数学对象都不一样，是通过“描述性质”的方法来定义的。所以我们必须说明其合理性。首先是“唯一性”
+
+\begin{proposition}
+如果 $Z$ 和 $Z'$ 都是满足上面两个条件的随机变量，那么 $Z=Z'$ a.e.
+\end{proposition}
+
+根据定义的第二条，我们知道 $Z$ 和 $Z'$ 都是可积的。设 $A = \set{\omega\in\Omega\cmid Z(\omega)>Z'(\omega)}$。于是
+\[
+    \int_A Z-Z' \d\bb P = \int_A Z\d\bb P - \int_A Z'\d\bb P' = \int_A X\d\bb P -\int_A X\d\bb P = 0.
+\]
+
+即 $\Pr{Z>Z'} = 0$。同理 $\Pr{Z<Z'}=0$。因此 $\Pr{Z=Z'}=1$。
+
+最后，我们要说明这样一个 $Z$ 总是存在的。它是测度论里面的 \href{https://en.wikipedia.org/wiki/Radon\%E2\%80\%93Nikodym_theorem}{\underline{Radon-Nikodym 定理}}的推论，它的证明超出了这门课的范畴，我们简单讨论一下。
+
+\subsection{条件期望的存在性与 Radon-Nikodym 定理}
+
+我们之前说过一个分布是“绝对连续（\href{https://en.wikipedia.org/wiki/Absolute_continuity}{\underline{absolutely continuous}}）”的，当且仅当其分布函数 $F(x)$ 存在概率密度 $f$ 满足
+\[
+    \forall t,\;F(t) = \int_{-\infty}^t f(x) \d x.
+\]
+
+事实上，我们更应该把上述定义看成绝对连续的性质。我们引入如下更加一般的“绝对连续” 的定义。
+
+\begin{definition}[绝对连续]
+设 $\mu$ 和 $\nu$ 为可测空间 $(\Omega,\@F)$ 上的两个测度。我们说 $\nu$ 相对于 $\mu$ 是\emph{绝对连续}的，当且仅当对于任何 $A\in\@F$，$\mu(A)=0\implies \nu(A)=0$，记作 $\nu\ll\mu$。
+\end{definition}
+
+Radon-Nikodym 定理则说，如果 $\nu\ll \mu$ 并且 $\mu$ 和 $\nu$ 均是 $\sigma$-有限的，那么 $\nu$ 具有“相对于” $\mu$ 的密度（又被称为 Radon-Nikodym 导数）$f$，满足：
+\begin{itemize}
+\item $f\colon \Omega\to\bb R_{\ge 0}$ 是一个 $\@F$-可测的函数；
+    \item 对于任何 $A\in\@F$，$\nu(A) = \int_A f\d\mu$。
+\end{itemize}
+
+并且，在 up to $\mu$ 的零测集的意义下 $f$ 是唯一的。我们一般把 $f$ 记作 $\frac{\dd\nu}{\dd\mu}$。可以看到，我们之前以前定义的概率密度函数就是 $\mu$ 为勒贝格测度的特例（这个时候我们把 $\mu(\dd x)$ 习惯性记作 $\dd x$）。
+
+回到我们的条件期望。在我们的概率空间 $(\Omega,\@F,\bb P)$ 上，对于一个给定的随机变量 $X$ 以及一个子 $\sigma$-代数 $\@G$，我们可以定义两个 $\@G$ 上的测度：对于任何 $A\in\@G$，
+\begin{itemize}
+\item $\mu(A)\defeq \Pr{A}$，
+    \item $\nu(A)\defeq \int_A X \d\bb P$。
+\end{itemize}
+我们定义 $\E{X\mid \@G} \defeq \frac{\dd\nu}{\dd\mu}$。
+
+\section{条件期望的性质}
+
+我们现在讨论条件期望的性质。可以很容易验证，我们定义的期望，本身也是条件期望的一个特殊情况，即 $\@G=\set{\emptyset,\Omega}$ 是最简单 $\sigma$-代数。
+
+\begin{enumerate}
+    \item $\E{X} = \E{X\mid\set{\emptyset,\Omega}}$。
+\end{enumerate}
+
+\begin{proposition}
+如果 $X$ 是 $\@G$-可测的，那么 $\E{X\mid \@G} = X$ a.e.
+\end{proposition}
+
+\begin{proof}
+根据条件期望的定义，这是显然的（$X$ 是 $\@G$-可测且对任意 $A\in\@G$， $\int_A X \d\bb P = \int_A X\d\bb P$）。
+\end{proof}
+
+条件期望的一个核心的性质是所谓的"tower rule"。假设 $\@G_1,\@G_2\subseteq \@F$，并且满足 $\@G_1\subseteq \@G_2$。换句话说，$\@G_1$ 是比 $\@G_2$ 更粗的 $\sigma$-代数。那么
+
+\begin{enumerate}
+    \setcounter{enumi}{2}
+    \item $\E{\E{X\mid \@G_1}\mid \@G_2} = \E{\E{X\mid \@G_2}\mid \@G_1} = \E{X\mid \@G_1}$。
+\end{enumerate}
+    
+也就是说，当条件期望复合出现的时候，最终剩下的总是更“粗”的 $\sigma$-代数。
+
+\begin{proof}
+$\E{X\mid \@G_1}$ 是 $\@G_1$-可测的，因此也是 $\@G_2$-可测的。于是根据性质 (2)，$\E{\E{X\mid \@G_1}\@G_2} = \E{X\mid\@G_1}$。
+另一方面，对于任意一个 $A\in\@G_1$，我们知道其也 $\in \@G_2$。
+\[
+\int_A \E{X\mid \@G_2}\d \bb P = \int_A X \d \bb P = \int_A \E{X\mid \@G_1}\d \bb P.
+\]
+
+又 $\E{X\mid \@G_1}$ 是 $\@G_1$-可测的，所以
+\[
+\E{\E{X\mid\@G_2}\mid\@G_1} = \E{X\mid\@G_1}.
+\]
+
+\end{proof}
+
+\begin{enumerate}
+    \setcounter{enumi}{3}
+    \item $\E{\E{X\mid\@G}} = \E{X}$
+\end{enumerate}
+
+这个性质是 (1) 和 (3) 的简单推论，但是在很多概率的计算中非常有用。我们通常使用的方式是 $\E{X} = \E{\E{X\mid Y}}$，它可以解读成“为了计算 $X$ 的平均值，我们先按照 $Y$ 分类，对 $Y$ 的每种情况计算对应 $X$ 的平均值，再对 $Y$ 的取值求平均”。比如说，我们让 $(\Omega,\@F,\bb P)$ 为班上所有同学的均匀分布。$X$ 为同学的身高，$Y$ 为同学的性别，那么 $\E{X\mid Y}$ 就表示随机抽一个同学，和该同学同性别的同学的平均身高。而 $\E{\E{X\mid Y}} = \E{X}$ 的直观含义就是，先统计男生平均身高和女生平均身高，然后再按照男生女生人数的比例对这两个数平均，就得到了全班同学的身高。（很遗憾，上课的时候 $Y$ 是一个常数）
+
+\begin{enumerate}
+    \setcounter{enumi}{4}
+    \item 如果 $X$ 是 $\@G$-可测的，并且 $XY$ 是可积的，那么 $\E{XY\mid \@G} = X\E{Y\mid \@G}$ a.e.
+\end{enumerate}
+
+这个性质和（2）一样告诉我们，在做计算的时候，如果 $X$ 是 $\@G$-可测的，说明它在“已知 $\@G$”的信息下，它没有什么随机性，因此可以当成一个常数一样从期望里拿出来。
+
+对于离散的随机变量 $X$，可以使用定义简单的证明。对于一般的 $X$，我们可以通过对 $\underline{X}_k$ 的情况取极限得到。这个证明留做练习。
+
+大量关于期望的性质都可以推广到条件期望，我们罗列如下。他们均可以通过定义简单证明。
+
+\begin{enumerate}
+    \setcounter{enumi}{5}
+    \item $\E{aX+bY\mid \@G} = a\E{X\mid\@G} + b\E{Y\mid \@G}$ a.e.
+    \item 如果 $X\ge 0$ a.e., 那么 $\E{X\mid\@G}\ge 0$ a.e.
+    \item $\abs{\E{X\mid \@G}}\le \E{\abs{X}\mid \@G}$ a.e.
+    \item 如果 $X$ 和 $\@G$ 独立，那么 $\E{X\mid \@G} = \E{X}$。
+    \item 如果 $X_n$ 和 $X$ 均可积，并且 $X_n\uparrow X$，那么 $\E{X_n\mid\@G}\to\E{X\mid \@G}$ a.e.
+    \item 琴生不等式：如果函数 $\phi$ 在定义域内是 convex 的，并且 $\phi(X)$ 是可积的。那么 $\phi(\E{X\mid \@G}) \le \E{\phi(X)\mid \@G}$。
+\end{enumerate}
+
+我们将在之后几次课大量使用这些性质进行计算。但在计算的时候，需要非常小心。试看下面一例：
+
+\begin{example}
+假设我独立的投掷两个 $6$ 面骰子，$X$ 表示第一个的点数，$Y$ 表示第二个的点数。那么 $\E{\E{X+Y\mid X}\mid Y}$ 是多少？
+\end{example}
+
+根据定义，我们知道 $\E{X+Y\mid X} = X+\E{Y\mid X} = X+3.5$ 是一个 $\sigma(X)$ 可测的随机变量。于是 $\E{X+3.5\mid Y} = 3.5+\E{X} = 7$。
+
+即使非常 senior 的学者也容易在这个问题上犯错。

@@ -1,0 +1,276 @@
+\chapter{高维概率，协方差矩阵，高斯分布}
+
+\section{高维概率}
+
+我们之前讨论过定义在同一个概率空间 $(\Omega,\@F,\bb P)$ 上的两个随机变量 $X$ 和 $Y$ 的联合分布。除了可以定义各自的期望 $\E{X},\E{Y}$ 方差 $\Var{X},\Var{Y}$ 之外，我们还能够定义协方差（\href{https://en.wikipedia.org/wiki/Covariance}{\underline{covariance}}）的概念
+\[
+    \Cov{X,Y} \defeq \E{(X-\E{X})(Y-\E{Y})} = \E{XY} - \E{X}\E{Y}.
+\]
+
+从定义式就可以看出，协方差是方差概念的推广，因为 $\Cov{X,X} = \Var{X}$。它可以用来衡量随机变量之间的“相关度”。从定义式 $\Cov{X,Y} = \E{XY}-\E{X}\E{Y}$ 可以看出，如果 $X$ 和 $Y$ 独立，那么 $\Cov{X,Y} = 0$。但是反过来一般不成立:
+
+\begin{example}
+设 $X\sim\!{Ber}\tp{\frac{1}{2}}$; $Y = \begin{cases} \frac{1}{2} & \mbox{ if } X=0，\\ \sim\!{Ber}\tp{\frac{1}{2}} &\mbox{ if } X=1 \end{cases}$。那么
+\[
+\E{XY} = \E{XY\mid X=0}\Pr{X=0}+\E{XY\mid X=1}\Pr{X=1} = \frac{1}{4};
+\]
+
+并且 $\E{X}\E{Y} = \frac{1}{2}\cdot \frac{1}{2} = \frac{1}{4}$。所以 $\Cov{X,Y} = 0$。但是显然 $X$ 和 $Y$ 不独立，因为
+\[
+\Pr{X=0 \land Y = \frac{1}{2}} = \frac{1}{2}, \quad\Pr{X=0}\Pr{Y=\frac{1}{2}} = \frac{1}{4}.
+\]
+
+\end{example}
+
+我们同样可以把相关概念推广到 $n$ 个随机变量。我们会用一个向量 $\*X = (X_1,\dots,X_n)^\top$ 来表示 $n$ 个随机变量 $X_1,\dots,X_n$ 所组成的向量，并把它看成 $\omega\in\Omega\mapsto \*X(\omega)\in \bb R^n$ 中的函数。我们有时候也直接称 $\*X$ 为随机向量。我们定义它的期望为
+\[
+\E{\*X} = \tp{\E{X_1},\E{X_2},\dots,\E{X_n}}^\top\in \bb R^n.
+\]
+
+高维随机变量在计算机科学和数据科学中都是核心的研究对象，我们这门课不会涉及太多相关的内容，感兴趣的同学可以参考两本著名的教科书 \href{https://www.math.uci.edu/~rvershyn/papers/HDP-book/HDP-book.html}{\underline{High-Dimensional Probability}} 和 \href{https://web.math.princeton.edu/~rvan/APC550.pdf}{\underline{Probability in High Dimension}}。其中前者从统计与计算机科学的角度研究高维概率，而后者从概率论的角度研究类似的对象。
+
+对于一个 $n$-维随机变量，我们可以定义它的协方差矩阵（\href{https://en.wikipedia.org/wiki/Covariance_matrix}{\underline{covariance matrix}}）为
+\[
+    \Cov{\*X} \defeq \E{(\*X-\E{\*X})(\*X-\E{\*X})^\top}.
+\]
+
+换句话说，$\Cov{\*X}$ 是一个 $n\times n$ 的矩阵，其第 $i$ 行 $j$ 列的元素是 $\Cov{X_i,X_j}$。协方差矩阵有一些基本的性质：
+\begin{enumerate}
+    \item $\Cov{\*X}$ 总是半正定的，这是因为对于任何 $\*x\in\bb R^n$，
+    \[
+    \*x^\top\Cov{\*X}\*x = \*x^\top\E{(\*X-\E{\*X})(\*X-\E{\*X})^\top}\*x = \E{\inner{\*x}{\*X-\E{\*X}}^2}\ge 0.
+    \]
+    
+    \item 如果 $X_1,\dots,X_n$ 两两独立，那么 $\Cov{\*X}$ 是对角阵，并且其对角线第 $i$ 位的元素是 $\Var{X_i}$。
+\end{enumerate}
+
+注意到，我们以前介绍过的联合分布函数和联合密度函数均可以无缝推广到 $n$-维随机变量上。
+
+\section{高斯分布}
+
+我们开始介绍也许是最重要的高维分布，高维的高斯分布。对于任意 $i\in [n]$，我们定义 $\xi_i$ 为一个独立的 $\+N(0,1)$ 随机变量，$\xi = (\xi_1,\dots,\xi_n)$。我们把它的分布记作 $\+N(0,\!{Id}_n)$，其中 $\!{Id}_n$ 是 $n$-维的单位矩阵，它是 $\xi$ 的协方差矩阵。
+
+我们在 $\xi$ 的基础上定义一般的高维高斯向量。我们说一个向量 $\*X$ 是\emph{高维高斯（\href{https://en.wikipedia.org/wiki/Multivariate_normal_distribution}{\underline{multi-dimensional Gaussian random variable}}）}，如果他可以写成 $\*X = A\xi+\mu$ 的形式，其中 $A\in \bb R^{n\times n}$，$\mu\in \bb R^n$。
+
+我们可以计算一下 $\*X$ 的期望和协方差。首先
+\[
+    \E{\*X} = \E{A\xi+\mu} = A\E{\xi} + \mu = \mu.
+\]
+
+其次
+\[
+    \Cov{\*X} = \E{\tp{\*X-\E{X}}\tp{\*X-\E{\*X}}^\top} = \E{\tp{A\xi}\tp{A\xi}^\top} = A\E{\xi\xi^\top}A^\top = AA^\top.
+\]
+
+如果我们定义 $\Sigma = AA^\top$，那么 $\*X$ 就是一个期望为 $\mu$，协方差矩阵为 $\Sigma$ 的随机向量。我们把它的分布记为 $\+N\tp{\mu,\Sigma}$。可以看到，一个高维的高斯向量，其分布由期望和协方差矩阵唯一确定（这对于一般的随机向量显然是不对的）。
+
+我们接下来推导 $\*X\sim\+N\tp{\mu,\Sigma}$ 的联合密度函数。我们知道，对于一个 $\+N(0,1)$ 的标准高斯随机变量，其概率密度函数为 $\phi(x) = \frac{1}{\sqrt{2\pi}}e^{-\frac{x^2}{2}}$。于是，对于 $\xi\sim\+N(0, \!{Id}_n)$，由于其各个维度均是独立的 $\+N(0,1)$ 随机变量，其概率密度函数为 $\phi_\xi(x_1,\dots,x_n) = (2\pi)^{-\frac{n}{2}}\exp\tp{-\frac{1}{2}\sum_{i=1}^n x_i^2}$。对于一般的 $\*X\sim\+N\tp{\mu,\Sigma}$，我们先贷款下面这个结论（将在下次课证明）：
+
+\begin{lemma}
+设 $F$ 和 $G$ 是两个分布函数。如果对于任何一个定义在紧集上的光滑函数 $h$，都有 $\int_\Omega h \d F = \int_\Omega  h\d G$，那么在那些 $F(x)$ 连续的点 $x$ 上，$F(x) = G(x)$。
+\end{lemma}
+
+在上述引理的加持下，我们计算对于一个定义在紧集上的光滑函数 $h$ 的期望 $\E{h(\*X)}$。设 $\*X$ 的密度函数是 $\phi_{\*X}$，那么由 LOTUS：
+\[
+    \E{h(\*X)} = \int_{\bb R^n} h(\*x) \phi_\*X(\*x) \d\*x
+\]
+
+我们做换元 $\*x = A\*y + \mu$，并且注意到这个线性变换的 Jacobian 就是 $A$，于是
+\[
+    \E{h(\*X)} = \int_{\bb R^n} h\tp{A\*y+\mu} \phi_\*X(A\*y+\mu) \abs{\det A}\d\*y
+\]
+
+从另外一方面来说，如果我们按照 $\*y\sim\+N\tp{0,\!{Id}_n}$ 来积分函数 $h(A\*y+\mu)$，可以同样得到 $\E{h(\*X)}$：
+\[
+    \E{h(\*X)} = \int_{\bb R^n} h\tp{A\*y+\mu}\phi_\xi(\*y)\d \*y.
+\]
+
+比较上面的系数，我们可以得到 $\phi_\*X(A\*y+\mu)\abs{\det A} = \phi_\xi(\*y)$，或者等价的
+\[
+    \phi_\*X(\*x) = \abs{\det A}^{-1}\phi_\xi\tp{A^{-1}(\*x-\mu)} = \frac{1}{(2\pi)^{\frac{n}{2}}\tp{\det \Sigma}^{\frac{1}{2}}}\exp\tp{-\frac{1}{2}(\*x-\mu)^\top\Sigma^{-1}(\*x-\mu)}.
+\]
+
+同样，我们可以看出来，如果 $\Sigma$ 是对角阵，那么 $X_1,\dots,X_n$ 是相互独立的。这是高斯向量特有的性质。
+
+\subsection{高斯分布的和}
+
+我们现在证明，对于两个\textbf{独立}的高斯分布，$X_1\sim \+N(\mu_1,\sigma_1^2)$，$X_2\sim\+N(\mu_2,\sigma_2^2)$，它们的和 $X_1+X_2\sim\+N(\mu_1+\mu_2,\sigma_1^2+\sigma_2^2)$。设 $Z=X_1+X_2$，我们直接计算 $Z$ 的概率密度函数 $f_Z$。我们之前计算过两个随机变量的和的概率密度公式：
+\[
+\begin{aligned}
+    f_Z(z) 
+    &= \int_{-\infty}^{\infty}f_X(x)f_Y(y-x)\d x \\
+    &=\frac{1}{2\pi\cdot\sigma_1\sigma_2}\int_{-\infty}^\infty e^{-\frac{(x-\mu_1)^2}{2\sigma_1^2}-\frac{(z-x-\mu_2)^2}{2\sigma_2^2}}\d x\\
+    &=\frac{1}{2\pi\sigma_1\sigma_2}e^{-\frac{\tp{z-(\mu_1+\mu_2)}^2}{2(\sigma_1^2+\sigma_2^2)}}\int_{-\infty}^\infty e^{-\frac{\sigma_1^2+\sigma_2^2}{2\sigma_1^2\sigma_2^2}\tp{x-\frac{\sigma_2^2\mu_1+\sigma_1^2(z-\mu_2)}{\sigma_1^2+\sigma_2^2}}^2}\\
+    &=\frac{1}{\sqrt{2\pi}\cdot\sqrt{\sigma_1^2+\sigma_2^2}}\exp\tp{-\frac{\tp{z-(\mu_1+\mu_2)}^2}{2(\sigma_1^2+\sigma_2^2)}}.
+\end{aligned}
+\]
+
+这便是 $\+N(\mu_1+\mu_2,\sigma_1^2+\sigma_2^2)$ 的概率密度函数。上述结论可以推广到任意个 $n$ 个\textbf{相互独立}的高斯分布之和，即如果 $X_1,\dots,X_n$ 是相互独立且 $X_i\sim\+N(\mu_i,\sigma_i^2)$，那么
+\[
+    \sum_{i\in [n]} X_i\sim\+N\tp{\sum_{i\in [n]}\mu_i,\sum_{i\in [n]}\sigma_i^2}.
+\]
+
+注意到，上面要求的相互独立是必须的。如果两个高斯随机变量变量 $X_1$，$X_2$ 不独立，那么它们的和不一定是高斯随机变量（你能想到反例吗？）。事实上，如果我们要求 $X_1$ 和 $X_2$ 的任意线性组合都是一个高斯变量，这等价于要求 $(X_1,X_2)$ 是一个二维高斯向量。我们会在未来证明这给出了高维高斯向量的另一个等价定义。
+
+\section{最大割的近似算法}
+
+我们小讲一个高维向量在算法设计里面应用。我们之前研究过在一个图上求“最小割”的问题。我们今天来研究它的姊妹问题 - “最大割”。给定一个无向图 $G=(V,E)$，我们想把顶点集 $V$ 分成两部分 $S$ 和 $V\setminus S$，满足 $S$ 和 $V\setminus S$ 之间的边尽量多。在这里 $(S,V\setminus S)$ 就被称为图上的一个割。它的大小定义为 $\abs{\set{\set{u,v}\in E\cmid u\in S, v\in V\setminus S}}$。
+
+和最小割问题不一样，最大割问题是 NP-hard 的，也就是说，如果 $\mathbf{NP}\ne \mathbf{P}$，那么最大割问题不存在多项式时间的算法能找到最优解。因此，我们期待在多项式时间内找到近似解。严格来说，我们说一个算法是 $\alpha$-近似（ $\alpha\in[0,1]$ ）的，当且仅当给定一个图作为输入之后，如果其最大割的值本身是 $\!{OPT}$，算法可以输出一个割，其大小至少为 $\alpha\cdot\!{OPT}$。如果 $\alpha=1$，那这就是一个最优算法。我们希望算法能够保证的 $\alpha$ 越大越好。
+
+这是一个经典的组合优化问题，我们将介绍使用半正定规划得到的一个近似算法，这个算法大家猜想是最优的（in terms of $\alpha$ ）。
+
+\subsection{半正定规划（Positive Semi-Definite Programming, SDP）}
+
+我们先简单介绍半正定规划，它是线性规划的推广。我们在算法或者优化课中学过线性规划：
+
+\[
+\text{max } 2x - 3y\\
+\begin{aligned}
+\text{s.t. } 
+x + y &\leq 2, \\
+3x - y &\leq 1, \\
+x,y &\geq 0. 
+\end{aligned}
+\]
+
+我们可以将其改写为等价的矩阵形式：
+
+\[
+\text{max } 
+\begin{bmatrix}
+2 & 0 \\ 
+0 & -3
+\end{bmatrix}
+\bullet
+\begin{bmatrix}
+x & 0 \\ 
+0 & y
+\end{bmatrix}\\
+\begin{aligned}
+\text{s.t.}
+\begin{bmatrix}
+1 & 0 \\ 
+0 & 1
+\end{bmatrix}
+\bullet
+\begin{bmatrix}
+x & 0 \\ 
+0 & y
+\end{bmatrix}
+\leq 2,\\
+\begin{bmatrix}
+3 & 0 \\ 
+0 & -1
+\end{bmatrix}
+\bullet
+\begin{bmatrix}
+x & 0 \\ 
+0 & y
+\end{bmatrix}
+\leq 1,\\
+\begin{bmatrix}
+x & 0 \\ 
+0 & y
+\end{bmatrix}
+\succeq 0.
+\end{aligned}
+\]
+
+在这里，对于两个 $n \times n$ 矩阵 $A = (a_{i,j})_{1 \leq i,j \leq n}$ 和 $B = (b_{i,j})_{1 \leq i,j \leq n}$，它们 Frobenius 积定义为：
+
+\[
+A \bullet B = \sum_{1 \leq i,j \leq n} a_{i,j} \cdot b_{i,j}.
+\]
+
+在上述例子中，每个矩阵都为对角矩阵，并附加了一个正半定约束 $X \succeq 0$。
+
+\subsubsection{SDP 的一般形式}
+
+如上所示，标准形式的线性规划可以写成矩阵形式，其中线性规划的变量 $\set{x_i}_{i \in n}$ 被收集在一个对角矩阵 $X = \text{diag}(x_1, \dots, x_n)$ 中。正半定规划将对角矩阵 $X$ 推广到任意对称矩阵：
+
+\[
+\text{max } C \bullet X \\
+\text{s.t. } A_k \bullet X \leq b_k, \, \forall k \in [m], \\
+X \succeq 0.
+\]
+
+其中，$C = (c(i, j))_{1 \leq i,j \leq n}$，$X = (x(i, j))_{1 \leq i,j \leq n}$，$A_k = (a_k(i, j))_{1 \leq i,j \leq n}$ 是 $n \times n$ 的矩阵，$k \in [m]$。
+
+我们知道一个半正定矩阵 $X$ 可以写成 $X= U^\top U$，其中 $U = \left[\*u_1,\dots,\*u_n\right]$ 满足 $\*u_i\in \bb R^n$ 是一个向量。于是 $x(i,j) = \*u_i^\top \*u_j$。我们可以使用 $\*u_i$ 们重写上面的半正定规划，从而得到
+\[
+\text{max } \sum_{1 \leq i,j \le n} c(i, j) \cdot \*u_i^\top \*u_j, \\
+\text{s.t. } \sum_{1 \leq i,j \le n} a_k(i, j) \cdot \*u_i^\top \*u_j \leq b_k, \, \forall k \in [m], \\
+\*u_i \in \mathbb{R}^n, \, i \in [n].
+\]
+
+这被称为向量规划，与半正定规划是等价的。与线性规划类似，只要提供一个高效的 \href{https://en.wikipedia.org/wiki/Separation_oracle}{\underline{seperation oracle}}，就可以使用椭球法（\href{https://en.wikipedia.org/wiki/Ellipsoid_method}{\underline{ellipsoid method}}）在多项式时间内（近似）求解。一个  seperation oracle 指的是如下一个算法：给定一个点 $\*x\in\bb R^n$：
+
+\begin{enumerate}
+\item 如果 $\*x$ 是可行解，算法输出 YES；
+    \item 如果 $\*x$ 不是可行解，算法输出一个它所不满足的约束。
+\end{enumerate}
+
+我们并不想详细介绍 SDP，我们只是把上述结果当成黑盒使用。
+
+\subsection{Goemans-Williamson 的舍入算法}
+
+实际上，我们可以把最大割问题自然的建模成一个二次规划（\href{https://en.wikipedia.org/wiki/Quadratic_programming}{\underline{quadratic programming}}）：
+
+\[
+\text{max } \frac{1}{2} \sum_{e = \{u, v\} \in E} (1 - x_u x_v)\\
+\text{s.t. } x_u \in \{-1, 1\}, \, \forall u \in V.
+\]
+
+对于这样一个规划，由于其与最大割问题是等价的，我们知道它也是 NP-hard 的。近似算法设计的一个常用技巧是，把这个规划放松（relax）成一个取值范围更大，也因此更容易解的优化问题。然后从这个容易解的优化问题的最优解得到原规划的最优解。后面一步通常被称为舍入（rounding）。在我们这个问题里，如果将每个 $x_u$ 视为一个一维向量 $x_u \in \mathbb{R}^1$，我们可以将其放松为一个 $n$ 维向量 $\*w_u \in \mathbb{R}^n$。于是，我们可以得到如下向量规划：
+\[
+\text{max } \frac{1}{2} \sum_{e = \{u, v\} \in E} \left(1 - \*w_u^\top \*w_v\right)\\
+\text{s.t. } \*w_u \in \mathbb{R}^n, \, \forall u \in V; \quad \*w_u^\top \*w_u = 1, \, \forall u \in V。
+\]
+
+使用之前提到的求解半正定规划的黑盒，我们可以高效的求解上述规划，并得到向量规划的最优解 $\{\*w_u^*\}_{u \in V}$。注意到，每一个 $\*w^*_u$ 均是 $\bb R^n$ 中的一个向量。直观上，这些向量包含了一个好的割的信息：如果 $\*w_u^\top\*w_v$ 比较小，说明 $u$ 和 $v$ 更应该被割开。那我们如何从它舍入成一个割，并严格的证明其近似比呢？
+
+Goemans-Williamson 舍入算法通过随机采样一个穿过原点的超平面，将向量分为两部分：超平面一侧的向量，对应于 $S$，和另一侧的向量，对应于 $V\setminus S$。于是，角度较大的向量对更可能被分开，这也与我们前面说的直观是一致的。
+
+\subsubsection{如何随机采样超平面？}
+
+这并不是一个简单的问题，因为我们首先要定义随机超平面的概率空间，这稍微有一点麻烦。我们便如同大部分计算机科学中做的一样，稍微不那么严格一点，并把正确性的验证付诸于直观（但我并不支持这样做，大家可以参看前文提到的 High-Dimensional Probability 教材来寻找严格的处理）。我们做的具体方法是从 $n-1$ 维单位球（ $S^{n-1} = \set{x \in \mathbb{R}^n \cmid \|x\| = 1}$ ）中均匀地采样一个点作为超平面的法向量。$S_{n-1}$ 上的均匀测度是一个 \href{https://en.wikipedia.org/wiki/Haar_measure}{\underline{Haar 测度}}，它是存在的，我们暂时接受这个设定。我们现在来说明如何从这个测度中进行采样。事实上，我们只需要取一个 $\*x\sim\+N(0,\!{Id}_n)$，然后输出 $\frac{\*x}{\norm{\*x}}$ 即可。这是因为我们知道
+\[
+    \phi_\xi(\*x) \propto \exp\tp{-\frac{1}{2}\|\*x\|^2},
+\]
+
+仅仅依赖于 $\*x$ 的模长 $\|\*x\|$。因此归一化后，$\frac{\*x}{\|\*x\|}$ 在 $S^{n-1}$ 上均匀分布。
+
+\begin{example}[Goemans-Williamson 舍入算法]
+
+\begin{enumerate}
+    \item 计算 $\{\*w_u^*\}_{u \in V}$。
+    \item 随机选择一个向量 $\*x = (x_1, \dots, x_n) \in S^{n-1}$。
+    \item 定义集合 $S = \set{u \in V \cmid \*x^\top \*w_u^* \geq 0}$。
+\end{enumerate}
+\end{example}
+
+\begin{theorem}
+Goemans-Williamson 舍入算法是最大割问题的一个随机 $\alpha^*$-近似算法，其中 $\alpha^* > 0.878$。
+\end{theorem}
+
+记 $w_u^*$ 和 $w_v^*$ 之间的夹角为 $\theta_{u,v}$，即 $\theta_{u,v} = \arccos(\inner{w_u^*}{ w_v^*})$。由于分隔超平面是均匀选取的，对于任意边 $e = \{u, v\} \in E$，顶点 $u$ 和 $v$ 被分隔（位于超平面两侧）的概率为：
+
+\[
+\Pr{u\mbox{ and }v\mbox{ are seperated}} = \frac{\theta_{u,v}}{\pi}.
+\]
+
+我们用随机变量 $X$ 表示割的大小，则有：
+
+\[
+\E{X} = \sum_{\{u, v\} \in E} \Pr{u \mbox{ and } v \mbox{ are seperated}} = \sum_{\{u, v\} \in E} \frac{\arccos(\*w_u^* \cdot \*w_v^*)}{\pi}。
+\]
+
+设 $\alpha^* = \min_{-1 \leq x \leq 1} \frac{2 \arccos x}{\pi (1 - x)} > 0.878$。则有
+\[
+\E{X} \geq \alpha^* \cdot \!{OPT}\mbox{-}\!{VP}\geq \alpha^* \cdot \!{OPT}.
+\]
+
+其中 $\!{OPT}\mbox{-}\!{VP}$ 是向量规划的最优解，而 $\!{OPT}$ 是最大割的最优解。
+
+Goemans-Williamson 舍入算法看似是一个对于这个问题很特殊的算法，也看似有很多改进的空间。同样0.878也看似是一个无厘头的数。但在\href{https://en.wikipedia.org/wiki/Unique_games_conjecture}{\underline{某一些计算复杂性假设}}下，这个近似比是最优的。

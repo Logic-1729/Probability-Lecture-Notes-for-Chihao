@@ -1,0 +1,249 @@
+\chapter{一般随机变量的期望，勒贝格积分}
+
+我们之前定义了在离散概率空间上随机变量的期望，现在我们终于有了足够的工具来定义一般的随机变量的期望了。
+
+\section{一般测度空间上离散随机变量的期望}
+
+首先，我们来说明一下，我们之前对于离散概率空间上随机变量的期望的定义，可以直接的推广成一般的概率空间上的$\textbf{离散随机变量}$的期望，即使现在的概率空间不一定离散了。我们假设概率空间是 $(\Omega, \mathscr{F}, \mathbb{P})$，随机变量 $X: \Omega \to \mathbb{R}$ 的取值 $\mathsf{Im}(X)$ 是可数集。对于每一个 $\Omega$ 的分划 $\Omega = \bigsqcup_{i=1}^\infty \Lambda_i$，如果 $X$ 在 $\Lambda_i$ 上的取值是常数 $z_i$，并且级数 $\sum_{i=1}^\infty |z_i| \mathbb{P}[\Lambda_i] < \infty$，则称 $X$ 是可积的，并定义其期望为
+\[
+\textbf{E}[X] = \sum_{i=1}^\infty z_i \cdot \mathbb{P}[\Lambda_i].
+\]
+
+我们可以同样的证明，只要 $X$ 在每个 $\Lambda_i$ 上是常数，定义出来的 $\textbf{E}[X]$ 与实际选取的 $\Lambda_i$ 无关。所以，我们可以对于每一个 $x \in \mathsf{Im}(X)$，选取 $\Lambda_i = [X = x]$，那么
+\[
+\textbf{E}[X] = \sum_{x \in \mathsf{Im}(X)} x \cdot \mathbb{P}[X = x].
+\]
+
+对于离散随机变量，我们之前证明过的大部分性质，比如对于可积随机变量的期望线性性，独立随机变量的乘积的期望等于期望的乘积等，其证明均可以同样照搬至现在的场合。
+
+\section{从离散到一般可测函数}
+
+现在我们考虑一个一般的随机变量 $X$，也就是说，是从 $\Omega$ 到 $\mathbb{R}$ 的一个可测函数。现在我们没有办法再像离散的场合那样找到一个可数的分划，使得 $X$ 限制在每个分划里是常数了。那我们定义期望的做法便是，正如同数学分析中常见的那样，使用离散的随机变量去逼近它。
+
+对于每一个整数 $n \geq 0$，我们用 $2^{-n}$ 的尺度来离散化实数轴。我们定义一系列随机变量， $\{\overline{X}_n\}_{n \geq 0}$, $\{\underline{X}_n\}_{n \geq 0}$，分别来表示在 $2^{-n}$ 这个尺度下对于 $X$ 的上逼近和下逼近。具体来说，对于每一个 $n \geq 0$，以及每一个 $\omega \in \Omega$，我们总可以找到一个整数 $k$，使得 $X(\omega) \in (k \cdot 2^{-n}, (k+1) \cdot 2^{-n}]$。于是，我们定义 $\overline{X}_n(\omega) := (k+1) \cdot 2^{-n}$，$X_n(\omega) := k \cdot 2^{-n}$。换句话说，$\overline{X}_n(\omega)$ 和 $\underline{X}_n(\omega)$ 都是 $X(\omega)$ 精确到（二进制）小数点后 $n$ 位的近似，所不同的是对于 $n$ 位后面的部分，一个是向上取整，一个是向下取整。根据这个定义，我们可以马上得到一些性质：
+
+\begin{proposition}
+\begin{enumerate}
+    \item 所有的 $\overline{X}_n,\underline{X}_n$ 均为离散随机变量；
+    \item $\forall \omega \in \Omega$, $\underline{X}_n(\omega) \leq X(\omega) \leq \overline{X}_n(\omega)$；
+    \item $\overline{X}_n - \underline{X}_n = 2^{-n}$；
+    \item $\forall n \geq 0$, $\underline{X}_n \leq \underline{X}_{n+1} \leq \overline{X}_{n+1} \leq \overline{X}_n$；
+    \item $\forall \omega \in \Omega$, $\lim_{n \to \infty} \underline{X}_n(\omega) = \lim_{n \to \infty} \overline{X}_n(\omega) = X(\omega)$。
+\end{enumerate}
+\end{proposition}
+
+这些性质大部分是不言自明的，请大家自行验证。上面第3条性质告诉我们，在任意样本点 $\omega$，$\underline{X}_n(\omega)$ 和 $\overline{X}_n(\omega)$ 相差最多 $2^{-n} \leq 1$。因此，所有这些随机变量，是同时可积或者同时不可积的。并且，在它们可积的时候，我们有性质
+\[
+-\infty < \textbf{E}[\underline{X}_0] \leq \textbf{E}[\underline{X}_1] \cdots \leq \textbf{E}[\overline{X}_1] \leq \textbf{E}[\overline{X}_0] < \infty.
+\]
+
+所以，我们可以引入如下 $\textbf{E}[X]$ 的定义。
+
+\begin{definition}
+我们说随机变量 $X$ 是可积的，当且仅当 $X_0$ 是可积的。如果 $X$ 是可积的，定义其期望为
+\[
+\textbf{E}[X] := \lim_{n \to \infty} \textbf{E}[\underline{X}_n] = \lim_{n \to \infty} \textbf{E}[\overline{X}_n].
+\]
+\end{definition}
+
+我们上面的性质说明了，$\lim_{n \to \infty} \textbf{E}[\underline{X}_n]$ 和 $\lim_{n \to \infty} \textbf{E}[\overline{X}_n]$ 这两个极限一定是存在并且相等的。因此，这个定义是良定义。
+
+我们有时候也把 $\textbf{E}[X]$ 记成 $\int_\Omega X  d\mathbb{P}$，或者 $\int_\Omega X(\omega) \mathbb{P}( d\omega)$，它被称为在 $\Omega$ 上可测函数 $X$ 关于测度 $\mathbb{P}$ 的勒贝格积分（\href{https://en.wikipedia.org/wiki/Lebesgue_integral}{\underline{Lebesgue Integral}}）。
+
+所以，期望就是积分，正如同随机变量就是可测函数一样，这也是为什么我们把存在有限期望称为“可积”的原因。于是，我们便能用分析的工具来研究概率论了，这也是 Kolmogorov 概率公理体系的高明之处。
+
+事实上，我们对于积分（期望）的定义不限于概率测度，可以完全的推广到任何“有限”测度。对于无穷的测度，比如 $\mathbb{R}$ 上的勒贝格测度，也可以用类似的方法定义积分（一个值得注意的点是我们只能使用 $\underline{X}_n$ 从下方来逼近一个可积函数）。感兴趣的同学可以参考 \href{https://en.wikipedia.org/wiki/Lebesgue_integral#Definition}{\underline{wiki}}，或者任何一本讲测度或者实分析的教材。我们未来证明的关于期望的大部分性质，都可以无缝推广到无穷测度（事实上，我们需要测度是 $\sigma$-有限的）的勒贝格积分上去。对于只在有限测度上成立的性质，我（如果记得的话）会特别指出。
+
+值得注意的是，在未来，如果 $\mathbb{P}$ 是勒贝格测度（定义在某个 $\mathscr{B}(\Omega)$ 上），我们常常用来 $\text{dx}$ 表示 $\mathbb{P}( \text{dx})$。
+
+\subsection{关于无穷的处理}
+
+有的时候，我们允许随机变量取无穷值，也就是说，是把 $X$ 当成从 $\Omega$ 到 $\mathbb{R} \cup \{\pm \infty\}$ 的映射。这个时候，我们也允许期望取无穷值。在这个场合，我们按照如下方式扩展期望的定义，也把这个定义当成最一般的期望定义。
+
+我们首先考虑非负的随机变量 $X$，即（包括）$\forall \omega \in \Omega, X(\omega) \geq 0$（包括 $X(\omega) = \infty$）。如果 $\mathbb{P}[X = \infty] > 0$，我们就定义 $\textbf{E}[X] := \infty$，否则，我们定义一个新的随机变量 $\widehat{X}$，用来把 $X$ 取值为 $\infty$ 的那些位置的值置为零：
+\[
+\forall \omega \in \Omega, \quad \widehat{X}(\omega) := \begin{cases} 0, & \text{if } X(\omega) = \infty; \\ X(\omega), & \text{otherwise}. \end{cases}
+\]
+
+由于 $\widehat{X}$ 也是非负随机变量，如果其可积，我们定义 $\textbf{E}[X] := \textbf{E}[\widehat{X}]$，如果其不可积（那么定义其期望的级数一定发散），我们定义 $\textbf{E}[X] := \infty$。
+
+我们现在引入一个方便的记号：我们用二元算符 $\wedge, \vee$ 分别来表示 $\min$ 和 $\max$。即 $a \wedge b := \min\{a, b\}$，$a \vee b := \max\{a, b\}$。注意到，这个在组合数学里在 Lattice 上定义的类似算符的意义是一致的。
+
+对于一般的不一定非负的随机变量 $X$，我们用 $X^+$ 和 $X^-$ 分别表示其非负的部分和非正的部分，即对于任何 $\omega \in \Omega$，
+\[
+X^+(\omega) = X(\omega) \vee 0, \quad X^-(\omega) = -X(\omega) \vee 0.
+\]
+
+那么 $X^+, X^- \geq 0$ 并且 $X = X^+ - X^-$。如果 $\textbf{E}[X^+] = \textbf{E}[X^-] = \infty$，此时我们称 $\textbf{E}[X]$ 无定义，否则，我们定义
+\[
+\textbf{E}[X] := \textbf{E}[X^+] - \textbf{E}[X^-].
+\]
+
+这样，我们便完成了最一般的期望的定义。注意到，到现在为止，随机变量“可积”表示它的期望是有限的，而“不可积”有可能期望不存在，也有可能期望是无穷。对于一个非负的随机变量，它的期望一定存在，在它不可积的时候，期望是无穷。
+
+\section{期望（积分）的基本性质}
+
+我们说某个概率空间上的事件“几乎必然（\href{https://en.wikipedia.org/wiki/Almost_surely}{\underline{almost surely}}）”发生，记作 a.s.，如果该事件发生的概率为 $1$。
+
+这一节，我们列举期望的一些基本性质，同样，它们大部分的正确性是不言自明的，也可以使用定义直接验证。我们给出一些证明，并把剩下的留作练习。
+
+\begin{enumerate}
+    \item 如果 $X = Y$ a.s., 那么 $X$ 可积当且仅当 $Y$ 可积。如果它们都可积的话，那么 $\textbf{E}[X] = \textbf{E}[Y]$。
+    \begin{proof}
+    显然，$X = Y$ a.s. 可以推出对于任何 $n \geq 0$, $\overline{X}_n = \overline{Y}_n$ a.s.。而我们有
+    \[
+    X \text{ 可积 } \iff \overline{X}_0 \text{ 可积 } \iff \overline{Y}_0 \text{ 可积 } \iff Y \text{ 可积}.
+    \]
+    
+    因此，在它们都可积的时候，有 $\textbf{E}[X] = \lim \textbf{E}[\overline{X}_n] = \lim \textbf{E}[\overline{Y}_n] = \textbf{E}[Y]$。
+    \end{proof}
+    \item 如果 $|X| \leq |Y|$ a.s. 并且 $Y$ 可积，那么 $X$ 可积。特别的，$X$ 可积当且仅当 $|X|$ 可积。
+
+    \item 如果 $X$ 可积，那么对于任何 $a \in \mathbb{R}$, $aX$ 可积，并且 $\textbf{E}[aX] = a\textbf{E}[X]$。
+
+    \item 如果 $X$ 和 $Y$ 均可积，那么 $X+Y$ 也可积，并且 $\textbf{E}[X+Y] = \textbf{E}[X] + \textbf{E}[Y]$。
+\end{enumerate}
+
+\begin{proof}
+这一条就是所谓的期望的线性性，我们在之前的离散场合已经证明了，现在对于一般的随机变量我们马上对其再进行验证。注意，这个条件里面的 $X$ 和 $Y$ 均可积是非常重要的，否则该性质不一定成立。比如我们可以构造 $\textbf{E}[X] = \infty$, $\textbf{E}[Y] = -\infty$，但 $\textbf{E}[X+Y]$ 是任何数。
+
+首先验证 $X+Y$ 的可积性。我们令 $Z = X+Y$。只需要验证 $\overline{Z}_0$ 是可积的即可。显然有
+\[
+|\overline{Z}_0| \leq |Z| + 1 \leq |X| + |Y| + 1 \leq |\overline{X}_0| + |\overline{Y}_0| + 3.
+\]
+
+由于 $X,Y$ 均是可积的，所以 $\overline{X}_0, \overline{Y}_0$ 均是可积的。因此 $\overline{Z}_0$ 也是可积的。
+
+接着我们验证关于期望的等式。由于 $\mathbf{E}[Z] = \lim_{n \to \infty} \overline{Z}_n$, $\mathbf{E}[X] +  \mathbf{E}[Y]= \lim_{n \to \infty} (\overline{X}_n+\overline{Y}_n)$,对于每一个 $n \geq 0$，我们考察 $\overline{Z}_n - (\overline{X}_n + \overline{Y}_n)$。根据三角不等式，我们有
+\[
+|\overline{Z}_n - (\overline{X}_n + \overline{Y}_n)| \leq |\overline{Z}_n - Z| + |Z - (X+Y)| + |X - \overline{X}_n| + |Y - \overline{Y}_n| \leq 3 \cdot 2^{-n}.
+\]
+
+这也意味着，$\textbf{E}[\overline{Z}_n]$ 和 $\textbf{E}[\overline{X}_n + \overline{Y}_n]$ 有着相同的极限。
+\end{proof}
+\begin{enumerate}
+    \setcounter{enumi}{4}
+    \item 如果 $X$ 可积，那么 $|\textbf{E}[X]| \leq \textbf{E}[|X|]$。
+    \item 如果 $X$ 和 $Y$ 都可积，并且 $X \leq Y$ a.s.，那么 $\textbf{E}[X] \leq \textbf{E}[Y]$。
+    \item 如果 $X$ 和 $Y$ 独立，并且都可积，那么 $XY$ 也可积，并且 $\textbf{E}[XY] = \textbf{E}[X]\textbf{E}[Y]$。
+\end{enumerate}
+
+\begin{proof}
+这个性质我们也证明过其离散的版本。对于一般的情况的证明，我们要用到离散时候的结论。我们首先验证 $XY$ 可积。对于任意 $n \geq 0$，根据三角不等式，我们有
+\[
+|XY| \leq |\overline{X}_n \overline{Y}_n| + |XY - \overline{X}_n \overline{Y}_n|.
+\]
+
+由于 $\overline{X}_n, \overline{Y}_n$ 均是离散随机变量，并且是可积的，我们在离散的时候已经证明过了 $\overline{X}_n \overline{Y}_n$ 是可积的。所以我们只需要验证 $|XY - \overline{X}_n \overline{Y}_n|$ 是可积的即可。To this end，我们有
+
+\begin{align*}
+\left| XY - \overline{X}_n \overline{Y}_n \right|
+&= \left| XY - \overline{X}_n Y + \overline{X}_n Y - \overline{X}_n \overline{Y}_n \right| \\
+&\le |Y| \left| X - \overline{X}_n \right| + \left| \overline{X}_n \right| \left| Y - \overline{Y}_n \right| \\
+&\le 2^{-n} \left( |Y| + \left| \overline{X}_n \right| \right).
+\end{align*}
+
+由于 $|Y|$ 和 $\overline{X}_n$ 均是可积的随机变量，使用上面的性质 2 和 4，我们知道 $|XY - \overline{X}_n \overline{Y}_n|$ 也是可积的。因此 $XY$ 是可积的。
+
+接下来验证 $\textbf{E}[XY] = \textbf{E}[X]\textbf{E}[Y]$。我们使用刚才验证的对应变量的可积性，期望的线性性以及离散时候独立随机变量乘法和期望的可交换性，可以得到
+\begin{align*}
+\mathbf{E}\left[ XY \right] 
+&= \mathbf{E}\left[ \overline{X}_n \overline{Y}_n + (XY - \overline{X}_n \overline{Y}_n) \right] \\
+&= \mathbf{E}\left[ \overline{X}_n \overline{Y}_n \right] + \mathbf{E}\left[ XY - \overline{X}_n \overline{Y}_n \right] \\
+&= \mathbf{E}\left[ \overline{X}_n \right] \mathbf{E}\left[ \overline{Y}_n \right] + \mathbf{E}\left[ XY - \overline{X}_n \overline{Y}_n \right].
+\end{align*}
+
+所以，由性质 5 以及我们刚才得到的估计，
+\begin{align*}
+\left| \mathbf{E}\left[ XY \right] - \mathbf{E}\left[ X \right] \mathbf{E}\left[ Y \right] \right|
+&= \left| \lim_{n \to \infty} \left( \mathbf{E}\left[ XY \right] - \mathbf{E}\left[ \overline{X}_n \right] \mathbf{E}\left[ \overline{Y}_n \right] \right) \right| \\
+&= \lim_{n \to \infty} \left| \mathbf{E}\left[ XY - \overline{X}_n \overline{Y}_n \right] \right| \\
+&\le \lim_{n \to \infty} \mathbf{E}\left[ \left| XY - \overline{X}_n \overline{Y}_n \right| \right] \\
+&\le \lim_{n \to \infty} 2^{-n} \left( \mathbf{E}\left[ |Y| \right] + \mathbf{E}\left[ |\overline{X}_n| \right] \right) \\
+&= 0.
+\end{align*}
+
+以上最后一个等号是由于 $|Y|$ 和 $\overline{X}_n$ 均是可积的。
+\end{proof}
+
+\subsection{Remark: 期望、求和和求极限的交换性质}
+
+我们这里引入作业题的例子，以说明其不可直接交换性：
+
+\newtcolorbox{mybox}{
+    colback=blue!10,
+    colframe=blue!30,
+    arc=2pt,
+    boxrule=0.5pt,
+    left=5pt,
+    right=5pt,
+    top=5pt,
+    bottom=5pt,
+    fontupper=\small
+}
+
+\begin{enumerate}[label=(\arabic*)]
+
+\item 给定概率空间 $(\Omega, \mathcal{F}, P)$ 和一列随机变量 $X_1, X_2, \cdots : \Omega \to \mathbb{R}$。如果每个 $X_n$ 都可积 ($\mathbb{E} [|X_n|] < \infty$)，那么
+\[
+\mathbb{E} \left[ \sum_{n=1}^{\infty} X_n \right] = \sum_{n=1}^{\infty} \mathbb{E} [X_n].
+\]
+
+\begin{mybox}
+\textbf{该结论错误。}
+
+给定概率空间 $([0,1], \mathcal{B}([0,1]), \mathbb{P})$，其中 $\mathbb{P}$ 是勒贝格测度。对于任意 $n \in \mathbb{N}$，定义 $Y_n = n \cdot \mathbb{I}_{[0, 1/n]}$。对于任意 $n \in \mathbb{N}^+$ 定义 $X_n = Y_n - Y_{n-1}$。
+
+显然我们有 $\mathbb{E} [|X_n|] \le 2 < \infty$。注意到 $\sum_{n=1}^{\infty} \mathbb{E} [X_n] = \lim_{n \to \infty} \mathbb{E} [Y_n] = 1$ 并且 $\mathbb{E} [\sum_{n=1}^{\infty} X_n] = \mathbb{E} [\lim_{n \to \infty} Y_n] = 0$。因此，$\mathbb{E} [\sum_{n=1}^{\infty} X_n] \neq \sum_{n=1}^{\infty} \mathbb{E} [X_n]$。
+\end{mybox}
+
+\item 假设随机变量 $X, X_1, X_2, \ldots$ 满足对于任意 $n$，$X_n \le X_{n+1}$ 并且 $\lim_{n \to \infty} X_n = X$ a.s. 那么
+\[
+\lim_{n \to \infty} \mathbb{E} [X_n] = \mathbb{E} [X].
+\]
+
+\begin{mybox}
+\textbf{该结论错误。}
+
+给定概率空间 $((0,1), \mathcal{B}, \mathbb{P})$, 其中 $\mathbb{P}$ 是勒贝格测度。定义随机变量 $X_n$ 使得对于任何 $\omega \in (0,1)$，$X_n(\omega) = -\frac{1}{n \omega^2}$。那么我们有 $X_n \le X_{n+1}$, $\lim_{n \to \infty} X_n = X$ a.s. 并且 $X = 0$。
+
+注意到 $\mathbb{E} [X] = 0$，而对于任何 $n$，$\mathbb{E} [X_n] = -\infty$。因此 $\lim_{n \to \infty} \mathbb{E} [X_n] \neq \mathbb{E} [X]$。
+\end{mybox}
+
+\item 假设随机变量 $X, X_1, X_2, \ldots$ 满足对于任意 $n$，$X_n \le X_{n+1}$ 并且 $\lim_{n \to \infty} X_n = X$ a.s. 如果对于任意 $n$，$X_n$ 都可积，那么
+\[
+\lim_{n \to \infty} \mathbb{E} [X_n] = \mathbb{E} [X].
+\]
+
+\begin{mybox}
+\textbf{该结论正确。证明如下：}
+
+定义随机变量 $Y_1, Y_2, \ldots$，使得 $Y_n = X_n - X_1$。对于任何 $n$，$Y_n$ 是非负可积的，并且 $\lim_{n \to \infty} Y_n = X - X_1$。对 $Y_1, Y_2, \ldots$ 使用单调收敛定理，我们得到，
+\[
+\lim_{n \to \infty} \mathbb{E} [Y_n] = \mathbb{E} [X - X_1].
+\]
+
+因为每个 $X_n$ 都是可积的，所以
+\[
+\lim_{n \to \infty} \mathbb{E} [Y_n] = \lim_{n \to \infty} (\mathbb{E} [X_n] - \mathbb{E} [X_1]) = \lim_{n \to \infty} \mathbb{E} [X_n] - \mathbb{E} [X_1].
+\]
+
+接下来我们只需要证明 $\mathbb{E} [X - X_1] = \mathbb{E} [X] - \mathbb{E} [X_1]$。注意到 $X_1 \le X$ a.s.。因为 $X_1$ 可积，我们有 $\mathbb{E} [X^-] \le \mathbb{E} [X_1^-] < \infty$。因此要么 $X$ 可积，要么 $\mathbb{E} [X] = \infty$。当 $X$ 可积时，由期望线性性可知 $\mathbb{E} [X - X_1] = \mathbb{E} [X] - \mathbb{E} [X_1]$。否则我们有 $\mathbb{E} [X - X_1] = \mathbb{E} [X] - \mathbb{E} [X_1] = \infty$。
+
+因此我们可以证明 $\lim_{n \to \infty} \mathbb{E} [X_n] = \mathbb{E} [X]$。
+\end{mybox}
+
+\item 对于一列非负随机变量 $X_1, X_2, \ldots$，我们有
+\[
+\mathbb{E} \left[ \limsup_{n \to \infty} X_n \right] \ge \limsup_{n \to \infty} \mathbb{E} [X_n].
+\]
+
+\begin{mybox}
+\textbf{该结论错误。}
+
+给定概率空间 $([0,1], \mathcal{B}([0,1]), \mathbb{P})$，其中 $\mathbb{P}$ 是勒贝格测度。对于任意 $n \in \mathbb{N}$，定义 $X_n = n \cdot \mathbb{I}_{[0,1/n]}$。显然我们有对于任何 $n$，$\mathbb{E} [X_n] = 1$，并且 $\mathbb{E} [\lim_{n \to \infty} X_n] = 0$。因此，$\mathbb{E} [\limsup_{n \to \infty} X_n] < \limsup_{n \to \infty} \mathbb{E} [X_n]$。
+\end{mybox}
+
+\end{enumerate}
+
+\newpage

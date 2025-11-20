@@ -1,0 +1,152 @@
+\chapter{大数定律，矩方法}
+
+\section{大数定律（\href{https://en.wikipedia.org/wiki/Law_of_large_numbers}{\underline{Law of large numbers}}）}
+
+有一个六面的骰子，我们想知道它扔到每一面的概率是不是相同的。那我们便可以通过反复投掷该骰子，然后统计每一面出现的频率。直观上，当我们投掷的次数足够多之后，每一面出现的频率就应该越来越接近投掷一次骰子时该面出现的概率。大数定律就是严格的来说明这件事情。
+
+有很多种不同形式的大数定律，但是它们都遵循着同样的模式。设 $X_1,X_2,\dots$ 是定义在同一个概率空间上的随机变量。对于 $n\in \bb N$, 我们定义部分和 $S_n = \sum_{i\in [n]} X_i$。一个大数定律总是如下模式
+\begin{itemize}
+\item 如果 $X_1, X_2,\dots$ 满足[某条件]，
+    \item 那么 $\frac{S_n}{n}$ 以[某种模式]收敛到[某一个数]。
+\end{itemize}
+
+我们可以对 [某条件]，[某种模式]，[某一个数] 取不同的东西，得到不同的大数定律。但在一般情况下，我们关心的收敛模式主要是“依概率收敛”和“几乎必然收敛”两种。而具有这两种收敛模式的结论的大数定律，我们分别叫做\textbf{弱大数定律（Weak Law of Large Numbers, WLLN）}和\textbf{强大数定律（Strong Law of Large Numbers, SLLN）}。由于我们前面说明过，“几乎必然收敛”是比“依概率收敛”更强的收敛模式，因此，强大数定律的成立要么需要更强的条件，要么其证明需要更加细致的分析。
+
+我们接下来给出几个大数定律。
+
+\begin{enumerate}
+\item （弱大数定律）设 $X_1,X_2,\dots$ 是\textbf{独立}的随机变量，并且每一个 $X_i$ 均是可积的且有相同的期望，即 $\E{X_i}=\mu$。如果对于每一个 $X_i$，其\textbf{二阶矩有统一上界}，即 $\E{X_i^2}\le \sigma^2$。那么 $\frac{S_n}{n}\overset{P}{\to} \mu$。
+    \item （Cantelli 强大数定律） 设 $X_1,X_2,\dots$ 是\textbf{独立}的随机变量，并且每一个 $X_i$ 均是可积的且有相同的期望，即 $\E{X_i}=\mu$。如果对于每一个 $X_i$，其\textbf{四阶矩有统一上界}，即 $\E{X_i^4}\le \tau$。那么 $\frac{S_n}{n}\overset{a.s}{\to} \mu$。
+    \item （辛钦（Khinchin）弱大数定律）设 $X_1,X_2,\dots$ 是\textbf{独立同分布}的随机变量，并且每一个 $X_i$ 均是可积的，满足 $\E{X_i}=\mu$。那么 $\frac{S_n}{n}\overset{P}{\to} \mu$。
+    \item （科尔莫格洛夫（Kolmogorov）强大数定律）设 $X_1,X_2,\dots$ 是\textbf{独立同分布}的随机变量，并且每一个 $X_i$ 均是可积的，满足 $\E{X_i}=\mu$。那么 $\frac{S_n}{n}\overset{a.s.}{\to} \mu$。
+\end{enumerate}
+
+注意到，前两个大数定律对随机变量的高阶矩有要求，而后面两个大数定律只要求随机变量可积。但是，前两个大数定律允许随机变量具有不同的分布，但后面两个要求随机变量必须是同分布的，否则结论不一定正确。
+
+\section{矩方法}
+
+我们今天先来证明前两个大数定律，即弱大数定律与 Cantelli 强大数定律。它们的共同点是我们分别要求了随机变量的二阶矩和四阶矩有上界。这便让我们可以使用切比雪夫不等式来进行证明。我们先来证明弱大数定律。
+
+由于显然 $\E{\frac{S_n}{n}}=\mu$，对于任何 $\eps>0$，使用切比雪夫不等式，我们有
+\[
+\Pr{\abs{\frac{S_n}{n}-\mu}>\eps}\le \frac{\Var{S_n}}{n^2\eps^2} \le \frac{\sigma^2}{n\eps^2} \to 0.
+\]
+
+我们接着来证明 Cantelli 强大数定律。我们可以不妨假设 $\mu=0$ （否则可以使用 $X_n-\mu$ 来代替 $X_n$ ）。我们如果想说明“几乎必然收敛”，可以回忆我们上节课证明依概率收敛的随机变量列里存在几乎必然收敛的子列的证明。我们希望这里挑出来的子序列就是序列 $\frac{S_n}{n}$ 自己。我们是使用 Borel-Cantelli 来说明几乎必然收敛的，也因此要求概率 $\Pr{\abs{\frac{S_n}{n}}>\eps}$ 不仅仅收敛到零，而且还要收敛的足够快，快到级数
+$\sum_{n\ge 1} \Pr{\abs{\frac{S_n}{n}}>\eps}$ 是收敛的。我们前面使用二阶矩的切比雪夫不等式得到的界显然是不够的，这也是为什么在 Cantelli 强大数定律的条件里面出现了更强的“四阶矩有界”的条件。
+
+在这个条件下，使用马尔科夫不等式，我们有
+\[
+\Pr{\abs{\frac{S_n}{n}}>\eps} = \Pr{\tp{\frac{S_n}{n}}^4>\eps^4}\le \frac{\E{S_n^4}}{n^4\eps^4}.
+\]
+
+我们需要来估计 $\E{S_n^4}$。注意到
+\[
+\E{S_n^4} = \E{\tp{\sum_{i\in [n]} X_i}^4}=\sum_{i,j,k,\ell\in [n]} \E{X_iX_jX_kX_\ell}.
+\]
+
+由于 $X_i$ 是相互独立的均值为零的随机变量，我们知道如果 $\E{X_iX_jX_kX_\ell}$ 在出现一次项的时候一定为零（比如 $\E{X_1X_4^3} = \E{X_1}\E{X_4^3}=0$ ）。所以
+\[
+\sum_{i,j,k,\ell\in [n]} \E{X_iX_jX_kX_\ell} = 3n(n-1)\E{X_1^2X_2^2}+n\E{X_1^4}.
+\]
+
+我们知道 $\E{X_1^4}\le \tau$。根据 Cauchy-Schwarz 不等式，
+\[
+    \E{X_1^2X_2^2}\le \sqrt{\E{X_1^4}\E{X_2^4}}\le \tau.
+\]
+
+所以，我们有 $\E{S_n^4}\le (3n^2-2n)\tau$。如果我们选 $\eps=\frac{1}{n^{0.1}}$ 的话，马上可以得到
+\[
+    \Pr{\abs{\frac{S_n}{n}}>\frac{1}{n^{0.1}}}\le \frac{3\tau}{n^{1.6}}.
+\]
+
+我们用 $A_n$ 表示坏事件 $\abs{\frac{S_n}{n}}>\frac{1}{n^{0.1}}$，那么由于
+\[
+    \sum_{n\ge 1}\Pr{A_n}\le \sum_{n\ge 1} \frac{3\tau}{n^{1.6}}<\infty,
+\]
+
+根据 Borel-Cantelli，我们有 $\Pr{A_n\mbox{ i.o.}}=0$，即 $\frac{S_n}{n}\overset{a.s.}{\to} 0$。
+
+\section{两个大数定律的应用}
+
+\subsection{\href{https://en.wikipedia.org/wiki/Glivenko\%E2\%80\%93Cantelli_theorem}{\underline{Glivenko-Cantelli}} 定理}
+
+我们假设有一个随机源，可以反复、独立的产生分布为 $\mu$ 的样本。我们从中进行 $n$ 次采样得到 $n$ 个独立同分布的样本 $X_1,X_2,\dots,X_n$。设 $F$ 是 $\mu$ 的分布函数，我们现在想根据这些样本来估计 $F$，应该怎么做？一个很自然的做法如下：我们定义\textbf{经验分布函数}
+\[
+    F_n(x) = \frac{1}{n}\cdot\abs{\set{i\in [n]\cmid X_i\le x}}.
+\]
+
+对于一个固定的 $x$，我们定义 $Y_i=\bb I_{X_i\le x}$。那么 $F_n(x)=\frac{1}{n}\sum_{i\in [n]} Y_i$。使用期望的线性性容易验证，对于任何 $x$，我们有
+\[
+    \E{F_n(x)} = \frac{1}{n}\sum_{i\in [n]} \E{Y_i} = \Pr{X_i\le x} = F(x).
+\]
+
+换句话说，$F_n(x)$ 是对 $F(x)$ 的一个\emph{无偏估计}。
+
+Glivenko-Cantelli 定理说的是 almost surely，函数列 $F_n$ 一致收敛到 $F$。注意到，我们这里有两个修饰的词，几乎一定（almost surely） 和一致（uniformly）。因为 $F_n$ 是随机变量，所以实际上可以看成 $(\omega,x)\times \Omega\in \bb R \to \bb R$ 的函数。所以这句话的意思是，存在一个测度为 $1$ 的样本集 $\Omega'\subseteq\Omega$，使得对于任意 $\omega\in\Omega'$，函数 $F_n(\omega,\cdot)$ 一致收敛到 $F(\cdot)$。我们先不妨假设 $F$ 是 $[0,1]$ 上的均匀分布的分布函数，我们接着再说明，对于一般的分布，可以简单的转化成均匀分布的情形。
+
+对于固定的 $x$，由于 $Y_i$ 是一个伯努利分布的变量，它的每一阶矩都是有限的。Cantelli 大数定律告诉我们 $F_n(x)\overset{a.s.}{\to} F(x)$。我们现在需要进一步说明，这一个 almost surely 可以对于所有的 $x\in [0,1]$ 同时保持，并且，收敛速度是一致的（与 $x$ 无关）。我们固定一个让 $F_n(x)\to F(x)$ 的样本点。对于任何 $\eps>0$，我们取一个整数 $m$ 满足 $\frac{1}{m}<\eps$。对于 $i=0,1,\dots,m$，我们设 $x_i = \frac{i}{m}$。由于 $m$ 是一个整数，所以我们知道 almost surely, 存在一个 $N$ (可以与 $m$ 有关)，使得当 $n>N$ 的时候，对于任何 $i=0,1,\dots,m$，$\abs{F_n(x_i) - F(x_i)}\le \eps$。
+
+于是，对于任何的 $x\in [0,1]$，我们总是可以找到一个 $i$，使得 $x\in [x_i,x_{i+1}]$。于是，根据 $F_n$ 和 $F$ 的单调性，对于 $n>N$，有
+\[
+\begin{aligned}
+    F_n(x) - F(x) &\le F_n(x_{i+1}) - F(x_i)\le \abs{F_n(x_{i+1})-F(x_{i+1})}+F(x_{i+1}) - F(x_i) \le 2\eps;\\
+    F_n(x) - F(x) & \ge F_n(x_i)-F(x_{i+1}) = \tp{F_n(x_i)-F(x_i)}+\tp{F(x_i)-F(x_{i+1})}\ge -2\eps.
+\end{aligned}
+\]
+
+这说明，在这个样本点上，$\abs{F_n(x)-F(x)}\le 2\eps$。由于 $N$ 是一个与 $x$ 无关的数，这个收敛是一致收敛。
+
+我们现在来考虑 $F$ 是一般的分布函数的情况。如果 $X$ 的分布是 $F$，那么对于任何 $t$
+\[
+F(t) = \Pr{X\le t} = \Pr{F(X)\le F(t)}
+\]
+
+这说明，如果我们定义 $Z=F(X)\in [0,1]$，那么 $\Pr{Z\le F(t)} = F(t)$。这意味着 $Z$ 的分布是 $[0,1]$ 上的均匀分布。我们用 $U$ 来表示 $[0,1]$ 上均匀分布的分布函数。
+
+对于每一个 $i\in [n]$，我们设 $Z_i = F(X_i)$。因此，我们可以想想此时到来的是 $n$ 个 $[0,1]$ 上均匀分布的随机变量，这便把问题转化为了我们刚解决的均匀分布的情况。实际上，我们假设 $U_n$ 是使用这些假想的 $Z_i$ 估计出来的 $U$ 的近似，那么就有对于任何 $n$ 和 任何 $x\in \bb R$：
+\[
+    F_n(x) = \frac{1}{n}\sum_{i=1}^n \bb I_{X_i\le x} = \frac{1}{n}\sum_{i=1}^n \bb I_{Z_i\le F(x)} = U_n(F(x)).
+\]
+
+于是，对于每一个 $n$，
+\[
+    \sup_{x\in\bb R} \abs{F_n(x)-F(x)} = \sup_{x\in \bb R}\abs{U_n(F(x))-U(F(x))} = \sup_{z\in [0,1]}\abs{U_n(z)-U(z)}.
+\]
+
+而上述最后一项我们已经证明了 almost surely uniformly 收敛到 $0$。
+
+\subsection{\href{https://en.wikipedia.org/wiki/Bernstein_polynomial}{\underline{Bernstein 多项式}} 与 \href{https://en.wikipedia.org/wiki/Stone\%E2\%80\%93Weierstrass_theorem}{\underline{Weierstrass 定理}}}
+
+Weierstrass 定理说的是每一个定义在 $[0,1]$ 上的连续函数 $f(x)$，均可以找到一列多项式 $p_n(x)$ 使得
+\[
+\lim_{n\to\infty} \tp{\sup_{x\in [0,1]} \abs{f(x)-p_n(x)}}=0,
+\]
+
+即 $p_n$ 一致收敛到 $f$。我们现在使用“概率”的想法给出一个简洁的证明。
+
+首先我们构造 $p_n$ 收敛到 $f$。对于每一个 $x\in [0,1]$，我们考虑随机变量 $Y_n^x\sim\!{Bin}(n,x)$。由于 $Y_n^x$ 可以写成 $n$ 个独立的满足 $\!{Ber}(x)$ 分布的随机变量之和，根据弱大数定律，我们有 $\frac{Y_n^x}{n}\overset{P}{\to} x$。由于 $f$ 是 $[0,1]$ 上的连续函数，所以 $f\tp{\frac{Y_n^x}{n}}\overset{P}{\to} f(x)$ (why?)。再根据 DCT，我们有 $\E{f\tp{\frac{Y_n^x}{n}}}\to f(x)$。我们便令 $p_n(x)=\E{f\tp{\frac{Y_n^x}{n}}}$，可以看到，根据 LOTUS 以及二项式分布的定义，
+\[
+    p_n(x) = \sum_{k=0}^n f\tp{\frac{k}{n}}\binom{n}{k}x^k(1-x)^{n-k}
+\]
+
+是一个关于 $x$ 的多项式。
+
+我们再来验证收敛的一致连续性。由于 $f$ 是连续函数，对于任何 $\eps>0$，存在 $\delta>0$ 满足 $\abs{y-x}<\delta\implies \abs{f(y)-f(x)}<\eps$。于是，
+\[
+\begin{aligned}
+    \abs{\E{f\tp{\frac{Y_n^x}{n}}}-f(x)}
+    &=\E{\abs{f\tp{\frac{Y_n^x}{n}}-f(x)}\mid \abs{\frac{Y_n^x}{n}-x}<\delta}\cdot\Pr{\abs{\frac{Y_n^x}{n}-x}<\delta}\\
+    &+\quad \E{\abs{f\tp{\frac{Y_n^x}{n}}-f(x)}\mid \abs{\frac{Y_n^x}{n}-x}\ge \delta}\cdot\Pr{\abs{\frac{Y_n^x}{n}-x}\ge\delta}\\
+    &\le \eps+2\|f\|_\infty\cdot \Pr{\abs{\frac{Y_n^x}{n}-x}\ge\delta}.
+\end{aligned}
+\]
+
+使用切比雪夫不等式，我们可以得到 $\Pr{\abs{\frac{Y_n^x}{n}-x}\ge\delta}\le \frac{1}{4n\delta^2}$。 因此
+\[
+    \abs{\E{f\tp{\frac{Y_n^x}{n}}}-f(x)} \le \eps+\frac{\|f\|_\infty}{2n\delta^2}
+\]
+
+随着 $n$ 增大趋向于零，并且这个上界是一个与 $x$ 无关的数。
+
+\newpage

@@ -1,0 +1,113 @@
+\chapter{课程简介}
+
+概率在我们生活中无处不在。经常赌博的同学都知道，我们会谈论某个比赛结果或者某个事件发生的概率，这反映在赌博公司开出来的赔率上。比如约老师赢得 2025-2026 年MVP的赔率；在赌场的时候我们会计算扔三个骰子得到 666（即豹子）的概率；又或者说明天某股票会涨的概率。有很多不同的方式能够对这些事件进行概率建模，而每一种建模的方式都有其局限性。
+
+在这门课里，我们会专注于所谓的\underline{\href{https://en.wikipedia.org/wiki/Probability_axioms}{ Kolmogorov 的公理体系}}，它使得我们能够使用数学分析的工具来研究概率。一旦接受了这个体系，很多生活中的问题，比如扔一枚均匀硬币会有50\%的概率出现正面，这句话就有了准确的数学的含义，尽管它可能和物理事实不一样（谁能否认当我们扔硬币的时候，每个硬币的结果都是由外星人控制的呢？想想三体里面的智子，我们没有办法否认它的存在），但物理事实如何，比如是否真的有外星人控制了硬币的结果，并不是我们讨论的范畴。有趣的是，通过这些数学理论我们能够预测出一些结果，它和现实符合的很好（比如扔一万次硬币里面大约有五千次正面）。
+
+但某一些问题，比如说前面提到的MVP概率问题，并不适合在这个公理体系里进行建模。对于类似的事情，或者对于概率论的一些其它的解释，可以参考\underline{\href{https://book.douban.com/subject/36874373/}{《概率论沉思录》}}。
+
+接下来，我想通过一些例子，来说明一个严格的概率论是必须的，以及概率论是有用的。在这些例子中，我也许会用到一些在未来才严格介绍的记号。
+
+\section{圣彼得堡悖论 (\underline{\href{https://en.wikipedia.org/wiki/St._Petersburg_paradox}{St.~Petersburg Paradox}})}
+
+这是我最喜欢的例子之一。假设有一个基于掷硬币的赌博游戏。首先庄家扔一个公平硬币，如果结果是正面，则给玩家 $2$ 元钱，游戏结束；如果结果是反面，庄家再扔一次硬币，如果结果是正面，则给玩家 $4$ 元钱，游戏结束；否则按照同样的规则继续扔硬币，每一轮奖金翻倍。换句话说，庄家会生成一个无限长的投掷硬币的结果序列，如果这个序列里第一次出现正面是在第 $k$ 次，则玩家获得 $2^{k}$ 元的奖金。现在的问题是：你愿意花多少钱去购买一次玩这个游戏的机会？或者说，假设你可以无限次地玩这个游戏，但是每一次需要付门票 $a$ 元，那你认为，$a$ 设置成多少是合理的？
+
+一个很自然的想法是计算每一轮游戏的平均收益。很显然，我们有 $2^{-k}$ 的概率在第 $k$ 轮拿钱走人。因此，平均收益是
+\[
+\sum_{k \geq 1} 2^{k} \cdot 2^{-k} = 1 + 1 + 1 + \cdots = \infty.
+\]
+
+也就是说，平均我们每一轮的收益是无穷大！
+
+我们在生活中有一个常见的直观是，独立重复一个随机试验很多次，那么平均收益会趋近于这个实验的期望收益，这个在概率论中叫做大数定律（\underline{\href{https://en.wikipedia.org/wiki/Law_of_large_numbers}{Law of large numbers}}）。那这么说，如果允许我们不断的玩这个游戏，那每一轮门票的价格无论定多少钱，对于玩家来说都是赚的。但想想现实生活，你真的愿意花比如每轮一万元去玩这个游戏吗？我们可以用如下两种方式来问这个问题 ：
+\begin{itemize}
+\item 如果允许你花 $a$ 元购买一次玩游戏的机会（可以重复任意次，每次 $a$ 元），在 $a$ 的定价是多少的时候对于玩家来说是合算的？ 
+\item 假设游戏门票是捆绑销售，即定价 $a \cdot n$ 元来购买 $n$ 次游戏的机会，那 $a$ 应该定价为多少呢？
+\end{itemize}
+
+我们会在这门课里发展足够的数学工具，来回答上面这些问题。
+
+
+\section{波利亚的困惑}
+
+有一个流传已广的关于数学家波利亚的小故事。他喜欢在公园里一边散步一边思考问题。有一次他在散步的时候，正好有一对夫妻也在公园里散步。他在散步的过程中好几次遇到了这对夫妻，导致对方怀疑波利亚是不是在猥琐的跟踪他们。波利亚知道自己并没有，并且非常好奇为什么总会遇到对方，因此，想从数学上来证明这件事情。
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.5\textwidth]{figure/001.png}
+\label{fig:standing_waves}
+\end{figure}
+
+这个问题的一个简化建模是这样的：假设一个人在二维的 $\mathbb{Z}^2$ 的网格上随机游走。他从原点 $(0, 0)$ 出发，每次分别以 $1/4$ 的概率往上下左右四个方向移动。我们现在想问，这个随机游走，是否会无数次回到原点？我们用 $T$ 来表示第一次回到原点的时间，那么 $T$ 的取值是随机的。可以证明，无数次回到原点等价于 $\mathbb{P}\left[T < \infty\right] = 1$，即 $T$ 以 $1$ 的概率是有限的。当然，我们现在还没有定义这儿概率 $\mathbb{P}\left[T < \infty\right]$ 是什么意思，这是一个非平凡的事情，也是我们在未来的几节课里要做的事情。
+
+当然，关于这个问题，数学家角谷静夫说过:
+
+\begin{leftbarquote}
+    \quad \quad 喝醉的人一定能够回家，而喝醉的鸟不一定能回家。
+\end{leftbarquote}
+
+这也就是波利亚证明的，当考虑在 $n$-维格点 $\mathbb{Z}^n$ 上的随机游走的时候，对于 $n \leq 2$，$\mathbb{P}\left[T < \infty\right] = 1$，而对于 $n > 2$，$\mathbb{P}\left[T < \infty\right] < 1$。
+
+\section{投资策略问题}
+
+我们希望通过下面这个例子来说明，在计算机科学，或者说算法设计中，使用概率或者随机是不可或缺的。这个问题是在线优化（\underline{\href{https://en.wikipedia.org/wiki/Online_machine_learning}{Online Learning}}）领域的经典问题，更多的相关资料可以查看这本\underline{\href{https://arxiv.org/abs/1912.13213}{专著}}。
+
+我们考虑一个很简化的投资模型。假设现在有两只股票，我们进行 $T$ 天的交易，每一天，玩家需要选择一只股票进行投资。假设当前是第 $t$ 天，在这一天开始的时候，需要选定投资哪一只，在这一天结束的时候，可以看到收益。我们假设两只股票在第 $t$ 天的收益是 $r_1^{(t)}, r_2^{(t)} \in [0,1]$。假设第 $t$ 天玩家选择了投资股票 $a_t$，则玩家在 $T$ 天的总收益是
+
+\[
+R(T) := \sum_{t=1}^T r_{a_t}^{(t)}.
+\]
+
+那么，我们应该如何选择一个好的投资策略呢？
+
+首先，我们必须明确怎样衡量一个投资策略的好坏。一个很自然的假设是把 $R(T)$ 看成一个关于 $T$ 的函数，我们当然是希望累计收益 $R(T)$ 越大越好。但是，这儿的 $L(T)$ 不仅与玩家的策略有关，还与两只股票每天的收益有关。假设因为大环境不好，两只股票的收益都很差，那自然不管投资策略如何聪明，都不可能有很高的收益。所以，一个很自然的想法是把玩家 $T$ 天的累计收益 $R(T)$ 和表现最好的那只股票相比。这便是懊悔值（Regret）的定义：对于一个给定的投资策略，以及每天的收益情况 $\vec{r} = \left( \left( r_1^{(t)}, r_2^{(t)} \right) \right)_{1 \le t \le T}$
+
+\[
+\mathsf{Regret}(T) := \left( \max_{a \in \{1,2\}} \sum_{t=1}^T r_a^{(t)} \right) - R(T).
+\]
+
+换句话说，$\mathsf{Regret}(T)$ 可以描述成因为没有事先知道哪只股票最好而产生的懊悔的程度。
+
+我们希望一个好的投资策略是，不管两只股票每天的收益如何，即对于任意的 $\vec{r} = \left( \left( r_1^{(t)}, r_2^{(t)} \right) \right)_{1 \le t \le T}$，$\mathsf{Regret}(T)$ 都比较小。注意到，$\mathsf{Regret}(T)$ 最大是 $T$，因此，我们希望我们的算法满足 $\mathsf{Regret}(T) = o(T)$，这表示当 $T$ 足够大的时候，我们的投资策略事实上找到了最好的股票。
+
+我们首先证明，任何确定性的策略，都不可能达到 $o(T)$ 的后悔值。首先明确，在第 $t$ 天的时候，我们的策略可以看成前 $t-1$ 天我们对于股票的选择以及对应收益的情况到两个股票上的一个映射 $f_t$，即：
+
+\[
+f_t: (a_1, a_2, \ldots, a_{t-1}, (r_1^{(1)}, r_2^{(1)}), (r_1^{(2)}, r_2^{(2)}), \ldots, (r_1^{(t-1)}, r_2^{(t-1)})) \mapsto a_t.
+\]
+
+于是，我们想象有一个坏人可以针对这个策略来控制市场，即如果当前玩家选了股票 1，则让 $r_1^{(t)} = 0, r_2^{(t)} = 1$，如果当前玩家选了股票 2，则让 $r_2^{(t)} = 0, r_1^{(t)} = 1$。
+
+我们来计算这个策略的懊悔值 $\mathsf{Regret}(T)$。容易看到，在这样针对性的设置下，$R(T) = 0$。并且，在每一天，两个股票的收益之和是 1。因此，一定有一个股票，它的 $T$ 天累计收益之和 $\ge T/2$。所以，我们有后悔值 $\mathsf{Regret}(T) \ge T/2$。
+
+可以看到，确定性算法之所以表现不好，在于对手可以进行针对性的设置。我们可以使用随机来避免这一点。这就是所谓的在线镜像下降（Online Mirror Descent）算法，它是一个在计算机科学非常著名的算法，在多个领域被重新发现过，因此，它也有很多其他的名字，比如 \underline{\href{https://en.wikipedia.org/wiki/Multiplicative_weight_update_method}{Multiplicative weight update method}}，Hedge算法，EXP3算法等。
+
+简单来说，算法在每一轮会维护一个分布 $D_t$，然后玩家的决策来自于从这个分布中的采样。并且，玩家会根据每回合的反馈来更新这个分布。
+\begin{enumerate}
+\item 初始情况 $D_1 = (1/2, 1/2)$.
+    \item 对于 $t = 1, 2, \ldots T$
+    \begin{itemize}
+        \item 玩家选择股票 $a_t \sim D_t$，并且观察到 $r_1^{(t)}, r_2^{(t)}$.
+        \item 更新 $D_{t+1}$ 使得 $D_{t+1}(j) = \frac{D_t(j) \exp\left(-\eta (1 - r_j^{(t)})\right)}{\sum_{k=1,2} D_t(k) \exp\left(-\eta (1 - r_k^{(t)})\right)}$,
+\end{itemize}
+\end{enumerate}
+
+其中参数 $\eta = \sqrt{1/T}$。算法的想法很简单：这一轮哪个股票表现的好，就增加它在下一轮被选的概率。当然，为什么要像算法中这样增加，这样增加了能够达到什么样的效果，如果用别的方式或者程度增加概率行不行，这就是一个复杂而有点深刻的问题了。这一节最后给出的讲义上可以找到一些讨论。
+
+可以证明，这个算法满足在期望上 $\mathsf{Regret}(T) = O(\sqrt{T})$。这个结论表示，使用随机，可以让算法的效果有质变。我们可以把一个问题的难度想象成算法设计者和给出环境数据的人（即这儿设计 $r^{(t)}$ 的人）的一个博弈结果。一旦允许算法设计者使用随机数，他便有了额外的手段，使得他所设计的算法不那么容易被对手针对了。
+
+我们仅仅给出这个算法的描述，对分析感兴趣的同学，可以参考这个讲义（\underline{\href{https://chihaozhang.com/teaching/AA2022/notes/lec8.pdf}{1}},\underline{\href{https://chihaozhang.com/teaching/AA2022/notes/lec9.pdf}{2}}）。对于这个算法在其他问题上的应用，可以参考这一篇 \underline{\href{https://www.cs.princeton.edu/~arora/pubs/MWsurvey.pdf}{survey}}。
+
+\section{参考书}
+
+这儿，我列举一些这门课的参考书，它们会在课程的不同进度中有所帮助。值得注意的是，除了第一本 \textit{Knowing the Odds} 之外，其它的都不太适合作为教材从头到尾读下去。
+
+\begin{enumerate}
+    \item \underline{\href{https://book.douban.com/subject/12447942/}{\textit{Knowing the Odds}}}, John Walsh.
+    \item \underline{\href{https://book.douban.com/subject/31671522/}{\textit{Mathematics of Probability}}}, Daniel Stroock.
+    \item \underline{\href{https://book.douban.com/subject/27105338/}{\textit{Probability and Computing}}}, Michael Mitzenmacher and Eli Upfal.
+    \item An Introduction to Probability Theory and Its Applications (two volumes), William Feller.
+    \item \underline{\href{https://terrytao.wordpress.com/category/teaching/275a-probability-theory/}{\textit{Probability Theory}}}, Terence Tao.
+\end{enumerate}
+
+\newpage

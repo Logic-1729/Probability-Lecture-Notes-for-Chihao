@@ -1,0 +1,244 @@
+\chapter{MCT，Fatou Lemma 与DCT}
+
+我们今天来学习关于期望，或者更一般的勒贝格积分的几个关于求极限与求积分进行交换的结论。这几个结论在我们未来的学习中会扮演非常重要的角色。
+
+\section{逐点收敛与几乎处处收敛}
+
+我们在数学分析中会遇到函数列收敛的概念，也就是一列函数 $\{f_n\}_{n \geq 1}$ 收敛到一个函数 $f$。我们最常见的收敛形式是逐点收敛，也就是说对于定义域里面的每一个点 $x$，数列 $f_1(x), f_2(x), \dots$ 收敛到 $f(x)$。
+
+同样，我们在概率论中会讨论一列随机变量 $\{X_n\}_{n \geq 1}$ 收敛到 $X$。如果所有的这些随机变量均生活在同一个概率空间 $(\Omega, \mathscr{F}, \mathbb{P})$ 中，那么，逐点收敛可以自然的定义为：
+\[
+\forall \omega \in \Omega, \quad \lim_{n \to \infty} X_n(\omega) = X(\omega).
+\]
+
+事实上，由于概率测度的存在，我们对于收敛会有很多种\href{https://en.wikipedia.org/wiki/Convergence_of_random_variables}{\underline{不同的定义}}。在未来，我们会专门讨论各种收敛的概念之间的联系。
+
+今天，我们先引入所谓的“几乎必然（\href{https://en.wikipedia.org/wiki/Convergence_of_random_variables#Almost_sure_convergence}{\underline{almost surely}}）”收敛，也叫做“以概率 $1$ 收敛”或者“几乎处处收敛（almost everywhere，简称 a.e.）”。它的定义是
+\[
+\mathbb{P}\left[ \lim_{n \to \infty} X_n = X \right] = 1.
+\]
+
+换句话说，那些使得 $\lim_{n \to \infty} X_n \neq X$ 的样本集的测度是 $0$。在概率论里，这是一个很强的收敛准则，但它比逐点收敛（$\forall \omega, \lim_{n \to \infty} X_n(\omega) = X(\omega)$）要弱。在概率论的很多结论中，一个测度为零的集合往往不能掀起什么风浪，所以我们经常可以把逐点收敛的条件弱化成几乎处处收敛。
+
+\section{期望与极限的交换}
+
+假设 $X_n$ 逐点收敛到 $X$。我们想问，$\mathbf{E}[X_n]$ 会不会收敛到 $\mathbf{E}[X]$ 呢？换句话说，就是期望和极限是否能够交换？
+
+\[
+\lim_{n \to \infty} \mathbf{E}\left[ X_n \right] \overset{?}{=} \mathbf{E}\left[ \lim_{n \to \infty} X_n \right].
+\]
+
+首先，我们必须明白，期望和极限不一定总是能够交换。
+
+我们假设概率空间是 $(0, 1]$ 上的均匀分布。设 $X_n = n \cdot \mathbb{\mathbb{I}}_{(0, 1/n)}$。那么，容易验证 $X_n$ 逐点收敛到 $0$。另一方面，对于每一个 $n \geq 1$，我们有 $\mathbf{E}[X_n] = 1$。所以，
+\[
+\lim_{n \to \infty} \mathbf{E}[X_n] = 1 \neq 0 = \mathbf{E}\left[\lim_{n \to \infty} X_n\right].
+\]
+
+另一个更实际的例子是下图中的赌博游戏。
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.7\textwidth]{figure/figure10.1.png}
+\caption{Figure 1}
+\end{figure}
+
+我们接下来会介绍期望与极限交换的三个重要结论，即单调收敛定理（简称 MCT）、Fatou 引理（简称 Fatou）和控制收敛定理（简称 DCT）。这三个结论是可以互推的，我们采取 MCT $\implies$ Fatou $\implies$ DCT 的顺序介绍。因此，大家可以看到，在我们的处理中，真正打开定义的黑盒进行实质性说明的是第一个对于 MCT 的证明。
+
+\section{单调收敛定理（\href{https://en.wikipedia.org/wiki/Monotone_convergence_theorem}{\underline{Monotone Convergence Theorem}}）}
+
+\begin{theorem}[单调收敛定理]
+设 $\{X_n\}_{n \geq 1}$ 是一组非负随机变量，满足 $0 \leq X_1 \leq X_2 \leq \cdots$，并且 $\lim_{n \to \infty} X_n = X$ a.s.，那么
+\[
+\lim_{n \to \infty} \mathbf{E}[X_n] = \mathbf{E}[X].
+\]
+\end{theorem}
+
+值得注意的是，这个定理里我们没有要求随机变量可积，因此，即使在 $\mathbf{E}[X] = \infty$ 的时候也是成立的。
+
+为了证明这个定理，我们可以直观上来考察一下这个结论为什么对。$X_n$ 是单调递增的，它越来越接近 $X$，我们想说明 $\mathbf{E}[X_n]$ 也会越来越接近 $\mathbf{E}[X]$。直观上来说，对于每一个 $\varepsilon$，我们考察 $X_n$ 和 $X$ 差距比较大（比如大于 $\varepsilon$）的那些样本点的集合。随着 $n$ 越来越大，这些样本点的集合的测度会越来越小。我们希望这些样本点对于期望的差距的贡献也是越来越小的。如果我们知道函数的取值本身是有界的，那么这个问题就会很显然。这促使我们先来证明下面这个引理，它实际上是 MCT 的一个特殊情况（$X_n = X \wedge n$），来把一般 MCT 的证明转变为有界函数的场合。
+
+\begin{lemma}
+设 $X \geq 0$。那么 $\lim_{n \to \infty} \mathbf{E}[X \wedge n] = \mathbf{E}[X]$。
+\end{lemma}
+
+\begin{proof}
+
+如果 $\mathbb{P}[X = \infty] > 0$，那么对于每一个 $\omega \in [X = \infty]$，我们都有 $(X \wedge n)(\omega) = n$。因此，我们有 $\mathbf{E}[X \wedge n] \geq n \cdot \mathbb{P}[X = \infty]$。这说明 $\lim_{n \to \infty} \mathbf{E}[X \wedge n] = \infty$。
+
+因此，我们可以假设 $\mathbb{P}[X < \infty] = 1$。实际上，我们可以进一步的假设 $X$ 是逐点有限的，因为测度为零的部分不会改变期望。由于对于任意 $n$，我们均有 $X \wedge n \leq X$，所以 $\lim_{n \to \infty} \mathbf{E}[X \wedge n] \leq \mathbf{E}[X]$。所以我们只需证明 $\mathbf{E}[X] \leq \lim_{n \to \infty} \mathbf{E}[X \wedge n]$。事实上，我们有对于任何 $n$ 和 $k$，
+\[
+\mathbf{E}[X \wedge n] \geq \mathbf{E}[\underline{X}_k \wedge n] \geq \mathbf{E}\left[ \underline{X}_k \cdot \mathbb{\mathbb{I}}_{\underline{X}_k \leq n} \right] = \sum_{j=0}^{n \cdot 2^k} j \cdot 2^{-k} \cdot \mathbb{P}\left[ \underline{X}_k = j \cdot 2^{-k} \right].
+\]
+
+我们让上式最左边和最右边的 $n$ 同时趋向无穷大，便能得到
+\[
+\lim_{n \to \infty} \mathbf{E}[X \wedge n] \geq \sum_{j=0}^\infty j \cdot 2^{-k} \cdot \mathbb{P}\left[ \underline{X}_k = j \cdot 2^{-k} \right] = \mathbf{E}[\underline{X}_k].
+\]
+
+我们再令 $k \to \infty$，便得证。
+\end{proof}
+
+有了这个引理，我们来证明 MCT。
+
+\begin{proof}
+
+首先我们简单说明一下我们可以不管题设里的 a.e.，而假设所有性质都是逐点成立的。我们把那些让某个性质不成立的样本点拿出来，记作 $\Lambda$。由于 $\mathbb{P}(\Lambda) = 0$，我们可以把一个随机变量 $Y$ 都换成 $Y \cdot \mathbb{I}_{\overline{\Lambda}}$。这样所有的性质都是逐点成立了，并且，$
+\mathbf{E}[Y] = \mathbf{E}[Y \cdot \mathbb{I}_{\overline{\Lambda}}].
+$
+
+同样，因为我们知道 $X_n \leq X$，所以 $\lim_{n \to \infty} \mathbf{E}[X_n] \leq \mathbf{E}[X]$。我们只需要证明 $\mathbf{E}[X] \leq \lim_{n \to \infty} \mathbf{E}[X_n]$。根据刚才的引理，我们只需要证明 $\lim_{N \to \infty} \mathbf{E}[X \wedge N] \leq \lim_{n \to \infty} \mathbf{E}[X_n]$。我们将证明，对于任意 $N \geq 0$，$\mathbf{E}[X \wedge N] \leq \lim_{n \to \infty} \mathbf{E}[X_n]$。由于显然 $\mathbf{E}[X_n] \geq \mathbf{E}[X_n \wedge N]$，我们只需要证明对于任意 $N \in \mathbb{N}$，
+\[
+\mathbf{E}[X \wedge N] \leq \lim_{n \to \infty} \mathbf{E}[X_n \wedge N].
+\]
+
+上面的讨论说明，我们可以不失一般性的假设我们关心的随机变量是$\textbf{有界}$，即只需证明有上界 $N$ 的随机变量 $0 \leq X_1 \leq X_2 \leq \cdots \leq N$，满足 $\lim_{n \to \infty} \mathbf{E}[X_n] = \mathbf{E}[X]$，就可以证明原问题。
+
+对于有界的随机变量，这个问题变得容易很多。我们将说明，对于任意 $\varepsilon > 0$，在 $n$ 足够大的时候，$X_n$ 和 $X$ 差距大于 $\varepsilon$ 的那些样本集的测度将任意小，而随机变量在这些样本集上的取值又有上界，因此，他们对于期望的贡献也任意小。
+
+所以我们将说明，对于任意 $\varepsilon > 0$，$\lim_{n \to \infty} \mathbf{E}[X_n] \geq \mathbf{E}[X] - \varepsilon$，这等价于 $\lim_{n \to \infty} \mathbf{E}[X_n] \geq \mathbf{E}[X]$。这个技巧叫做 “an epsilon of room”。
+
+对于每一个 $n \in \mathbb{N}$ 和 $\varepsilon > 0$，我们定义 $A_{n,\varepsilon} = \{ \omega : X_n(\omega) < X(\omega) - \varepsilon \}$，也就是 $X_n$ 和 $X$ 差距大于 $\varepsilon$ 的那些集合。由于 $X_n$ 关于 $n$ 是非降的，我们有 $A_{n,\varepsilon}$ 是非增的，并且 $\bigcap_{n \geq 1} A_{n,\varepsilon} = \varnothing$。所以
+
+\[
+\lim_{n \to \infty} \mathbf{E}\left[ X - X_n \right] 
+\le \lim_{n \to \infty} \left( \varepsilon \cdot 1 + N \mathbb{P}\left[ \bigcap_{i=1}^{n} A_{i,\varepsilon} \right] \right) 
+= \varepsilon.
+\]
+
+这足够说明我们想证明的结论了（why？）。
+\end{proof}
+
+\begin{corollary}[MCT 的推论1]
+我们可以考虑非增的随机变量：假设 $X_1 \geq X_2 \geq \cdots \geq 0$，并且 $\lim_{n \to \infty} X_n = X$ a.e.。如果 $X_1$ 是可积的，那么
+\[
+\lim_{n \to \infty} \mathbf{E}[X_n] = \mathbf{E}[X].
+\]
+\end{corollary}
+
+这个结论的证明也很简单，我们只要令 $Y_n = X_1 - X_n$，由于涉及的每一个随机变量的都是可积的，再使用 MCT 即可。条件里的可积性是必要的，不然的话，考虑定义在 $(0, 1]$ 均匀测度上的随机变量 $X_n(x) = \frac{1}{n x}$。
+
+另外一个推论是期望的线性性在涉及无穷项的时候，如果每一项都是非负的，那依然成立。也就是说：
+
+\begin{corollary}[MCT 的推论2]
+如果 $Y_1, Y_2, \dots \geq 0$，那么
+\[
+\mathbf{E}\left[ \sum_{i=1}^\infty Y_i \right] = \sum_{i=1}^\infty \mathbf{E}[Y_i].
+\]
+\end{corollary}
+
+为了说明这个，我们令 $X_n = \sum_{i=1}^n Y_i$，并使用 MCT，可以得到
+\[
+\mathbf{E}\left[ \sum_{i=1}^{\infty} Y_i \right] 
+= \mathbf{E}\left[ \lim_{n \to \infty} X_n \right] 
+\overset{\text{(MCT)}}{=} \lim_{n \to \infty} \mathbf{E}\left[ X_n \right] 
+\overset{(\heartsuit)}{=} \lim_{n \to \infty} \sum_{i=1}^{n} \mathbf{E}\left[ Y_i \right] 
+= \sum_{i=1}^{\infty} \mathbf{E}\left[ Y_i \right].
+\]
+
+注意到，我们在 $(\heartsuit)$ 用到了有限和时候的期望线性性。这个在每一个 $Y_i$ 是可积的时候我们已经证明过了。由于我们这儿 $Y_i$ 都是非负的，即使其中某一个不可积，期望的线性性也成立，因为两边都等于无穷大。
+
+\section{Fatou引理（\texorpdfstring{\href{https://en.wikipedia.org/wiki/Fatou\%27s_lemma}{\underline{Fatou's Lemma}}}{Fatou's Lemma}）}
+
+我们一开始说的期望和极限交换的反例说明，对于非负的随机变量，取其极限可能让期望变小。下面这个结论确认这个事实。对于非负随机变量，如果直观的把期望想象成围成的面积的话（我们将在下次课 justify 这件事！），极限过程只可能破坏这些面积，而不可能增加面积。
+
+\begin{theorem}[Fatou引理]
+对于一列非负随机变量 $X_n$，我们有
+\[
+\mathbf{E}\left[ \liminf_{n \to \infty} X_n \right] \leq \liminf_{n \to \infty} \mathbf{E}[X_n].
+\]
+
+\end{theorem}
+
+我们注意到，在这儿，我们没有任何收敛性的要求。因此，我们只能谈论 $\liminf$，而不是 $\lim$。
+
+根据定义，对于一列数 $x_n$，
+\[
+\liminf_{n \to \infty} x_n := \lim_{n \to \infty} \inf_{j \geq n} x_j.
+\]
+
+因此，如果我们定义 $y_n := \inf_{j \geq n} x_j$，则 $y_n \uparrow \liminf_{n \to \infty} x_n$。于是乎，对于随机变量列 $X_n$，我们也有
+\[
+ \inf_{j \geq n} X_j \uparrow \liminf_{n \to \infty} X_n.
+\]
+
+由于我们关心的随机变量都是非负的，我们便可以使用 MCT 得到
+\[
+\lim_{n \to \infty} \mathbf{E}\left[ \inf_{j \geq n} X_j \right] = \mathbf{E}\left[ \liminf_{n \to \infty} X_n \right].
+\]
+
+另一方面，我们有 $X_n \geq \inf_{j \geq n} X_j$；也就是说
+\[
+\mathbf{E}[X_n] \geq \mathbf{E}\left[ \inf_{j \geq n} X_j \right].
+\]
+
+两边取 $\liminf$，可以得到
+\[
+\liminf_{n \to \infty} \mathbf{E}\left[ X_n \right] 
+\ge \liminf_{n \to \infty} \mathbf{E}\left[ \inf_{j \ge n} X_j \right] 
+\overset{(\spadesuit)}{=} \lim_{n \to \infty} \mathbf{E}\left[ \inf_{j \ge n} X_j \right] 
+= \mathbf{E}\left[ \liminf_{n \to \infty} X_n \right],
+\]
+
+其中 $(\spadesuit)$ 是由于 $\mathbf{E}[\inf_{j \geq n} X_n]$ 是关于 $n$ 单调的。
+
+注意到，如果把 Fatou 引理里面的 inf 换成 sup 是不对的。考虑一个从 $(0, 1)$ 中均匀选出来的实数的二进制表示。我们用 $X_n$ 表示它的第 $n$ 位数字。那么容易验证 $\mathbf{E}[X_n] = 0.5$，但是 $\limsup X_n = 1$, $\liminf X_n = 0$。
+
+\section{控制收敛定理（\href{https://en.wikipedia.org/wiki/Dominated_convergence_theorem}{\underline{Dominated Convergence Theorem}}）}
+
+我们接下来证明控制收敛定理（DCT），这也是实际上我们最常用的一个结论。
+
+\begin{theorem}[控制收敛定理]
+设 $X_n$ 为一列随机变量，满足 $\lim_{n \to \infty} X_n = X$ a.e.。如果存在一个随机变量 $Y$，满足
+\begin{enumerate}
+\item 对所有 $n \in \mathbb{N}$, $|X_n| \leq Y$；
+    \item $Y$ 是可积的。
+\end{enumerate}
+那么 $\lim_{n \to \infty} \mathbf{E}[X_n] = \mathbf{E}[X]$。
+\end{theorem}
+
+需要注意的是，我们这儿没有要求 $X_n$ 是非负的。
+
+可以回忆我们一开始提到的反例 $X_n = n \cdot \mathbb{I}_{(0,1/n)}$，我们可以直观的解释它是反例的原因：在取极限的过程中，所围成的面积从上方溜掉了。DCT 便说明，如果能够给所有的 $X_n$ 找一个统一的上界 $Y$，把它们都给罩住不让跑出去，这种情况便不会发生。
+
+我们来证明 DCT。
+
+\begin{proof}
+
+考虑非负的随机变量 $Y - X_n$，根据 Fatou 引理，我们有
+\[
+\liminf_{n \to \infty} \mathbf{E}[Y - X_n] \geq \mathbf{E}\left[ \liminf_{n \to \infty} (Y - X_n) \right] = \mathbf{E}\left[ Y - \limsup_{n \to \infty} X_n \right] = \mathbf{E}[Y - X] = \mathbf{E}[Y] - \mathbf{E}[X].
+\]
+
+因此，
+\[
+\mathbf{E}[Y] - \mathbf{E}[X] \leq \liminf_{n \to \infty} \mathbf{E}[Y - X_n] = \mathbf{E}[Y] - \limsup_{n \to \infty} \mathbf{E}[X_n].
+\]
+
+由于 $\mathbf{E}[Y] < \infty$，这等价于
+\[
+\limsup_{n \to \infty} \mathbf{E}[X_n] \leq \mathbf{E}[X].
+\]
+
+同样的，我们考察随机变量 $Y + X_n$. 根据 Fatou 引理，我们有
+\[
+\liminf_{n \to \infty} \mathbf{E}[Y + X_n] \geq \mathbf{E}\left[ \liminf_{n \to \infty} (Y + X_n) \right] = \mathbf{E}[Y + X] = \mathbf{E}[Y] + \mathbf{E}[X].
+\]
+
+因此，
+\[
+\mathbf{E}[Y] + \mathbf{E}[X] \leq \liminf_{n \to \infty} \mathbf{E}[Y + X_n] = \mathbf{E}[Y] + \liminf_{n \to \infty} \mathbf{E}[X_n].
+\]
+
+和上面得到的式子放在一起，我们便知道了
+\[
+\limsup_{n \to \infty} \mathbf{E}[X_n] \leq \mathbf{E}[X] \leq \liminf_{n \to \infty} \mathbf{E}[X_n].
+\]
+
+所以 $\lim_{n \to \infty} \mathbf{E}[X_n] = \mathbf{E}[X]$ 得证。
+
+\end{proof}
+
+控制收敛定理的一个显然的推论，有时候又叫$\textit{有界收敛定理}$，便是当所有的 $X_n$ 都有一个一致的上界 $|X_n| \leq M$ 时，$\lim_{n \to \infty} \mathbf{E}[X_n] = \mathbf{E}[\lim_{n \to \infty} X_n]$ 成立。这只需要在我们的 DCT 里取 $Y = M$ 就可以了。注意到，有界收敛定理对于无穷测度不成立，原因是有界函数在无穷测度下并不一定是可积的。
+
+\newpage
