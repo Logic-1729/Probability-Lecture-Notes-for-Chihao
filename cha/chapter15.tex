@@ -226,7 +226,7 @@ F(t) = \int_{0}^t \lambda e^{-\lambda x} dx = 1 - e^{-\lambda t}.
 \[
     \begin{aligned}
         \Pr{N(t)=n}
-        &=\Pr{T_n\ge t\land T_{n+1}>t}\\
+        &=\Pr{T_n\le t\land T_{n+1}>t}\\
         &=\int_0^t g_n(s)\cdot \Pr{\tau_{n+1}>t-s}\d s\\
         &=\int_0^t \lambda e^{-\lambda s}\cdot \frac{(\lambda s)^{n-1}}{(n-1)!}\cdot e^{-\lambda (t-s)}\d s\\
         &=\lambda^n e^{-\lambda t}\cdot \frac{t^n}{n!}.
