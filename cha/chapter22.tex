@@ -100,7 +100,7 @@
 
 使用 $\log (1+x)=x-\frac{x^2}{2}+\+O\tp{x^3}$，我们有 $1+x = e^{\log\tp{1+x}} = e^{x-\frac{x^2}{2}}\cdot \tp{1+\+O\tp{\abs{x}^3}}$。注意我们这里要利用 $\abs{k-\frac{n}{2}}=C\cdot \sqrt{n}$ 仔细估计误差项。可以得到
 \[
-    p_n^k = \sqrt{\frac{2}{\pi n}}\cdot e^{\frac{1}{2}\cdot \tp{\frac{2k-n}{n}}^2}\cdot e^{-\frac{1}{2}\cdot \frac{(2k-n)^2}{n}}\tp{1+\+O\tp{n^{-1}}} = \sqrt{\frac{2}{\pi n}}\cdot e^{-\frac{1}{2}\cdot \frac{(2k-n)^2}{n}}\cdot \tp{1+\+O\tp{n^{-1}}}.
+    p_n(k) = \sqrt{\frac{2}{\pi n}}\cdot e^{\frac{1}{2}\cdot \tp{\frac{2k-n}{n}}^2}\cdot e^{-\frac{1}{2}\cdot \frac{(2k-n)^2}{n}}\tp{1+\+O\tp{n^{-1}}} = \sqrt{\frac{2}{\pi n}}\cdot e^{-\frac{1}{2}\cdot \frac{(2k-n)^2}{n}}\cdot \tp{1+\+O\tp{n^{-1}}}.
 \]
 
 而这正是 $\frac{\phi\tp{\frac{k-n/2}{\sqrt{n/4}}}}{\sqrt{n/4}}\tp{1+\+O\tp{n^{-1}}}$。
@@ -155,7 +155,7 @@
 
 根据 Fatou 引理，我们有
 \[
-\E{\abs{X}^{1+\eps}} \le \E{\liminf\abs{X_n}^{1+\eps}} \le \liminf\E{X_n^{1+\eps}}=M.
+\E{\abs{X}^{1+\eps}} \le \E{\liminf\abs{X_n}^{1+\eps}} \le \liminf\E{|X_n|^{1+\eps}}=M.
 \]
 
 所以我们使用类似的推理可以得到
